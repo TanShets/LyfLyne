@@ -47,6 +47,7 @@
 						case 0:{
 							$temp_rid = $_POST['rid'];
 							$out = null;
+							$dtype = $_POST['dtype'];
 							if($_SESSION['request']['type'] == "hospital" || $_SESSION['request']['type'] == "hospital-priority only"){
 								$lid = $_POST['lid'];
 								$quantity = $_POST['quantity'];
@@ -74,7 +75,6 @@
 									}
 								}
 							}
-
 
 							//$cmd = "DELETE FROM request WHERE rid = '$temp_rid';";
 							//$out = mysqli_query($conn, $cmd);
@@ -200,6 +200,14 @@
 				echo "</tr>";
 			}
 			echo "</table>";
+		}
+
+		function getSupply($conn, $dtype, $btype, $lid){
+			if($conn && $dtype && $bype && $lid){
+				$cmd = "SELECT* FROM ".$dtype." WHERE btype = '$btype' AND lid = '$lid';";
+			}
+			else
+				return null;
 		}
 	?>
 	<form action = "emp-requests.php" method = "post">
