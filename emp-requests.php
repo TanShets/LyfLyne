@@ -128,6 +128,69 @@
 							}
 							break;
 						}
+
+						case 1:{
+							$cmd = "SELECT state FROM location WHERE lid = '$lid'";
+							$temp_rid = $_POST['rid'];
+							$out = null;
+							$dtype = $_POST['dtype'];
+							if($_SESSION['request']['type'] == "hospital" || $_SESSION['request']['type'] == "hospital-priority only"){
+								$lid = $_POST['lid'];
+								$quantity = $_POST['quantity'];
+								//echo $_POST['btype'];
+								$btype = $_POST['btype'];
+								$lids = getLocations($conn, $lid);
+							}
+							else{
+								$uid = $_POST['uid'];
+								$cmd = "SELECT* FROM user WHERE uid = '$uid'";
+								$out = mysqli_query($conn, $cmd);
+								if($out){
+									//echo "Step one<br>";
+									$arr = mysqli_fetch_array($out);
+									$out = null;
+									if(is_array($arr)){
+										//echo "Step two<br>";
+										$lid = $arr['lid'];
+										$btype = $arr['btype'];
+										if($_POST['dtype'] == "blood"){
+											if($_POST['priority'] == 1)
+												$quantity = 1000;
+											else
+												$quantity = 300;
+										}
+										else
+											$quantity = 1;
+										$lids = getLocations($conn, $lid, $quantity, true);
+										if(is_array($lids)){
+
+										}
+										else{
+											$lids = getLocations($conn, $lid, $quantity, true);
+										}
+									}
+								}
+							}
+
+							//$cmd = "DELETE FROM request WHERE rid = '$temp_rid';";
+							//$out = mysqli_query($conn, $cmd);
+							//$out = null;
+							if($out){
+								//echo "SUCCESS";
+								echo "<script>";
+								echo "alert(\"Successful Acceptance of Request id ".$_POST['rid']."\");";
+								echo "</script>";
+							}
+							else{
+								echo "<script>";
+								if(isset($message))
+									echo "alert(\"".$message."\");";
+								else
+									echo "alert(\"Failed to accept Request of Request id ".$_POST['rid'].". Try again!!!!!!\");";
+								echo "</script>";
+							}
+							break;
+						}
 					}
 				}
 
@@ -279,6 +342,48 @@
 			}
 			else
 				return false;
+		}
+
+		function getLocations($conn, $lid, $isState){
+			if($conn && $lid && $quantity){
+				if($isState){
+					$cmd = "SELECT state FROM location WHERE lid = '$lid';";
+					$out = mysqli_query($conn, $cmd);
+					if($out){
+						$arr = mysqli_fetch_array($out);
+						$state = $arr['state'];
+						$cmd = "SELECT lid FROM location state = '$state';";
+						$out = mysqli_query($conn, $cmd);
+						if($out){
+							$arr = mysqli_fetch_all($out);
+							if(is_array($arr)){
+								$lids = array();
+								for($i = 0; $i < count($arr); $i++){
+									array_push($lids, $arr[$i][0]);
+								}
+								if(count($lids) > 0)
+									return $lids;
+							}
+						}
+					}
+				}
+				else{
+					$cmd = "SELECT lid FROM location WHERE lid != '$lid';";
+					$out = mysqli_query($conn, $cmd);
+					if($out){
+						$arr = mysqli_fetch_all($out);
+						if(is_array($arr)){
+							$lids = array();
+							for($i = 0; $i < count($arr); $i++){
+								array_push($lids, $arr[$i][0]);
+							}
+							if(count($lids) > 0)
+								return $lids;
+						}
+					}
+				}
+			}
+			return null;
 		}
 	?>
 	<form action = "emp-requests.php" method = "post">
