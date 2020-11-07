@@ -8,7 +8,7 @@
 		if(!isset($_SESSION))
 			session_start();
 
-		if($_SESSION['message']){
+		if(isset($_SESSION['message'])){
 			echo "<script>";
 			echo "alert(\"".$_SESSION['message']."\");";
 			echo "</script>";
@@ -42,25 +42,59 @@
 			if(isset($conn) && $conn)
 			{
 				if(isset($_POST['alter'])){
-					print_r($_POST);
+					//print_r($_POST);
 					switch($_POST['alter']){
 						case 0:{
 							$temp_rid = $_POST['rid'];
-							$cmd = "DELETE FROM request WHERE rid = '$temp_rid';";
-							$out = mysqli_query($conn, $cmd);
+							$out = null;
+							if($_SESSION['request']['type'] == "hospital" || $_SESSION['request']['type'] == "hospital-priority only"){
+								$lid = $_POST['lid'];
+								$quantity = $_POST['quantity'];
+								//echo $_POST['btype'];
+								$btype = $_POST['btype'];
+							}
+							else{
+								$uid = $_POST['uid'];
+								$cmd = "SELECT* FROM user WHERE uid = '$uid'";
+								$out = mysqli_query($conn, $cmd);
+								if($out){
+									$arr = mysqli_fetch_array($out);
+									$out = null;
+									if(is_array($arr)){
+										$lid = $arr['lid'];
+										$btype = $arr['btype'];
+										if($_POST['dtype'] == "blood"){
+											if($_POST['priority'] == 1)
+												$quantity = 1000;
+											else
+												$quantity = 500;
+										}
+										else
+											$quantity = 1;
+									}
+								}
+							}
+
+
+							//$cmd = "DELETE FROM request WHERE rid = '$temp_rid';";
+							//$out = mysqli_query($conn, $cmd);
 							//$out = null;
 							if($out){
-								echo "SUCCESS";
+								//echo "SUCCESS";
 								echo "<script>";
 								echo "alert(\"Successful Acceptance of Request id ".$_POST['rid']."\");";
 								echo "</script>";
 							}
-							else
-								echo "FAILURE";
+							else{
+								echo "<script>";
+								echo "alert(\"Failed to accept Request of Request id ".$_POST['rid'].". Try again!!!!!!\");";
+								echo "</script>";
+							}
 							break;
 						}
 					}
 				}
+
 				if(isset($_POST['type'])){
 					//if($_POST['type'] != "")
 					$_SESSION['request']['type'] = $_POST['type'];
@@ -97,7 +131,15 @@
 							break;
 						}
 						case "hospital":{
-							$cmd = "SELECT * FROM hospital_request GROUP BY request_time ORDER BY priority;";
+							$cmd = "SELECT * FROM hospital_request ORDER BY hid, priority;";
+							$out = mysqli_query($conn, $cmd);
+							$heads = mysqli_fetch_array($out);
+							$out = mysqli_query($conn, $cmd);
+							$arr = mysqli_fetch_all($out);
+							break;
+						}
+						case "hospital-priority only":{
+							$cmd = "SELECT * FROM hospital_request ORDER BY priority;";
 							$out = mysqli_query($conn, $cmd);
 							$heads = mysqli_fetch_array($out);
 							$out = mysqli_query($conn, $cmd);
@@ -124,7 +166,7 @@
 				}
 			}
 			echo "</tr>";
-			print_r($names);
+			//print_r($names);
 			$i = null;
 			foreach($arr as $x){
 				$i = 0;
@@ -193,6 +235,12 @@
 					echo " selected";
 			?>
 			>Hospital</option>
+			<option value = "hospital-priority only"
+			<?php
+				if(isset($_SESSION['request']['type']) && $_SESSION['request']['type'] == "hospital-priority only")
+					echo " selected";
+			?>
+			>Hospital - Priority only</option>
 		</select>
 	</form>
 	<?php
