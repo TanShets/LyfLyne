@@ -5,6 +5,13 @@
 	<?php
 		if(!isset($_SESSION))
 			session_start();
+
+		if(isset($_SESSION['emp-user'])){
+			$_SESSION['message'] = "You must be logged out to create a new account";
+			header("Location: emp-requests.php");
+				exit();
+		}
+
 		if(!isset($_SESSION['create_temp']))
 			$_SESSION['create_temp'] = array();
 		

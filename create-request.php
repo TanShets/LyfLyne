@@ -7,6 +7,7 @@
 			session_start();
 
 		if(!isset($_SESSION['user'])){
+			$_SESSION['message'] = "You must be logged out to create a new account!";
 			header("Location: login.php");
 				exit();
 		}

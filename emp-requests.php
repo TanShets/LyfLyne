@@ -8,6 +8,13 @@
 		if(!isset($_SESSION))
 			session_start();
 
+		if($_SESSION['message']){
+			echo "<script>";
+			echo "alert(\"".$_SESSION['message']."\");";
+			echo "</script>";
+			unset($_SESSION['message']);
+		}
+
 		if(!isset($_SESSION['emp-user'])){
 			$_SESSION['message'] = "You must login to view requests!";
 			header("Location: emp-login.php");

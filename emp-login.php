@@ -10,6 +10,7 @@
 			echo "<script>";
 			echo "alert(\"".$_SESSION['message']."\");";
 			echo "</script>";
+			unset($_SESSION['message']);
 		}
 
 		if($_SERVER['REQUEST_METHOD'] == "POST"){

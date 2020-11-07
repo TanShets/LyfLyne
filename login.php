@@ -6,6 +6,13 @@
 		if(!isset($_SESSION))
 			session_start();
 		
+		if(isset($_SESSION['message'])){
+			echo "<script>";
+			echo "alert(\"".$_SESSION['message']."\");";
+			echo "</script>";
+			unset($_SESSION['message']);
+		}
+
 		if($_SERVER['REQUEST_METHOD'] == "POST"){
 			$mainServe = "localhost";
 			$mainuser = "root";

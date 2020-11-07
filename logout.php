@@ -3,6 +3,7 @@
 <?php
 	session_start();
 	if(isset($_SESSION['user'])){unset($_SESSION['user']);}
+	if(isset($_SESSION['emp-user'])){unset($_SESSION['emp-user']);}
 	if(isset($_SESSION['request'])){unset($_SESSION['request']);}
 	if(isset($_SESSION['search'])){unset($_SESSION['search']);}
 	session_destroy();
