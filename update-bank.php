@@ -7,6 +7,7 @@
 			session_start();
 
 		if(!isset($_SESSION['emp-user'])){
+			$_SESSION['message'] = "You need to login before you can update the organ/blood bank!";
 			header("Location: emp-login.php");
 				exit();
 		}

@@ -75,54 +75,59 @@
 				}
 			}
 			if($count == 5 * $_SESSION['request_count']){
-			for($j = 1; $j <= $_SESSION['request_count']; $j++){
-				if(isset($conn) && $conn){
-					$lid = null;
-					if(isset($_SESSION['hospital_user']))
-					{
-						$hid = $_SESSION['hospital_user']['hid'];
-						$cmd = "SELECT lid FROM hospital_user WHERE hid = '$hid';";
-						$out = mysqli_query($conn, $cmd);
-						$lid = mysqli_fetch_array($out)['lid'];
-					}
-
-					if($lid != null)
-					{
+				$success = 0;
+				for($j = 1; $j <= $_SESSION['request_count']; $j++){
+					if(isset($conn) && $conn){
+						$lid = null;
 						if(isset($_SESSION['hospital_user']))
 						{
 							$hid = $_SESSION['hospital_user']['hid'];
-							$priority = $_SESSION['h_request']['priority'.$j];
-							$dtype = $_SESSION['h_request']['type'.$j];
-							$btype = $_SESSION['h_request']['btype'.$j];
-							$quantity = $_SESSION['h_request']['quantity'.$j];
-							$name = $_SESSION['h_request']['name'.$j];
-							$cmd = "INSERT INTO hospital_request(lid, priority, dtype, btype, quantity, hid, name, request_time) VALUES('$lid', '$priority', '$dtype', '$btype', '$quantity', '$hid', '$name', NOW());";
-							//print_r($cmd);
+							$cmd = "SELECT lid FROM hospital_user WHERE hid = '$hid';";
 							$out = mysqli_query($conn, $cmd);
-							//$out = null;
-							if($out)
+							$lid = mysqli_fetch_array($out)['lid'];
+						}
+
+						if($lid != null)
+						{
+							if(isset($_SESSION['hospital_user']))
 							{
-								echo "<script>";
-								echo "alert(\"Successfully created request/s\");";
-								echo "</script>";
-								unset($_SESSION['h_request']);
-								$_SESSION['request_count'] = 1;
+								$hid = $_SESSION['hospital_user']['hid'];
+								$priority = $_SESSION['h_request']['priority'.$j];
+								$dtype = $_SESSION['h_request']['type'.$j];
+								$btype = $_SESSION['h_request']['btype'.$j];
+								$quantity = $_SESSION['h_request']['quantity'.$j];
+								$name = $_SESSION['h_request']['name'.$j];
+								$cmd = "INSERT INTO hospital_request(lid, priority, dtype, btype, quantity, hid, name, request_time) VALUES('$lid', '$priority', '$dtype', '$btype', '$quantity', '$hid', '$name', NOW());";
+								//print_r($cmd);
+								$out = mysqli_query($conn, $cmd);
+								//$out = null;
+								if($out)
+								{
+									$success++;
+								}
+								else
+								{
+									//print_r($cmd);
+									echo "QUERY FAILED";
+								}
 							}
 							else
-							{
-								print_r($cmd);
-								echo "QUERY FAILED";
-							}
+								echo "Can't find hospital account";
 						}
 						else
-							echo "Can't find hospital account";
+							echo "Location failure";
 					}
 					else
-						echo "Location failure";
+						echo "Connection failure";
 				}
-				else
-					echo "Connection failure";
-			}
+
+				if($success == $_SESSION['request_count']){
+					echo "<script>";
+					echo "alert(\"Successfully created request/s\");";
+					echo "</script>";
+					unset($_SESSION['h_request']);
+					$_SESSION['request_count'] = 1;
+				}
 			}
 		}
 		//print_r($_SESSION);

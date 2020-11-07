@@ -53,15 +53,29 @@
 								$quantity = $_POST['quantity'];
 								//echo $_POST['btype'];
 								$btype = $_POST['btype'];
+								$arr = getSupply($conn, $dtype, $btype, $lid);
+								if(is_array($arr)){
+									$max_quantity = $arr['quantity'];
+									if($quantity <= $max_quantity){
+										//$cmd = "UPDATE ".$dtype." SET quantity = quantity - ".$quantity." WHERE btype = '$btype' AND lid = '$lid';";
+										$outcome = updateSupply($conn, $dtype, $btype, $lid, -$quantity);
+										if($outcome){
+											$cmd = "DELETE FROM hospital_request WHERE rid = '$temp_rid';";
+											$out = mysqli_query($conn, $cmd);
+										}
+									}
+								}
 							}
 							else{
 								$uid = $_POST['uid'];
 								$cmd = "SELECT* FROM user WHERE uid = '$uid'";
 								$out = mysqli_query($conn, $cmd);
 								if($out){
+									//echo "Step one<br>";
 									$arr = mysqli_fetch_array($out);
 									$out = null;
 									if(is_array($arr)){
+										//echo "Step two<br>";
 										$lid = $arr['lid'];
 										$btype = $arr['btype'];
 										if($_POST['dtype'] == "blood"){
@@ -72,6 +86,25 @@
 										}
 										else
 											$quantity = 1;
+										$arr = getSupply($conn, $dtype, $btype, $lid);
+										//print_r($arr);
+										if(is_array($arr)){
+											//echo "step 3<br>";
+											$max_quantity = $arr['quantity'];
+											if($quantity <= $max_quantity){
+												//echo "step 4<br>";
+												//$cmd = "UPDATE ".$dtype." SET quantity = quantity - ".$quantity." WHERE btype = '$btype' AND lid = '$lid';";
+												$outcome = updateSupply($conn, $dtype, $btype, $lid, -$quantity);
+												if($outcome){
+													//echo "step 5<br>";
+													$cmd = "DELETE FROM request WHERE rid = '$temp_rid';";
+													$out = mysqli_query($conn, $cmd);
+												}
+											}
+											else{
+												$message = "Insufficient supply in the bank. Please transfer request!";
+											}
+										}
 									}
 								}
 							}
@@ -87,7 +120,10 @@
 							}
 							else{
 								echo "<script>";
-								echo "alert(\"Failed to accept Request of Request id ".$_POST['rid'].". Try again!!!!!!\");";
+								if(isset($message))
+									echo "alert(\"".$message."\");";
+								else
+									echo "alert(\"Failed to accept Request of Request id ".$_POST['rid'].". Try again!!!!!!\");";
 								echo "</script>";
 							}
 							break;
@@ -203,11 +239,46 @@
 		}
 
 		function getSupply($conn, $dtype, $btype, $lid){
-			if($conn && $dtype && $bype && $lid){
-				$cmd = "SELECT* FROM ".$dtype." WHERE btype = '$btype' AND lid = '$lid';";
+			if($conn && $dtype && $btype && $lid){
+				$cmd = "SELECT* FROM ".$dtype." WHERE ";
+				if($dtype == "blood" || $dtype == "marrow")
+					$cmd = $cmd."isbank = 1 AND ";
+				$cmd = $cmd."btype = '$btype' AND lid = '$lid';";
+				echo $cmd;
+				$out = mysqli_query($conn, $cmd);
+				if($out)
+				{
+					$arr = mysqli_fetch_array($out);
+					$out = null;
+					if(is_array($arr))
+						return $arr;
+					else
+						return null;
+				}
+				else
+					return null;
 			}
 			else
 				return null;
+		}
+
+		function updateSupply($conn, $dtype, $btype, $lid, $quantity){
+			if($conn && $dtype && $btype && $lid && is_numeric($quantity)){
+				$cmd = "UPDATE ".$dtype." SET quantity = quantity + ".$quantity." WHERE ";
+				if($dtype == "blood" || $dtype == "marrow")
+					$cmd = $cmd."isbank = 1 AND ";
+				$cmd = $cmd."btype = '$btype' AND lid = '$lid';";
+				$out = mysqli_query($conn, $cmd);
+				if($out)
+				{
+					$out = null;
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
 		}
 	?>
 	<form action = "emp-requests.php" method = "post">
