@@ -8,6 +8,8 @@
         
         if(!isset($_SESSION['admin'])){
             $_SESSION['message'] = "You must login before you access the admin home page!";
+			header("Location: admin-login.php");
+				exit();
         }
     ?>
 </head>
