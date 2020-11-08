@@ -7,7 +7,7 @@
 			session_start();
 
 		if(!isset($_SESSION['user'])){
-			$_SESSION['message'] = "You must be logged out to create a new account!";
+			$_SESSION['message'] = "You must be logged in to create a request!";
 			header("Location: login.php");
 				exit();
 		}
@@ -102,7 +102,7 @@
 						$uid = $_SESSION['user']['uid'];
 						$priority = $_SESSION['request']['priority'];
 						$dtype = $_SESSION['request']['type'];
-						$cmd = "INSERT INTO request(lid, priority, dtype, uid, request_time) VALUES('$lid', '$priority', '$dtype', '$uid', NOW());";
+						$cmd = "INSERT INTO request(lid, priority, dtype, uid, request_time, lookin) VALUES('$lid', '$priority', '$dtype', '$uid', NOW(), '$lid');";
 						$out = mysqli_query($conn, $cmd);
 						if($out)
 							echo "SUCCESS";

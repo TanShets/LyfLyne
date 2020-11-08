@@ -97,7 +97,8 @@
 								$btype = $_SESSION['h_request']['btype'.$j];
 								$quantity = $_SESSION['h_request']['quantity'.$j];
 								$name = $_SESSION['h_request']['name'.$j];
-								$cmd = "INSERT INTO hospital_request(lid, priority, dtype, btype, quantity, hid, name, request_time) VALUES('$lid', '$priority', '$dtype', '$btype', '$quantity', '$hid', '$name', NOW());";
+								//$cmd = "INSERT INTO hospital_request(lid, priority, dtype, btype, quantity, hid, name, request_time) VALUES('$lid', '$priority', '$dtype', '$btype', '$quantity', '$hid', '$name', NOW());";
+								$cmd = "INSERT INTO hospital_request(hid, name, dtype, btype, quantity, lid, priority, request_time, lookin) VALUES('$hid', '$name', '$dtype', '$btype', '$quantity', '$lid', '$priority', NOW(), '$lid');";
 								//print_r($cmd);
 								$out = mysqli_query($conn, $cmd);
 								//$out = null;
@@ -109,6 +110,7 @@
 								{
 									//print_r($cmd);
 									echo "QUERY FAILED";
+									echo mysqli_error($conn);
 								}
 							}
 							else
