@@ -271,7 +271,7 @@
 
 							if($pass){
 								$_SESSION['message'] = "Find the donor here!";
-								header("Location: search.php");
+								header("Location: ../search.php");
 									exit();
 							}
 							else{
