@@ -309,7 +309,7 @@
 						}
 						case "time_d":{
 							$cmd = "SELECT * FROM request WHERE lid = '".$_SESSION['emp-user']['lid']."' OR ";
-							$cmd = $cmd."lookin = '".$_SESSION['emp-user']['lid']."' request_time;";
+							$cmd = $cmd."lookin = '".$_SESSION['emp-user']['lid']."' ORDER BY request_time;";
 							//$cmd = "SELECT * FROM request ORDER BY request_time;";
 							$out = mysqli_query($conn, $cmd);
 							$heads = null;
