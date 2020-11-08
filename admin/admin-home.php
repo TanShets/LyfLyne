@@ -23,7 +23,7 @@
     <form action = "emp-create.php" method = "post">
         <button type = "submit" value = "submit">Add Employee</button>
     </form>
-    <form action = "admin-home.php" method = "post">
+    <form action = "admin-view-request.php" method = "post">
         <button type = "submit" value = "submit">View all Requests</button>
     </form>
     <form action = "location-entry.php" method = "post">
