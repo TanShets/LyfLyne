@@ -64,8 +64,5 @@
 		</table>
 		<button type = "submit">Submit</button>
 	</form><br>
-	<form action = "emp-create.php">
-		<button type = "submit">Create Employee Account</button>
-	</form>
 </body>
 </html>

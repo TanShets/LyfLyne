@@ -126,19 +126,63 @@
 					$cmd = $cmd."'".$x."', ";
 				}
 				$cmd = substr($cmd, 0, -2).");";
-				echo $cmd;
+				//echo $cmd;
 				if(isset($conn) && $conn){
-					echo "Hear";
+					//echo "Hear";
 					$out = mysqli_query($conn, $cmd);
 					if($out)
 					{
-						echo "me";
-						header("Location: login.php");
+						$cmd = "SELECT uid FROM user WHERE ";
+						foreach ($_SESSION['create_temp'] as $x => $y) {
+							$cmd = $cmd.$x."= '$y' AND ";
+						}
+						$cmd = substr($cmd, 0, -5).";";
+						$out = mysqli_query($conn, $cmd);
+						if($out){
+							$arr = mysqli_fetch_array($out);
+							$uid = $arr['uid'];
+							$questions = 0;
+							$answers = 0;
+							if($_SESSION['create_temp']['bdonor'] == 1){
+								$questions++;
+								$cmd = "INSERT INTO blood(uid, btype, isbank, quantity, lid) VALUES('$uid', ";
+								$cmd = $cmd."'".$_SESSION['create_temp']['btype']."', 0, 0, ";
+								$cmd = $cmd."'".$_SESSION['create_temp']['lid']."');";
+								$out = mysqli_query($conn, $cmd);
+								if($out)
+									$answers++;
+							}
+
+							if($_SESSION['create_temp']['mdonor'] == 1){
+								$questions++;
+								$cmd = "INSERT INTO marrow(uid, btype, isbank, quantity, lid) VALUES('$uid', ";
+								$cmd = $cmd."'".$_SESSION['create_temp']['btype']."', 0, 0, ";
+								$cmd = $cmd."'".$_SESSION['create_temp']['lid']."');";
+								$out = mysqli_query($conn, $cmd);
+								if($out)
+									$answers++;
+							}
+
+							if($questions == $answers)
+								$_SESSION['message'] = "Successful creation of account";
+							else
+								$_SESSION['message'] = "There was some at creation time!";
+							
+							header("Location: login.php");
 							exit();
+						}
+						else{
+							echo "<script>";
+							echo "alert(\"Creation of account failed!\");";
+							echo "</script>";
+						}
 					}
 				}
-				else
-					echo "Failed";
+				else{
+					echo "<script>";
+					echo "alert(\"Creation of account failed!\");";
+					echo "</script>";
+				}
 			}
 		}
 	?>

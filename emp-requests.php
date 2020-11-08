@@ -287,50 +287,88 @@
 					$_SESSION['request']['type'] = $_POST['type'];
 					switch($_POST['type']){
 						case "priority":{
-							$cmd = "SELECT * FROM request ORDER BY priority;";
+							$cmd = "SELECT * FROM request WHERE lid = '".$_SESSION['emp-user']['lid']."' OR ";
+							$cmd = $cmd."lookin = '".$_SESSION['emp-user']['lid']."' ORDER BY priority;";
+							print_r($cmd);
 							$out = mysqli_query($conn, $cmd);
-							$heads = mysqli_fetch_array($out);
+							$heads = null;
+							$arr = null;
+							if($out){
+								$heads = mysqli_fetch_array($out);
+								$out = mysqli_query($conn, $cmd);
+								if($out)
+									$arr = mysqli_fetch_all($out);
+							}
+							//$heads = mysqli_fetch_array($out);
 							//print_r($heads);
-							$out = mysqli_query($conn, $cmd);
-							$arr = mysqli_fetch_all($out);
+							//$out = mysqli_query($conn, $cmd);
+							//$arr = mysqli_fetch_all($out);
 							//print_r($arr);
 							//display($arr);
 							break;
 						}
 						case "time_d":{
-							$cmd = "SELECT * FROM request ORDER BY request_time;";
+							$cmd = "SELECT * FROM request WHERE lid = '".$_SESSION['emp-user']['lid']."' OR ";
+							$cmd = $cmd."lookin = '".$_SESSION['emp-user']['lid']."' request_time;";
+							//$cmd = "SELECT * FROM request ORDER BY request_time;";
 							$out = mysqli_query($conn, $cmd);
-							$heads = mysqli_fetch_array($out);
-							$out = mysqli_query($conn, $cmd);
-							$arr = mysqli_fetch_all($out);
+							$heads = null;
+							$arr = null;
+							if($out){
+								$heads = mysqli_fetch_array($out);
+								$out = mysqli_query($conn, $cmd);
+								if($out)
+									$arr = mysqli_fetch_all($out);
+							}
 							//print_r($arr);
 							//display($arr);
 							break;
 						}
 						case "time_n":{
-							$cmd = "SELECT * FROM request ORDER BY request_time DESC;";
+							$cmd = "SELECT * FROM request WHERE lid = '".$_SESSION['emp-user']['lid']."' OR ";
+							$cmd = $cmd."lookin = '".$_SESSION['emp-user']['lid']."' ORDER BY request_time DESC;";
+							//$cmd = "SELECT * FROM request ORDER BY request_time DESC;";
 							$out = mysqli_query($conn, $cmd);
-							$heads = mysqli_fetch_array($out);
-							$out = mysqli_query($conn, $cmd);
-							$arr = mysqli_fetch_all($out);
+							$heads = null;
+							$arr = null;
+							if($out){
+								$heads = mysqli_fetch_array($out);
+								$out = mysqli_query($conn, $cmd);
+								if($out)
+									$arr = mysqli_fetch_all($out);
+							}
 							//print_r($arr);
 							//display($arr);
 							break;
 						}
 						case "hospital":{
-							$cmd = "SELECT * FROM hospital_request ORDER BY hid, priority;";
+							$cmd = "SELECT * FROM hospital_request WHERE lid = '".$_SESSION['emp-user']['lid']."' OR ";
+							$cmd = $cmd."lookin = '".$_SESSION['emp-user']['lid']."' ORDER BY hid, priority;";
+							//$cmd = "SELECT * FROM hospital_request ORDER BY hid, priority;";
 							$out = mysqli_query($conn, $cmd);
-							$heads = mysqli_fetch_array($out);
-							$out = mysqli_query($conn, $cmd);
-							$arr = mysqli_fetch_all($out);
+							$heads = null;
+							$arr = null;
+							if($out){
+								$heads = mysqli_fetch_array($out);
+								$out = mysqli_query($conn, $cmd);
+								if($out)
+									$arr = mysqli_fetch_all($out);
+							}
 							break;
 						}
 						case "hospital-priority only":{
-							$cmd = "SELECT * FROM hospital_request ORDER BY priority;";
+							$cmd = "SELECT * FROM hospital_request WHERE lid = '".$_SESSION['emp-user']['lid']."' OR ";
+							$cmd = $cmd."lookin = '".$_SESSION['emp-user']['lid']."' ORDER BY priority;";
+							//$cmd = "SELECT * FROM hospital_request ORDER BY priority;";
 							$out = mysqli_query($conn, $cmd);
-							$heads = mysqli_fetch_array($out);
-							$out = mysqli_query($conn, $cmd);
-							$arr = mysqli_fetch_all($out);
+							$heads = null;
+							$arr = null;
+							if($out){
+								$heads = mysqli_fetch_array($out);
+								$out = mysqli_query($conn, $cmd);
+								if($out)
+									$arr = mysqli_fetch_all($out);
+							}
 							break;
 						}
 						default:{
