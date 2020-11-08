@@ -5,6 +5,13 @@
 	<?php
 		if(!isset($_SESSION))
 			session_start();
+		
+		if(isset($_SESSION['hospital_user'])){
+			$_SESSION['message'] = "You must be logged out to create a hospital account!";
+			header("Location: hospital-request.php");
+				exit();
+		}
+		
 		if(!isset($_SESSION['h_create_temp']))
 			$_SESSION['h_create_temp'] = array();
 		
@@ -111,7 +118,7 @@
 					if($out)
 					{
 						echo "me";
-						header("Location: login.php");
+						header("Location: ../login.php");
 							exit();
 					}
 				}

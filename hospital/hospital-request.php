@@ -8,8 +8,15 @@
 
 		if(!isset($_SESSION['hospital_user'])){
 			$_SESSION['message'] = "You must login to create a hospital request!";
-			header("Location: login.php");
+			header("Location: ../login.php");
 				exit();
+		}
+
+		if(isset($_SESSION['message'])){
+			echo "<script>";
+			echo "alert(\"".$_SESSION['message']."\");";
+			echo "</script>";
+			unset($_SESSION['message']);
 		}
 
 		$mainServe = "localhost";

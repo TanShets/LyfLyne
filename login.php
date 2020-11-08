@@ -39,12 +39,12 @@
 				//$_SESSION['password'] = $vals['password'];
 				if(!isset($_POST['isHospital'])){
 					$_SESSION['user'] = $vals;
-					header("Location: create-request.php");
+					header("Location: user/create-request.php");
 						exit();
 				}
 				else{
 					$_SESSION['hospital_user'] = $vals;
-					header("Location: hospital-request.php");
+					header("Location: hospital/hospital-request.php");
 						exit();
 				}
 			}
@@ -82,11 +82,11 @@
 	</form><br>
 	<table>
 		<tr><td>
-			<form action = "create.php">
+			<form action = "user/create.php">
 				<button type = "submit">Create User Account</button>
 			</form></td>	
 			<td>
-			<form action = "hospital-create.php">
+			<form action = "hospital/hospital-create.php">
 				<button type = "submit">Create Hospital Account</button>
 			</form></td>
 		</tr>

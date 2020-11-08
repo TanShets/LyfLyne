@@ -168,7 +168,7 @@
 							else
 								$_SESSION['message'] = "There was some at creation time!";
 							
-							header("Location: login.php");
+							header("Location: ../login.php");
 							exit();
 						}
 						else{

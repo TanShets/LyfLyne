@@ -289,7 +289,7 @@
 						case "priority":{
 							$cmd = "SELECT * FROM request WHERE lid = '".$_SESSION['emp-user']['lid']."' OR ";
 							$cmd = $cmd."lookin = '".$_SESSION['emp-user']['lid']."' ORDER BY priority;";
-							print_r($cmd);
+							//print_r($cmd);
 							$out = mysqli_query($conn, $cmd);
 							$heads = null;
 							$arr = null;

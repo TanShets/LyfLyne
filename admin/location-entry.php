@@ -6,15 +6,16 @@
 		if(!isset($_SESSION))
 			session_start();
 
+		if(!isset($_SESSION['admin'])){
+			$_SESSION['message'] = "You must be logged in as admin to add a new location!";
+			header("Location: admin-login.php");
+				exit();
+		}
 		$mainServe = "localhost";
 		$mainuser = "root";
 		$mainpass = "";
 		$dbname = "lyflyne";
 		$conn = mysqli_connect($mainServe, $mainuser, $mainpass, $dbname);
-		if(!isset($_SESSION['search']))
-		{
-			$_SESSION['search'] = array();
-		}
 
 		if($conn == NULL || !$conn){
 			die("Failed: ".mysqli_connect_error());

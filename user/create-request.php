@@ -8,7 +8,7 @@
 
 		if(!isset($_SESSION['user'])){
 			$_SESSION['message'] = "You must be logged in to create a request!";
-			header("Location: login.php");
+			header("Location: ../login.php");
 				exit();
 		}
 

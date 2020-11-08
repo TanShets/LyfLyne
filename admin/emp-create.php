@@ -8,7 +8,13 @@
 
 		if(isset($_SESSION['emp-user'])){
 			$_SESSION['message'] = "You must be logged out to create a new account";
-			header("Location: emp-requests.php");
+			header("Location: ../employee/emp-requests.php");
+				exit();
+		}
+
+		if(!isset($_SESSION['admin'])){
+			$_SESSION['message'] = "You must be logged in as admin to create a new employee";
+			header("Location: admin-login.php");
 				exit();
 		}
 
@@ -127,7 +133,7 @@
 						echo "me";
 						print_r($cmd);
 						//echo "Success";
-						header("Location: emp-login.php");
+						header("Location: ../employee/emp-login.php");
 							exit();
 					}
 					else{
