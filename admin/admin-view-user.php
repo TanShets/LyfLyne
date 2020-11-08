@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Create Individual Request</title>
+	<title>View Users</title>
     <?php
         if(!isset($_SESSION))
             session_start();
@@ -27,11 +27,107 @@
         if($conn == NULL || !$conn){
 			die("Failed: ".mysqli_connect_error());
         }
-        
-        $cmd = "SELECT * FROM user;";
-        $out = mysqli_query($conn, $cmd);
-        
-        $out = mysqli_query($conn, $cmd);
+
+		if($_SERVER['REQUEST_METHOD'] == "POST"){
+			if(isset($conn) && $conn){
+				//print_r($_POST);
+				if(isset($_POST['alter'])){
+					switch($_POST['alter']){
+						case 0:{
+							$cmd = "DELETE FROM user WHERE uid = '".$_POST['uid']."';";
+							$out = mysqli_query($conn, $cmd);
+							if($out){
+								echo "<script>";
+								echo "alert(\"User id: ".$_POST['uid']." successfully deleted!\");";
+								echo "</script>";
+							}
+							break;
+						}
+						
+						case 1:{
+							$cmd = "SELECT * FROM user WHERE uid = '".$_POST['uid']."';";
+							//echo $cmd;
+							$out = mysqli_query($conn, $cmd);
+							if($out){
+								$temp_arr = mysqli_fetch_array($out);
+								//print_r($temp_arr);
+								if($temp_arr['odonor'] == 1){
+									$cmd = "SELECT tablename FROM control WHERE tablename != 'blood' AND ";
+									$cmd = $cmd."tablename != 'marrow';";
+									//echo $cmd;
+									//echo "<br><br>";
+									$out = mysqli_query($conn, $cmd);
+									if($out){
+										$temp_arr2 = mysqli_fetch_all($out);
+										for($i = 0; $i < count($temp_arr2); $i++){
+											$id_name = substr($temp_arr2[$i][0], 0, 2)."id";
+											$cmd = "SELECT $id_name FROM ";
+											$cmd = $cmd.$temp_arr2[$i][0]." WHERE lid = '".$temp_arr['lid']."' AND ";
+											$cmd = $cmd."btype = '".$temp_arr['btype']."';";
+											//echo $cmd;
+											//echo "<br>";
+											$out = mysqli_query($conn, $cmd);
+											if($out){
+												$temp_arr3 = mysqli_fetch_array($out);
+												//echo "Till here";
+												if(is_array($temp_arr3)){
+													$temp_id = $temp_arr3[$id_name];
+													$cmd = "UPDATE ".$temp_arr2[$i][0]." SET quantity = quantity + 1 WHERE ";
+													$cmd = $id_name." = '$temp_id';";
+													//echo $cmd;
+												}
+												else{
+													$cmd = "INSERT INTO ".$temp_arr2[$i][0]."(btype, quantity, lid) VALUES(";
+													$cmd = $cmd."'".$temp_arr['btype']."', 1, ";
+													$cmd = $cmd."'".$temp_arr['lid']."');";
+													//echo $cmd;
+												}
+
+												$out = mysqli_query($conn, $cmd);
+												if($out){
+													$cmd = "DELETE FROM user WHERE uid = '".$_POST['uid']."';";
+													$out = mysqli_query($conn, $cmd);
+													if($out){
+														echo "<script>";
+														echo "alert(\"User id: ".$_POST['uid']." successfully deleted\");";
+														echo "</script>";
+													}
+													else{
+														echo "<script>";
+														echo "alert(\"Deletion error\");";
+														echo "</script>";
+													}
+												}
+												else{
+													echo "<script>";
+													echo "alert(\"Failure in changes\");";
+													echo "</script>";
+												}
+											}
+										}
+									}
+								}
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		$cmd = "SELECT uid, username, name, mobile, landline, lid, email FROM user;";
+		$out = mysqli_query($conn, $cmd);
+		$heads = null;
+		$arr = null;
+		if($out){
+			$heads = mysqli_fetch_array($out);
+			if(is_array($heads)){
+				$out = mysqli_query($conn, $cmd);
+				if($out){
+					$arr = mysqli_fetch_all($out);
+				}
+			}
+		}	
 
         function display($heads, $arr){
 			//print_r($heads);
@@ -64,7 +160,7 @@
 				}
 				//print_r($inputs);
 				$buttons = Array("Delete", "Deceased");
-				$temp = "<input type = \"hidden\" name = \"type\" value = \"".$_POST['type']."\">";
+				//$temp = "<input type = \"hidden\" name = \"type\" value = \"".$_POST['type']."\">";
 				array_push($inputs, $temp);
 				for($k = 0; $k < count($buttons); $k++){
 					if($k != 2 || ($k == 2 && $x[3] == "blood")){
@@ -83,23 +179,9 @@
     ?>
 </head>
 <body>
-	<form action = "admin-home.php" method = "post">
-        <button type = "submit" value = "submit">Go to View Users</button>
-    </form>
-    <form action = "admin-home.php" method = "post">
-        <button type = "submit" value = "submit">Go to View Employees</button>
-    </form>
-    <form action = "emp-create.php" method = "post">
-        <button type = "submit" value = "submit">Add Employee</button>
-    </form>
-    <form action = "admin-home.php" method = "post">
-        <button type = "submit" value = "submit">View all Requests</button>
-    </form>
-    <form action = "location-entry.php" method = "post">
-        <button type = "submit" value = "submit">Enter New Location</button>
-    </form>
-    <form action = "../logout.php" method = "post">
-        <button type = "submit" value = "submit">Logout</button>
-    </form>
+	<?php
+		if($heads != null && $arr != null)
+			display($heads, $arr);
+	?>
 </body>
 </html>
