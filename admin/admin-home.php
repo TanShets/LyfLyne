@@ -17,7 +17,7 @@
 	<form action = "admin-view-user.php" method = "post">
         <button type = "submit" value = "submit">Go to View Users</button>
     </form>
-    <form action = "admin-home.php" method = "post">
+    <form action = "admin-view-employee.php" method = "post">
         <button type = "submit" value = "submit">Go to View Employees</button>
     </form>
     <form action = "emp-create.php" method = "post">

@@ -72,7 +72,7 @@
 					$count++;
 			}
 
-			echo "Look";
+			//echo "Look";
 			if(isset($conn) && $conn){
 				$lid = null;
 				if($count == 6)
@@ -94,7 +94,7 @@
 						$lid = mysqli_fetch_array($out)['lid'];
 					}
 				}
-				echo "Here";
+				//echo "Here";
 				if($lid != null)
 				{
 					if(isset($_SESSION['user']))
@@ -104,8 +104,10 @@
 						$dtype = $_SESSION['request']['type'];
 						$cmd = "INSERT INTO request(lid, priority, dtype, uid, request_time, lookin) VALUES('$lid', '$priority', '$dtype', '$uid', NOW(), '$lid');";
 						$out = mysqli_query($conn, $cmd);
-						if($out)
-							echo "SUCCESS";
+						if($out){
+							header("Location: view-request.php");
+								exit();
+						}
 					}
 				}
 			}

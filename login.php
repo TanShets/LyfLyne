@@ -13,6 +13,18 @@
 			unset($_SESSION['message']);
 		}
 
+		if(isset($_SESSION['user'])){
+			$_SESSION['message'] = "You must log out from your account before trying to login to another account.";
+			header("Location: user/create-request.php");
+				exit();
+		}
+
+		if(isset($_SESSION['hospital_user'])){
+			$_SESSION['message'] = "You must log out from your account before trying to login to another account.";
+			header("Location: user/hospital-request.php");
+				exit();
+		}
+
 		if($_SERVER['REQUEST_METHOD'] == "POST"){
 			$mainServe = "localhost";
 			$mainuser = "root";

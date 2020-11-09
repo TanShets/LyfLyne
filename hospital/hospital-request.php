@@ -131,11 +131,11 @@
 				}
 
 				if($success == $_SESSION['request_count']){
-					echo "<script>";
-					echo "alert(\"Successfully created request/s\");";
-					echo "</script>";
+					$_SESSION['message'] = "Successfully created request/s";
 					unset($_SESSION['h_request']);
 					$_SESSION['request_count'] = 1;
+					header("Location: hospital-view-request.php");
+						exit();
 				}
 			}
 		}
