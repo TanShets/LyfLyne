@@ -127,7 +127,7 @@
 			<tr>
 				<td>Donation type</td>
 				<td>
-					<select name = "type" onchange = 'this.form.submit()'>
+					<select class = "form-control" name = "type" onchange = 'this.form.submit()'>
 						<?php
 							echo "<option value = \"\"";
 							if(!isset($_SESSION['request']['type']) || $_SESSION['request']['type'] == "")

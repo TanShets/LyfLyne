@@ -81,33 +81,40 @@
 	?>
 </head>
 <body>
-	<form action = "login.php" method = "post">
+	<div class = "container-fluid" style = "margin-left: 35%; margin-top: 12%; height: 200%">
+		<div style = "width:29.8%; height: 200%; border: grey 2px solid; padding: 10px;">
+		<h2>Login to your account</h2>
+		<form action = "login.php" method = "post">
+			<table>
+				<tr>
+					<td>Username</td>
+					<td><input class = "form-control" type = "text" name = "name" placeholder="Enter your username"></td>
+				</tr>
+				<tr>
+					<td>Password</td>
+					<td><input class = "form-control" type = "password" name = "password" placeholder="Enter password"></td>
+				</tr>
+			</table>
+			<table>
+				<tr>
+					<td>Hospital Account</td>
+					<td><input class = "form-check-label" type = "checkbox" name = "isHospital" value = "1"/></td>
+				</tr>
+			</table>
+			<button type = "submit" class = "btn btn-primary">Login</button>
+		</form><br>
 		<table>
-			<tr>
-				<td>Username</td>
-				<td><input type = "text" name = "name" placeholder="Enter your username"></td>
-			</tr>
-			<tr>
-				<td>Password</td>
-				<td><input type = "password" name = "password" placeholder="Enter password"></td>
-			</tr>
-			<tr>
-				<td>Hospital Account</td>
-				<td><input type = "checkbox" name = "isHospital" value = "1"/></td>
+			<tr><td>
+				<form action = "user/create.php">
+					<button type = "submit" class = "btn btn-success">Create User Account</button>
+				</form></td>	
+				<td>
+				<form action = "hospital/hospital-create.php">
+					<button type = "submit" class = "btn btn-success">Create Hospital Account</button>
+				</form></td>
 			</tr>
 		</table>
-		<button type = "submit">Login</button>
-	</form><br>
-	<table>
-		<tr><td>
-			<form action = "user/create.php">
-				<button type = "submit">Create User Account</button>
-			</form></td>	
-			<td>
-			<form action = "hospital/hospital-create.php">
-				<button type = "submit">Create Hospital Account</button>
-			</form></td>
-		</tr>
-	</table>
+		</div>
+	</div>
 </body>
 </html>
