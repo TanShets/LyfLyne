@@ -27,7 +27,7 @@
 
 		if(isset($_SESSION['hospital_user'])){
 			$_SESSION['message'] = "You must log out from your account before trying to login to another account.";
-			header("Location: user/hospital-request.php");
+			header("Location: hospital/hospital-request.php");
 				exit();
 		}
 

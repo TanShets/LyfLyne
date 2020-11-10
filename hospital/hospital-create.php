@@ -135,176 +135,180 @@
 	?>
 </head>
 <body>
-	<h1>Create Hospital Account</h1>
-	<form action = "hospital-create.php" method = "post">
-		<table>
-			<tr>
-				<td>Name</td>
-				<td><input type = "text" name = "name"
-				<?php 
-					if(isset($_SESSION['h_create_temp']['name']) && $_SESSION['h_create_temp']['name'] != "")
-						echo " value = \"".$_SESSION['h_create_temp']['name']."\"";
-				?>
-				></td>
-			</tr>
-			<tr>
-				<td>Contact No.</td>
-				<td><input type = "number" name = "mobile"
-				<?php
-					if(isset($_SESSION['h_create_temp']['mobile']) && $_SESSION['h_create_temp']['mobile'] != "")
-						echo " value = \"".$_SESSION['h_create_temp']['mobile']."\"";
-				?>
-				></td>
-			</tr>
-			<tr>
-				<td>Landline No.</td>
-				<td><input type = "number" name = "landline"
-				<?php
-					if(isset($_SESSION['h_create_temp']['landline']) && $_SESSION['h_create_temp']['landline'] != "")
-						echo " value = \"".$_SESSION['h_create_temp']['landline']."\"";
-				?>
-				></td>
-			</tr>
-			<tr>
-				<td>State</td>
-				<td>
-					<?php
-						echo "<select name = \"state\" onchange = \"this.form.submit()\">";
-						echo "<option value = \"\"";
-						if(!isset($_SESSION['h_create_temp']['state']) || $_SESSION['h_create_temp']['state'] == "")
-							echo " selected ";
-						echo ">Select an option</option>";
-						if(isset($conn) && $conn)
-						{
-							$cmd = "SELECT state FROM location GROUP BY(state);";
-							$out = mysqli_query($conn, $cmd);
-							$arr = mysqli_fetch_all($out);
-							for($i = 0; $i < count($arr); $i++)
-							{
-								$temp = $arr[$i][0];
-								echo "<option value = \"$temp\"";
-								if(isset($_SESSION['h_create_temp']['state']) && $_SESSION['h_create_temp']['state'] == $temp)
-									echo " selected ";
-								echo ">".$temp."</option>";
-							}
-						}
-						echo "</select>";
+	<div style = "margin-left: 33%; margin-top: 2%; border: 1px solid grey; width: 35%; padding: 15px;">
+		<center><h2>Create Hospital Account</h2></center><center>
+		<form action = "hospital-create.php" method = "post">
+			<table>
+				<tr>
+					<td>Name</td>
+					<td><input type = "text" name = "name" class = "form-control"
+					<?php 
+						if(isset($_SESSION['h_create_temp']['name']) && $_SESSION['h_create_temp']['name'] != "")
+							echo " value = \"".$_SESSION['h_create_temp']['name']."\"";
 					?>
-					<noscript><input type="submit" value="Submit"></noscript>
-				</td>
-			</tr>
-			<tr>
-				<td>District</td>
-				<td>
-					<select name = "district" onchange = 'this.form.submit()'
+					></td>
+				</tr>
+				<tr>
+					<td>Contact No.</td>
+					<td><input type = "number" name = "mobile" class = "form-control"
 					<?php
-						if(!isset($_SESSION['h_create_temp']['state']) || $_SESSION['h_create_temp']['state'] == "")
-							echo " disabled";
+						if(isset($_SESSION['h_create_temp']['mobile']) && $_SESSION['h_create_temp']['mobile'] != "")
+							echo " value = \"".$_SESSION['h_create_temp']['mobile']."\"";
 					?>
-					>
+					></td>
+				</tr>
+				<tr>
+					<td>Landline No.</td>
+					<td><input type = "number" name = "landline" class = "form-control"
 					<?php
-						if(isset($_SESSION['h_create_temp']['state']) && $_SESSION['h_create_temp']['state'] != "")
-						{
+						if(isset($_SESSION['h_create_temp']['landline']) && $_SESSION['h_create_temp']['landline'] != "")
+							echo " value = \"".$_SESSION['h_create_temp']['landline']."\"";
+					?>
+					></td>
+				</tr>
+				<tr>
+					<td>State</td>
+					<td>
+						<?php
+							echo "<select name = \"state\" class = \"form-control\" onchange = \"this.form.submit()\">";
 							echo "<option value = \"\"";
-							if(!isset($_SESSION['h_create_temp']['district']) || $_SESSION['h_create_temp']['district'] == "")
-								echo " selected";
-							echo ">Select an option</option>";
-							$temp = $_SESSION['h_create_temp']['state'];
-							$cmd = "SELECT district from location WHERE state = '$temp' GROUP BY(district);";
-							$out = mysqli_query($conn, $cmd);
-							$arr = mysqli_fetch_all($out);
-							for($i = 0; $i < count($arr); $i++)
-							{
-								$temp = $arr[$i][0];
-								echo "<option value = \"$temp\"";
-								if(isset($_SESSION['h_create_temp']['district']) && $_SESSION['h_create_temp']['district'] == $temp)
-									echo " selected";
-								echo ">".$temp."</option>";
-							}
-						}
-						else
-							echo "<option value = \"\">Select an option</option>";
-					?>
-					</select>
-					<noscript><input type="submit" value="Submit"></noscript>
-				</td>
-			</tr>
-			<tr>
-				<td>City/Town</td>
-				<td>
-					<select name = "city"
-					<?php
-						if(!isset($_SESSION['h_create_temp']['state']) || $_SESSION['h_create_temp']['state'] == "" || !isset($_SESSION['h_create_temp']['district']) || $_SESSION['h_create_temp']['district'] == "")
-							echo " disabled";
-					?>
-					>
-					<?php
-						if(isset($_SESSION['h_create_temp']['state']) && $_SESSION['h_create_temp']['state'] != "" && isset($_SESSION['h_create_temp']['district']) && $_SESSION['h_create_temp']['district'] != "")
-						{
-							echo "<option value = \"\"";
-							if(!isset($_SESSION['h_create_temp']['city']) || $_SESSION['h_create_temp']['city'] == "")
-								echo " selected";
+							if(!isset($_SESSION['h_create_temp']['state']) || $_SESSION['h_create_temp']['state'] == "")
+								echo " selected ";
 							echo ">Select an option</option>";
 							if(isset($conn) && $conn)
 							{
-								$temp = $_SESSION['h_create_temp']['state'];
-								$temp1 = $_SESSION['h_create_temp']['district'];
-								$cmd = "SELECT city FROM location WHERE state = '$temp' AND district = '$temp1';";
+								$cmd = "SELECT state FROM location GROUP BY(state);";
 								$out = mysqli_query($conn, $cmd);
 								$arr = mysqli_fetch_all($out);
 								for($i = 0; $i < count($arr); $i++)
 								{
 									$temp = $arr[$i][0];
 									echo "<option value = \"$temp\"";
-									if(!isset($_SESSION['h_create_temp']['city']) || $_SESSION['h_create_temp']['city'] == $temp)
+									if(isset($_SESSION['h_create_temp']['state']) && $_SESSION['h_create_temp']['state'] == $temp)
+										echo " selected ";
+									echo ">".$temp."</option>";
+								}
+							}
+							echo "</select>";
+						?>
+						<noscript><input type="submit" value="Submit"></noscript>
+					</td>
+				</tr>
+				<tr>
+					<td>District</td>
+					<td>
+						<select name = "district" class = "form-control" onchange = 'this.form.submit()'
+						<?php
+							if(!isset($_SESSION['h_create_temp']['state']) || $_SESSION['h_create_temp']['state'] == "")
+								echo " disabled";
+						?>
+						>
+						<?php
+							if(isset($_SESSION['h_create_temp']['state']) && $_SESSION['h_create_temp']['state'] != "")
+							{
+								echo "<option value = \"\"";
+								if(!isset($_SESSION['h_create_temp']['district']) || $_SESSION['h_create_temp']['district'] == "")
+									echo " selected";
+								echo ">Select an option</option>";
+								$temp = $_SESSION['h_create_temp']['state'];
+								$cmd = "SELECT district from location WHERE state = '$temp' GROUP BY(district);";
+								$out = mysqli_query($conn, $cmd);
+								$arr = mysqli_fetch_all($out);
+								for($i = 0; $i < count($arr); $i++)
+								{
+									$temp = $arr[$i][0];
+									echo "<option value = \"$temp\"";
+									if(isset($_SESSION['h_create_temp']['district']) && $_SESSION['h_create_temp']['district'] == $temp)
 										echo " selected";
 									echo ">".$temp."</option>";
 								}
 							}
-						}
-						else
-							echo "<option value = \"\">Select an option</option>";
+							else
+								echo "<option value = \"\">Select an option</option>";
+						?>
+						</select>
+						<noscript><input type="submit" value="Submit"></noscript>
+					</td>
+				</tr>
+				<tr>
+					<td>City/Town</td>
+					<td>
+						<select name = "city" class = "form-control"
+						<?php
+							if(!isset($_SESSION['h_create_temp']['state']) || $_SESSION['h_create_temp']['state'] == "" || !isset($_SESSION['h_create_temp']['district']) || $_SESSION['h_create_temp']['district'] == "")
+								echo " disabled";
+						?>
+						>
+						<?php
+							if(isset($_SESSION['h_create_temp']['state']) && $_SESSION['h_create_temp']['state'] != "" && isset($_SESSION['h_create_temp']['district']) && $_SESSION['h_create_temp']['district'] != "")
+							{
+								echo "<option value = \"\"";
+								if(!isset($_SESSION['h_create_temp']['city']) || $_SESSION['h_create_temp']['city'] == "")
+									echo " selected";
+								echo ">Select an option</option>";
+								if(isset($conn) && $conn)
+								{
+									$temp = $_SESSION['h_create_temp']['state'];
+									$temp1 = $_SESSION['h_create_temp']['district'];
+									$cmd = "SELECT city FROM location WHERE state = '$temp' AND district = '$temp1';";
+									$out = mysqli_query($conn, $cmd);
+									$arr = mysqli_fetch_all($out);
+									for($i = 0; $i < count($arr); $i++)
+									{
+										$temp = $arr[$i][0];
+										echo "<option value = \"$temp\"";
+										if(!isset($_SESSION['h_create_temp']['city']) || $_SESSION['h_create_temp']['city'] == $temp)
+											echo " selected";
+										echo ">".$temp."</option>";
+									}
+								}
+							}
+							else
+								echo "<option value = \"\">Select an option</option>";
+						?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Email</td>
+					<td><input type = "email" name = "email" class = "form-control"
+					<?php
+						if(isset($_SESSION['h_create_temp']['email']) && $_SESSION['h_create_temp']['email'] != "")
+							echo " value = \"".$_SESSION['h_create_temp']['email']."\"";
 					?>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Email</td>
-				<td><input type = "email" name = "email"
-				<?php
-					if(isset($_SESSION['h_create_temp']['email']) && $_SESSION['h_create_temp']['email'] != "")
-						echo " value = \"".$_SESSION['h_create_temp']['email']."\"";
-				?>
-				></td>
-			</tr>
-			<tr>
-				<td>Username</td>
-				<td><input type = "text" name = "username"
-				<?php
-					if(isset($_SESSION['h_create_temp']['username']) && $_SESSION['h_create_temp']['username'] != "")
-						echo " value = \"".$_SESSION['h_create_temp']['username']."\"";
-				?>
-				></td>
-			</tr>
-			<tr>
-				<td>Password</td>
-				<td><input type = "password" name = "password"></td>
-			</tr>
-			<tr>
-				<td>Confirm Password</td>
-				<td><input type = "password" name = "cpassword"></td>
-			</tr>
-			<tr>
-				<td>Hospital Code</td>
-				<td><input type = "number" name = "hcode"
-				<?php
-					if(isset($_SESSION['h_create_temp']['hcode']) && $_SESSION['h_create_temp']['hcode'] != "")
-						echo " value = \"".$_SESSION['h_create_temp']['hcode']."\"";
-				?>
-				></td>
-			</tr>
-		</table>
-		<button type = "submit">Submit</button>
-	</form>
+					></td>
+				</tr>
+				<tr>
+					<td>Username</td>
+					<td><input type = "text" name = "username" class = "form-control"
+					<?php
+						if(isset($_SESSION['h_create_temp']['username']) && $_SESSION['h_create_temp']['username'] != "")
+							echo " value = \"".$_SESSION['h_create_temp']['username']."\"";
+					?>
+					></td>
+				</tr>
+				<tr>
+					<td>Password</td>
+					<td><input type = "password" name = "password" class = "form-control"></td>
+				</tr>
+				<tr>
+					<td>Confirm Password</td>
+					<td><input type = "password" name = "cpassword" class = "form-control"></td>
+				</tr>
+				<tr>
+					<td>Hospital Code</td>
+					<td><input type = "number" name = "hcode" class = "form-control"
+					<?php
+						if(isset($_SESSION['h_create_temp']['hcode']) && $_SESSION['h_create_temp']['hcode'] != "")
+							echo " value = \"".$_SESSION['h_create_temp']['hcode']."\"";
+					?>
+					></td>
+				</tr>
+			</table><br>
+			<button type = "submit" class = "btn btn-success" style = "width: 40%; margin-left: 33%;">
+				Create
+			</button>
+		</form></center>
+	</div>
 </body>
 </html>

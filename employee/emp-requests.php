@@ -158,7 +158,7 @@
 										$cmd = $cmd."'".$lids[$i][0].", ";
 									}
 									$cmd = $cmd."'".$lids[count($lids) - 1]."');";
-									echo $cmd;
+									//echo $cmd;
 									$out = mysqli_query($conn, $cmd);
 									if($out){
 										$arr = mysqli_fetch_array($out);
@@ -209,7 +209,7 @@
 												$cmd = $cmd."'".$lids[$i][0].", ";
 											}
 											$cmd = $cmd."'".$lids[count($lids) - 1]."');";
-											echo $cmd;
+											//echo $cmd;
 											$out = mysqli_query($conn, $cmd);
 											if($out){
 												$arr = mysqli_fetch_array($out);
@@ -439,7 +439,7 @@
 				if($dtype == "blood" || $dtype == "marrow")
 					$cmd = $cmd."isbank = 1 AND ";
 				$cmd = $cmd."btype = '$btype' AND lid = '$lid';";
-				echo $cmd;
+				//echo $cmd;
 				$out = mysqli_query($conn, $cmd);
 				if($out)
 				{

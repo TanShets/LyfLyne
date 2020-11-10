@@ -78,7 +78,7 @@
 
         function display($heads, $arr){
 			//print_r($heads);
-			echo "<table>";
+			echo "<table class = \"table table-striped\">";
 			echo "<tr>";
 			$names = Array();
 			foreach ($heads as $x => $y) {
@@ -87,6 +87,7 @@
 					array_push($names, $x);
 				}
 			}
+			echo "<th>Action</th>";
 			echo "</tr>";
 			//print_r($names);
 			$i = null;
@@ -115,7 +116,7 @@
 							echo $inputs[$i];
 						}
 						echo "<input type = \"hidden\" name = \"alter\" value = \"".$k."\">";
-						echo "<td><button type=\"submit\">".$buttons[$k]."</button></td>";
+						echo "<td><button class = \"btn btn-danger\" type=\"submit\">".$buttons[$k]."</button></td>";
 						echo "</form>";
 					}
 				}
@@ -127,8 +128,10 @@
 </head>
 <body>
 	<?php
-		if($heads != null && $arr != null)
+		if($heads != null && $arr != null){
+			echo "<center><h2>Your pending requests</h2></center>";
 			display($heads, $arr);
+		}
 	?>
 </body>
 </html>

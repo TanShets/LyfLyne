@@ -56,19 +56,21 @@
 	?>
 </head>
 <body>
-	<form action = "emp-login.php" method = "post">
-		<h1>Employee Login</h1>
-		<table>
-			<tr>
-				<td>Username</td>
-				<td><input type = "text" name = "name" placeholder="Enter your username"></td>
-			</tr>
-			<tr>
-				<td>Password</td>
-				<td><input type = "password" name = "password" placeholder="Enter password"></td>
-			</tr>
-		</table>
-		<button type = "submit">Submit</button>
-	</form><br>
+	<div style = "margin-left: 35%; margin-top: 18%; width: 30%; border: 1px solid grey; padding: 20px;">
+		<form action = "emp-login.php" method = "post">
+			<h1>Employee Login</h1>
+			<table>
+				<tr>
+					<td>Username</td>
+					<td><input class = "form-control" type = "text" name = "name" placeholder="Enter your username"></td>
+				</tr>
+				<tr>
+					<td>Password</td>
+					<td><input class = "form-control" type = "password" name = "password" placeholder="Enter password"></td>
+				</tr>
+			</table><br>
+			<button class = "btn btn-primary" type = "submit" style = "margin-left: 60%; width: 34%;">Login</button>
+		</form>
+	</div>
 </body>
 </html>

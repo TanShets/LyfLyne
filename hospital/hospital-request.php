@@ -149,114 +149,121 @@
 	?>
 </head>
 <body>
-	<form action = "hospital-request.php" method = "post">
-		<?php
-			for($j = 1; $j <= $_SESSION['request_count']; $j++){
-				echo "<table>";
-					echo "<tr>";
-						echo "<td>Donation type</td>";
-						echo "<td>";
-							echo "<select name = \"type".$j."\" onchange = 'this.form.submit()'>";
-								
-								echo "<option value = \"\"";
-								if(!isset($_SESSION['h_request']['type'.$j]) || $_SESSION['h_request']['type'.$j] == "")
-									echo " selected ";
-								echo ">Select an option</option>";
-								if(isset($conn) && $conn)
-								{
-									$cmd = "SELECT tablename from control;";
-									$out = mysqli_query($conn, $cmd);
-									$arr = mysqli_fetch_all($out);
-									for($i = 0; $i < count($arr); $i++)
-									{
-										$temp = $arr[$i][0];
-										echo "<option value = \"$temp\"";
-										if(isset($_SESSION['h_request']['type'.$j]) && $_SESSION['h_request']['type'.$j] == $temp)
-											echo " selected ";
-										echo ">$temp</option>";
-									}
-								}
-							echo "</select>";
-							echo "<noscript><input type = \"submit\" value = \"submit\"></noscript>";
-						echo "</td>";
-					echo "</tr>";
-					if(isset($_SESSION['h_request']['type'.$j]) && $_SESSION['h_request']['type'.$j] == "blood"){
+	<div style = "margin-left: 37%; margin-top: 12%; padding: 20px; border: 1px grey solid; width: 26%;">
+		<h2>Create a Request</h2>
+		<form action = "hospital-request.php" method = "post">
+			<?php
+				for($j = 1; $j <= $_SESSION['request_count']; $j++){
+					echo "<table>";
 						echo "<tr>";
-							echo "<td>Quantity</td>";
+							echo "<td>Donation type</td>";
 							echo "<td>";
-								echo "<input type = \"number\" name = \"quantity".$j."\" placeholder = \"in ml\"";
-								if(isset($_SESSION['h_request']['quantity'.$j])){
-									echo " value = \"".$_SESSION['h_request']['quantity'.$j]."\"";
-								}
-								echo ">";
+								echo "<select name = \"type".$j."\" class = \"form-control\" onchange = 'this.form.submit()'>";
+									
+									echo "<option value = \"\"";
+									if(!isset($_SESSION['h_request']['type'.$j]) || $_SESSION['h_request']['type'.$j] == "")
+										echo " selected ";
+									echo ">Select an option</option>";
+									if(isset($conn) && $conn)
+									{
+										$cmd = "SELECT tablename from control;";
+										$out = mysqli_query($conn, $cmd);
+										$arr = mysqli_fetch_all($out);
+										for($i = 0; $i < count($arr); $i++)
+										{
+											$temp = $arr[$i][0];
+											echo "<option value = \"$temp\"";
+											if(isset($_SESSION['h_request']['type'.$j]) && $_SESSION['h_request']['type'.$j] == $temp)
+												echo " selected ";
+											echo ">$temp</option>";
+										}
+									}
+								echo "</select>";
+								echo "<noscript><input type = \"submit\" value = \"submit\"></noscript>";
 							echo "</td>";
 						echo "</tr>";
-					}
-					else{
-						echo "<tr>";
-						echo "<input type = \"hidden\" name = \"quantity".$j."\" value = \"1\"";
-						echo "</tr>";
-					}
-					echo "<tr>";
-						echo "<td>Patient Name</td>";
-						echo "<td><input type = \"text\" name = \"name".$j."\"";
-						if(isset($_SESSION['h_request']['name'.$j]) && $_SESSION['h_request']['name'.$j] != ""){
-							echo " value = \"".$_SESSION['h_request']['name'.$j]."\"";
+						if(isset($_SESSION['h_request']['type'.$j]) && $_SESSION['h_request']['type'.$j] == "blood"){
+							echo "<tr>";
+								echo "<td>Quantity</td>";
+								echo "<td>";
+									echo "<input type = \"number\" class = \"form-control\" name = \"quantity".$j."\" placeholder = \"in ml\"";
+									if(isset($_SESSION['h_request']['quantity'.$j])){
+										echo " value = \"".$_SESSION['h_request']['quantity'.$j]."\"";
+									}
+									echo ">";
+								echo "</td>";
+							echo "</tr>";
 						}
-						echo "></td>";
-					echo "</tr>";
-					echo "<tr>";
-						echo "<td>Blood Group</td>";
-						echo "<td>";
-							echo "<select name = \"btype".$j."\">";
-								echo "<option value = \"\"";
-								if(!isset($_SESSION['h_request']['btype'.$j]) || $_SESSION['h_request']['btype'.$j] == "")
-									echo " selected";
-								echo ">Select an option</option>";
-								$btypes = Array('A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-', 'Rh null');
-								for($i = 0; $i < count($btypes); $i++)
-								{
-									$tempx = $btypes[$i];
-									echo "<option value = \"$tempx\"";
-									if(isset($_SESSION['h_request']['btype'.$j]) && $_SESSION['h_request']['btype'.$j] == $tempx)
-										echo " selected";
-									echo ">".$tempx."</option>";
-								}
-							echo "</select>";
-						echo "</td>";
-					echo "</tr>";
-					echo "<tr>";
-						echo "<td>Priority</td>";
-						echo "<td>";
-							echo "<select name = \"priority".$j."\">";
-								echo "<option value = \"\"";
-								if(!isset($_SESSION['h_request']['priority'.$j]) || $_SESSION['h_request']['priority'.$j] == "")
-									echo " selected ";
-							echo ">Select any one</option>";
-							for($i = 1; $i <= 10; $i++){
-								echo "<option value = \"".$i."\"";
-								if(isset($_SESSION['h_request']['priority'.$j]) && $_SESSION['h_request']['priority'.$j] == $i)
-									echo " selected ";
-								echo ">".$i."</option>";
+						else{
+							echo "<tr>";
+							echo "<input type = \"hidden\" name = \"quantity".$j."\" value = \"1\"";
+							echo "</tr>";
+						}
+						echo "<tr>";
+							echo "<td>Patient Name</td>";
+							echo "<td><input type = \"text\" class = \"form-control\" name = \"name".$j."\"";
+							if(isset($_SESSION['h_request']['name'.$j]) && $_SESSION['h_request']['name'.$j] != ""){
+								echo " value = \"".$_SESSION['h_request']['name'.$j]."\"";
 							}
-							echo "</select>";
-						echo "</td>";
-					echo "</tr>";
-				echo "</table><br><br>";
-			}
-		?>
-		<button type = "submit" value = "submit">Submit</button>
-	</form><br>
-	<table><tr><td>
-	<form action = "hospital-request.php" method = "post">
-		<input type = "hidden" name = "addMore" value = "add">
-		<button type = "submit" value = "submit">Add</button>
-	</form></td><td>
-	<form action = "hospital-request.php" method = "post">
-		<input type = "hidden" name = "addMore" value = "sub">
-		<button type = "submit" value = "submit">Remove</button>
-	</form></td>
-	</tr>
-	</table>
+							echo "></td>";
+						echo "</tr>";
+						echo "<tr>";
+							echo "<td>Blood Group</td>";
+							echo "<td>";
+								echo "<select class = \"form-control\" name = \"btype".$j."\">";
+									echo "<option value = \"\"";
+									if(!isset($_SESSION['h_request']['btype'.$j]) || $_SESSION['h_request']['btype'.$j] == "")
+										echo " selected";
+									echo ">Select an option</option>";
+									$btypes = Array('A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-', 'Rh null');
+									for($i = 0; $i < count($btypes); $i++)
+									{
+										$tempx = $btypes[$i];
+										echo "<option value = \"$tempx\"";
+										if(isset($_SESSION['h_request']['btype'.$j]) && $_SESSION['h_request']['btype'.$j] == $tempx)
+											echo " selected";
+										echo ">".$tempx."</option>";
+									}
+								echo "</select>";
+							echo "</td>";
+						echo "</tr>";
+						echo "<tr>";
+							echo "<td>Priority</td>";
+							echo "<td>";
+								echo "<select class = \"form-control\" name = \"priority".$j."\">";
+									echo "<option value = \"\"";
+									if(!isset($_SESSION['h_request']['priority'.$j]) || $_SESSION['h_request']['priority'.$j] == "")
+										echo " selected ";
+								echo ">Select any one</option>";
+								for($i = 1; $i <= 10; $i++){
+									echo "<option value = \"".$i."\"";
+									if(isset($_SESSION['h_request']['priority'.$j]) && $_SESSION['h_request']['priority'.$j] == $i)
+										echo " selected ";
+									echo ">".$i."</option>";
+								}
+								echo "</select>";
+							echo "</td>";
+						echo "</tr>";
+					echo "</table><br>";
+				}
+			?>
+			<center><button type = "submit" class = "btn btn-success" value = "submit" style = "width: 90%;">
+				Submit
+			</button></center>
+		</form><br>
+		<table><tr><td>
+		<form action = "hospital-request.php" method = "post">
+			<input type = "hidden" name = "addMore" value = "add">
+			<button type = "submit" class = "btn btn-primary" value = "submit" style = "width: 260%;">
+				Add
+			</button>
+		</form></td><td>
+		<form action = "hospital-request.php" method = "post">
+			<input type = "hidden" name = "addMore" value = "sub">
+			<button type = "submit" class = "btn btn-danger" value = "submit" style = "width: 180%; margin-left: 130%;">Remove</button>
+		</form></td>
+		</tr>
+		</table>
+	</div>
 </body>
 </html>

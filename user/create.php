@@ -194,272 +194,278 @@
 	?>
 </head>
 <body>
-	<h1>Create Account</h1>
-	<form action = "create.php" method = "post">
-		<table>
-			<tr>
-				<td>Name</td>
-				<td><input type = "text" name = "name"
-				<?php 
-					if(isset($_SESSION['create_temp']['name']) && $_SESSION['create_temp']['name'] != "")
-						echo " value = \"".$_SESSION['create_temp']['name']."\"";
-				?>></td>
-			</tr>
-			<tr>
-				<td>Blood Group</td>
-				<td>
-					<select name = "b-group">
-					<?php
-						echo "<option value = \"\"";
-						if(!isset($_SESSION['create_temp']['btype']) || $_SESSION['create_temp']['btype'] == "")
-							echo " selected";
-						echo ">Select an option</option>";
-						$btypes = Array('A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-', 'Rh null');
-						for($i = 0; $i < count($btypes); $i++)
-						{
-							$tempx = $btypes[$i];
-							echo "<option value = \"$tempx\"";
-							if(isset($_SESSION['create_temp']['btype']) && $_SESSION['create_temp']['btype'] == $tempx)
-								echo " selected";
-							echo ">".$tempx."</option>";
-						}
-					?>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Mobile No.</td>
-				<td><input type = "number" name = "mobile"
-				<?php
-					if(isset($_SESSION['create_temp']['mobile']) && $_SESSION['create_temp']['mobile'] != "")
-						echo " value = \"".$_SESSION['create_temp']['mobile']."\"";
-				?>
-				></td>
-			</tr>
-			<tr>
-				<td>Landline No.</td>
-				<td><input type = "number" name = "landline"
-				<?php
-					if(isset($_SESSION['create_temp']['landline']) && $_SESSION['create_temp']['landline'] != "")
-						echo " value = \"".$_SESSION['create_temp']['landline']."\"";
-				?>
-				></td>
-			</tr>
-			<tr>
-				<td>State</td>
-				<td>
-					<?php
-						echo "<select name = \"state\" onchange = \"this.form.submit()\">";
-						echo "<option value = \"\"";
-						if(!isset($_SESSION['create_temp']['state']) || $_SESSION['create_temp']['state'] == "")
-							echo " selected ";
-						echo ">Select an option</option>";
-						if(isset($conn) && $conn)
-						{
-							$cmd = "SELECT state FROM location GROUP BY(state);";
-							$out = mysqli_query($conn, $cmd);
-							$arr = mysqli_fetch_all($out);
-							for($i = 0; $i < count($arr); $i++)
-							{
-								$temp = $arr[$i][0];
-								echo "<option value = \"$temp\"";
-								if(isset($_SESSION['create_temp']['state']) && $_SESSION['create_temp']['state'] == $temp)
-									echo " selected ";
-								echo ">".$temp."</option>";
-							}
-						}
-						echo "</select>";
-					?>
-					<noscript><input type="submit" value="Submit"></noscript>
-				</td>
-			</tr>
-			<tr>
-				<td>District</td>
-				<td>
-					<select name = "district" onchange = 'this.form.submit()'
-					<?php
-						if(!isset($_SESSION['create_temp']['state']) || $_SESSION['create_temp']['state'] == "")
-							echo " disabled";
-					?>
-					>
-					<?php
-						if(isset($_SESSION['create_temp']['state']) && $_SESSION['create_temp']['state'] != "")
-						{
+	<div class = "container-fluid" style = "width: 90%; margin-left: 25%; padding-bottom: 30px;">
+		<h1>Create Account</h1>
+		<form action = "create.php" method = "post">
+			<table class = "table" style = "width: 50%">
+				<tr>
+					<td>Name</td>
+					<td><input type = "text" name = "name" class = "form-control"
+					<?php 
+						if(isset($_SESSION['create_temp']['name']) && $_SESSION['create_temp']['name'] != "")
+							echo " value = \"".$_SESSION['create_temp']['name']."\"";
+					?>></td>
+				</tr>
+				<tr>
+					<td>Blood Group</td>
+					<td>
+						<select name = "b-group" class = "form-control">
+						<?php
 							echo "<option value = \"\"";
-							if(!isset($_SESSION['create_temp']['district']) || $_SESSION['create_temp']['district'] == "")
+							if(!isset($_SESSION['create_temp']['btype']) || $_SESSION['create_temp']['btype'] == "")
 								echo " selected";
 							echo ">Select an option</option>";
-							$temp = $_SESSION['create_temp']['state'];
-							$cmd = "SELECT district from location WHERE state = '$temp' GROUP BY(district);";
-							$out = mysqli_query($conn, $cmd);
-							$arr = mysqli_fetch_all($out);
-							for($i = 0; $i < count($arr); $i++)
+							$btypes = Array('A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-', 'Rh null');
+							for($i = 0; $i < count($btypes); $i++)
 							{
-								$temp = $arr[$i][0];
-								echo "<option value = \"$temp\"";
-								if(isset($_SESSION['create_temp']['district']) && $_SESSION['create_temp']['district'] == $temp)
+								$tempx = $btypes[$i];
+								echo "<option value = \"$tempx\"";
+								if(isset($_SESSION['create_temp']['btype']) && $_SESSION['create_temp']['btype'] == $tempx)
 									echo " selected";
-								echo ">".$temp."</option>";
+								echo ">".$tempx."</option>";
 							}
-						}
-						else
-							echo "<option value = \"\">Select an option</option>";
-					?>
-					</select>
-					<noscript><input type="submit" value="Submit"></noscript>
-				</td>
-			</tr>
-			<tr>
-				<td>City/Town</td>
-				<td>
-					<select name = "city"
+						?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Mobile No.</td>
+					<td><input type = "number" name = "mobile" class = "form-control"
 					<?php
-						if(!isset($_SESSION['create_temp']['state']) || $_SESSION['create_temp']['state'] == "" || !isset($_SESSION['create_temp']['district']) || $_SESSION['create_temp']['district'] == "")
-							echo " disabled";
+						if(isset($_SESSION['create_temp']['mobile']) && $_SESSION['create_temp']['mobile'] != "")
+							echo " value = \"".$_SESSION['create_temp']['mobile']."\"";
 					?>
-					>
+					></td>
+				</tr>
+				<tr>
+					<td>Landline No.</td>
+					<td><input type = "number" name = "landline" class = "form-control"
 					<?php
-						if(isset($_SESSION['create_temp']['state']) && $_SESSION['create_temp']['state'] != "" && isset($_SESSION['create_temp']['district']) && $_SESSION['create_temp']['district'] != "")
-						{
+						if(isset($_SESSION['create_temp']['landline']) && $_SESSION['create_temp']['landline'] != "")
+							echo " value = \"".$_SESSION['create_temp']['landline']."\"";
+					?>
+					></td>
+				</tr>
+				<tr>
+					<td>State</td>
+					<td>
+						<?php
+							echo "<select name = \"state\"  class = \"form-control\" onchange = \"this.form.submit()\">";
 							echo "<option value = \"\"";
-							if(!isset($_SESSION['create_temp']['city']) || $_SESSION['create_temp']['city'] == "")
-								echo " selected";
+							if(!isset($_SESSION['create_temp']['state']) || $_SESSION['create_temp']['state'] == "")
+								echo " selected ";
 							echo ">Select an option</option>";
 							if(isset($conn) && $conn)
 							{
-								$temp = $_SESSION['create_temp']['state'];
-								$temp1 = $_SESSION['create_temp']['district'];
-								$cmd = "SELECT city FROM location WHERE state = '$temp' AND district = '$temp1';";
+								$cmd = "SELECT state FROM location GROUP BY(state);";
 								$out = mysqli_query($conn, $cmd);
 								$arr = mysqli_fetch_all($out);
 								for($i = 0; $i < count($arr); $i++)
 								{
 									$temp = $arr[$i][0];
 									echo "<option value = \"$temp\"";
-									if(!isset($_SESSION['create_temp']['city']) || $_SESSION['create_temp']['city'] == $temp)
+									if(isset($_SESSION['create_temp']['state']) && $_SESSION['create_temp']['state'] == $temp)
+										echo " selected ";
+									echo ">".$temp."</option>";
+								}
+							}
+							echo "</select>";
+						?>
+						<noscript><input type="submit" value="Submit"></noscript>
+					</td>
+				</tr>
+				<tr>
+					<td>District</td>
+					<td>
+						<select name = "district" class = "form-control" onchange = 'this.form.submit()'
+						<?php
+							if(!isset($_SESSION['create_temp']['state']) || $_SESSION['create_temp']['state'] == "")
+								echo " disabled";
+						?>
+						>
+						<?php
+							if(isset($_SESSION['create_temp']['state']) && $_SESSION['create_temp']['state'] != "")
+							{
+								echo "<option value = \"\"";
+								if(!isset($_SESSION['create_temp']['district']) || $_SESSION['create_temp']['district'] == "")
+									echo " selected";
+								echo ">Select an option</option>";
+								$temp = $_SESSION['create_temp']['state'];
+								$cmd = "SELECT district from location WHERE state = '$temp' GROUP BY(district);";
+								$out = mysqli_query($conn, $cmd);
+								$arr = mysqli_fetch_all($out);
+								for($i = 0; $i < count($arr); $i++)
+								{
+									$temp = $arr[$i][0];
+									echo "<option value = \"$temp\"";
+									if(isset($_SESSION['create_temp']['district']) && $_SESSION['create_temp']['district'] == $temp)
 										echo " selected";
 									echo ">".$temp."</option>";
 								}
 							}
-						}
-						else
-							echo "<option value = \"\">Select an option</option>";
+							else
+								echo "<option value = \"\">Select an option</option>";
+						?>
+						</select>
+						<noscript><input type="submit" value="Submit"></noscript>
+					</td>
+				</tr>
+				<tr>
+					<td>City/Town</td>
+					<td>
+						<select name = "city" class = "form-control"
+						<?php
+							if(!isset($_SESSION['create_temp']['state']) || $_SESSION['create_temp']['state'] == "" || !isset($_SESSION['create_temp']['district']) || $_SESSION['create_temp']['district'] == "")
+								echo " disabled";
+						?>
+						>
+						<?php
+							if(isset($_SESSION['create_temp']['state']) && $_SESSION['create_temp']['state'] != "" && isset($_SESSION['create_temp']['district']) && $_SESSION['create_temp']['district'] != "")
+							{
+								echo "<option value = \"\"";
+								if(!isset($_SESSION['create_temp']['city']) || $_SESSION['create_temp']['city'] == "")
+									echo " selected";
+								echo ">Select an option</option>";
+								if(isset($conn) && $conn)
+								{
+									$temp = $_SESSION['create_temp']['state'];
+									$temp1 = $_SESSION['create_temp']['district'];
+									$cmd = "SELECT city FROM location WHERE state = '$temp' AND district = '$temp1';";
+									$out = mysqli_query($conn, $cmd);
+									$arr = mysqli_fetch_all($out);
+									for($i = 0; $i < count($arr); $i++)
+									{
+										$temp = $arr[$i][0];
+										echo "<option value = \"$temp\"";
+										if(!isset($_SESSION['create_temp']['city']) || $_SESSION['create_temp']['city'] == $temp)
+											echo " selected";
+										echo ">".$temp."</option>";
+									}
+								}
+							}
+							else
+								echo "<option value = \"\">Select an option</option>";
+						?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Email</td>
+					<td><input type = "email" name = "email" class = "form-control"
+					<?php
+						if(isset($_SESSION['create_temp']['email']) && $_SESSION['create_temp']['email'] != "")
+							echo " value = \"".$_SESSION['create_temp']['email']."\"";
 					?>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Email</td>
-				<td><input type = "email" name = "email"
-				<?php
-					if(isset($_SESSION['create_temp']['email']) && $_SESSION['create_temp']['email'] != "")
-						echo " value = \"".$_SESSION['create_temp']['email']."\"";
-				?>
-				></td>
-			</tr>
-			<tr>
-				<td>Username</td>
-				<td><input type = "text" name = "username"
-				<?php
-					if(isset($_SESSION['create_temp']['username']) && $_SESSION['create_temp']['username'] != "")
-						echo " value = \"".$_SESSION['create_temp']['username']."\"";
-				?>
-				></td>
-			</tr>
-			<tr>
-				<td>Password</td>
-				<td><input type = "password" name = "password"></td>
-			</tr>
-			<tr>
-				<td>Confirm Password</td>
-				<td><input type = "password" name = "cpassword"></td>
-			</tr>
-			<tr>
-				<td>Are you available as a blood donor?</td>
-				<td>
-					<select name = "bdonor">
-						<option value = ""
-						<?php 
-							if(!isset($_SESSION['create_temp']['bdonor']) || $_SESSION['create_temp']['bdonor'] == ""){
-								echo " selected";
-							}
-						?>
-						>Select an option</option>
-						<option value = "1"
-						<?php 
-							if(isset($_SESSION['create_temp']['bdonor']) && $_SESSION['create_temp']['bdonor'] == "1"){
-								echo " selected";
-							}
-						?>
-						>Yes</option>
-						<option value = "0"
-						<?php 
-							if(isset($_SESSION['create_temp']['bdonor']) && $_SESSION['create_temp']['bdonor'] == "0"){
-								echo " selected";
-							}
-						?>
-						>No</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Do you consent to potentially donating your marrow?</td>
-				<td>
-					<select name = "mdonor">
-						<option value = ""
-						<?php 
-							if(!isset($_SESSION['create_temp']['mdonor']) || $_SESSION['create_temp']['mdonor'] == ""){
-								echo " selected";
-							}
-						?>
-						>Select an option</option>
-						<option value = "1"
-						<?php 
-							if(isset($_SESSION['create_temp']['mdonor']) && $_SESSION['create_temp']['mdonor'] == "1"){
-								echo " selected";
-							}
-						?>
-						>Yes</option>
-						<option value = "0"
-						<?php 
-							if(isset($_SESSION['create_temp']['mdonor']) && $_SESSION['create_temp']['mdonor'] == "0"){
-								echo " selected";
-							}
-						?>
-						>No</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Upon your death, do you consent to donate your other organs?</td>
-				<td>
-					<select name = "odonor">
-						<option value = ""
-						<?php 
-							if(!isset($_SESSION['create_temp']['odonor']) || $_SESSION['create_temp']['odonor'] == ""){
-								echo " selected";
-							}
-						?>
-						>Select an option</option>
-						<option value = "1"
-						<?php 
-							if(isset($_SESSION['create_temp']['odonor']) && $_SESSION['create_temp']['odonor'] == "1"){
-								echo " selected";
-							}
-						?>
-						>Yes</option>
-						<option value = "0"
-						<?php 
-							if(isset($_SESSION['create_temp']['odonor']) && $_SESSION['create_temp']['odonor'] == "0"){
-								echo " selected";
-							}
-						?>
-						>No</option>
-					</select>
-				</td>
-			</tr>
-		</table>
-		<button type = "submit">Submit</button>
-	</form>
+					></td>
+				</tr>
+				<tr>
+					<td>Username</td>
+					<td><input type = "text" name = "username" class = "form-control"
+					<?php
+						if(isset($_SESSION['create_temp']['username']) && $_SESSION['create_temp']['username'] != "")
+							echo " value = \"".$_SESSION['create_temp']['username']."\"";
+					?>
+					></td>
+				</tr>
+				<tr>
+					<td>Password</td>
+					<td><input type = "password" class = "form-control" name = "password"></td>
+				</tr>
+				<tr>
+					<td>Confirm Password</td>
+					<td><input type = "password" class = "form-control" name = "cpassword"></td>
+				</tr>
+				<tr>
+					<td>Are you available as a blood donor?</td>
+					<td>
+						<select name = "bdonor" class = "form-control">
+							<option value = ""
+							<?php 
+								if(!isset($_SESSION['create_temp']['bdonor']) || $_SESSION['create_temp']['bdonor'] == ""){
+									echo " selected";
+								}
+							?>
+							>Select an option</option>
+							<option value = "1"
+							<?php 
+								if(isset($_SESSION['create_temp']['bdonor']) && $_SESSION['create_temp']['bdonor'] == "1"){
+									echo " selected";
+								}
+							?>
+							>Yes</option>
+							<option value = "0"
+							<?php 
+								if(isset($_SESSION['create_temp']['bdonor']) && $_SESSION['create_temp']['bdonor'] == "0"){
+									echo " selected";
+								}
+							?>
+							>No</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Do you consent to potentially donating your marrow?</td>
+					<td>
+						<select name = "mdonor" class = "form-control">
+							<option value = ""
+							<?php 
+								if(!isset($_SESSION['create_temp']['mdonor']) || $_SESSION['create_temp']['mdonor'] == ""){
+									echo " selected";
+								}
+							?>
+							>Select an option</option>
+							<option value = "1"
+							<?php 
+								if(isset($_SESSION['create_temp']['mdonor']) && $_SESSION['create_temp']['mdonor'] == "1"){
+									echo " selected";
+								}
+							?>
+							>Yes</option>
+							<option value = "0"
+							<?php 
+								if(isset($_SESSION['create_temp']['mdonor']) && $_SESSION['create_temp']['mdonor'] == "0"){
+									echo " selected";
+								}
+							?>
+							>No</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Upon your death, do you consent to donate your other organs?</td>
+					<td>
+						<select name = "odonor" class = "form-control">
+							<option value = ""
+							<?php 
+								if(!isset($_SESSION['create_temp']['odonor']) || $_SESSION['create_temp']['odonor'] == ""){
+									echo " selected";
+								}
+							?>
+							>Select an option</option>
+							<option value = "1"
+							<?php 
+								if(isset($_SESSION['create_temp']['odonor']) && $_SESSION['create_temp']['odonor'] == "1"){
+									echo " selected";
+								}
+							?>
+							>Yes</option>
+							<option value = "0"
+							<?php 
+								if(isset($_SESSION['create_temp']['odonor']) && $_SESSION['create_temp']['odonor'] == "0"){
+									echo " selected";
+								}
+							?>
+							>No</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<div style = "width: 50%;">
+				<button type = "submit" class = "btn btn-primary" style = "width: 25%; margin-left: 73%;">
+					Submit
+				</button>
+			</div>
+		</form>
+	</div>
 </body>
 </html>

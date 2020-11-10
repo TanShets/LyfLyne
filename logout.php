@@ -16,13 +16,22 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<style type = "text/css">
+		.details{
+			font-size: 20px;
+			padding-bottom: 7px;
+			margin-left: 6%;
+		}
+	</style>
 </head>
 <body>
-	<div class = "logout-1">
+	<div class = "container" style = "margin-left: 38%; margin-top: 18%;">
 		<div class = "details">Logged out Successfully!</div>
+		<form action = "login.php" id = "pos">
+			<button class = "btn btn-primary" name = "login" value = "login" style = "width: 32%;">
+				Back To Login Page
+			</button>
+		</form>
 	</div>
-	<form action = "login.php" id = "pos">
-		<button class= "submit" name = "login" value = "login">Back To Login Page</button>
-	</form>
 </body>
 </html>

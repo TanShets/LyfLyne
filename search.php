@@ -10,7 +10,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<style type = "text/css">
 		.pop-window{
-			position: absolute;
+			position: fixed;
 			left: 42%;
 			top: 42%;
 			border: solid 1px black;
@@ -154,217 +154,232 @@
 			{
 				$cmd = "SELECT* FROM ".$dtype." WHERE isbank = 0 AND btype = '$btype' AND lid = '$lid';";
 				$out = mysqli_query($conn, $cmd);
-				$heads = mysqli_fetch_array($out);
-				$out = mysqli_query($conn, $cmd);
-				$arr = mysqli_fetch_all($out);
-				echo "<table>";
-				echo "<tr>";
-				$names = Array();
-				foreach ($heads as $x => $y) {
-					if(!is_numeric($x)){
-						echo "<th>".$x."</th>";
-						array_push($names, $x);
-					}
-				}
-				echo "</tr>";
-				//print_r($names);
-				$i = null;
-				foreach($arr as $x){
-					$i = 0;
-					$inputs = Array();
-					echo "<tr>";
-					//echo "<form action = \"emp-requests.php\" method = \"post\">";
-					$temp = "<form action = \"search.php\" method = \"post\">";
-					array_push($inputs, $temp);
-					foreach ($x as $y) {
-						echo "<td>".$y."</td>";
-						$temp = "<input type = \"hidden\" name = \"".$names[$i]."\" value = \"".$y."\">";
-						array_push($inputs, $temp);
-						//echo "<input type = \"hidden\" name = \"";
-						//echo $names[$i]."\" value = \"".$y."\">";
-						$i++;
-					}
-					//print_r($inputs);
-					$buttons = Array("Contact");
-					$temp = "<input type = \"hidden\" name = \"type\" value = \"".$_POST['type']."\">";
-					array_push($inputs, $temp);
-					for($k = 0; $k < count($buttons); $k++){
-						if($k != 2 || ($k == 2 && $x[3] == "blood")){
-							for($i = 0; $i < count($inputs); $i++){
-								echo $inputs[$i];
+				if($out){
+					$heads = mysqli_fetch_array($out);
+					if(is_array($heads)){
+						$out = mysqli_query($conn, $cmd);
+						if($out){
+							$arr = mysqli_fetch_all($out);
+							if(is_array($arr)){
+								echo "<div class = \"container\">";
+								echo "<table class = \"table table-striped\">";
+								echo "<tr>";
+								$names = Array();
+								foreach ($heads as $x => $y) {
+									if(!is_numeric($x)){
+										echo "<th scope = \"col\">".$x."</th>";
+										array_push($names, $x);
+									}
+								}
+								echo "<th scope = \"col\"></th>";
+								echo "</tr>";
+								//print_r($names);
+								$i = null;
+								foreach($arr as $x){
+									$i = 0;
+									$inputs = Array();
+									echo "<tr>";
+									//echo "<form action = \"emp-requests.php\" method = \"post\">";
+									$temp = "<form action = \"search.php\" method = \"post\">";
+									array_push($inputs, $temp);
+									foreach ($x as $y) {
+										echo "<td>".$y."</td>";
+										$temp = "<input type = \"hidden\" name = \"".$names[$i]."\" value = \"".$y."\">";
+										array_push($inputs, $temp);
+										//echo "<input type = \"hidden\" name = \"";
+										//echo $names[$i]."\" value = \"".$y."\">";
+										$i++;
+									}
+									//print_r($inputs);
+									$buttons = Array("Contact");
+									$temp = "<input type = \"hidden\" name = \"type\" value = \"".$_POST['type']."\">";
+									array_push($inputs, $temp);
+									for($k = 0; $k < count($buttons); $k++){
+										if($k != 2 || ($k == 2 && $x[3] == "blood")){
+											for($i = 0; $i < count($inputs); $i++){
+												echo $inputs[$i];
+											}
+											echo "<input type = \"hidden\" name = \"alter\" value = \"".$k."\">";
+											echo "<td><button type=\"submit\" class = \"btn btn-primary\">".$buttons[$k]."</button></td>";
+											echo "</form>";
+										}
+									}
+									echo "</tr>";
+								}
+								echo "</table>";
+								echo "</div>";
 							}
-							echo "<input type = \"hidden\" name = \"alter\" value = \"".$k."\">";
-							echo "<td><button type=\"submit\">".$buttons[$k]."</button></td>";
-							echo "</form>";
 						}
 					}
-					echo "</tr>";
 				}
-				echo "</table>";
 			}
 		}
 	?>
 </head>
 <body>
-	<h1>Search Donor</h1>
-	<form action = "search.php" method = "post">
-		<table>
-			<tr>
-				<td>Donor type</td>
-				<td>
-					<select name = "type" onchange = 'this.form.submit()'>
+	<div class = "container" style = "margin-left: 40%;">
+		<h1>Search Donor</h1>
+		<form action = "search.php" method = "post">
+			<table>
+				<tr>
+					<td>Donor type</td>
+					<td>
+						<select class = "form-control" name = "type" onchange = 'this.form.submit()'>
+							<?php
+								echo "<option value = \"\"";
+								if(!isset($_SESSION['search']['type']) || $_SESSION['search']['type'] == "")
+									echo " selected";
+								echo ">Select a type</option>";
+								if(isset($conn) && $conn)
+								{
+									$arr = array('blood', 'marrow');
+									for($i = 0; $i < count($arr); $i++)
+									{
+										$temp = $arr[$i];
+										echo "<option value = \"$temp\"";
+										if(isset($_SESSION['search']['type']) && $_SESSION['search']['type'] == $temp)
+											echo " selected";
+										echo ">".$temp."</option>";
+									}
+								}
+							?>
+							<!--<option value = "Blood">Blood</option>
+							<option value = "Marrow">Bone Marrow</option>-->
+						</select>
+						<noscript><input type="submit" value="Submit"></noscript>
+					</td>
+				</tr>
+				<tr>
+					<td>Blood Group</td>
+					<td>
+						<select class = "form-control" name = "b-group">
 						<?php
 							echo "<option value = \"\"";
-							if(!isset($_SESSION['search']['type']) || $_SESSION['search']['type'] == "")
+							if(!isset($_SESSION['search']['btype']) || $_SESSION['search']['btype'] == "")
 								echo " selected";
-							echo ">Select a type</option>";
-							if(isset($conn) && $conn)
+							echo ">Select an option</option>";
+							$btypes = Array('A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-', 'Rh null');
+							for($i = 0; $i < count($btypes); $i++)
 							{
-								$arr = array('blood', 'marrow');
-								for($i = 0; $i < count($arr); $i++)
-								{
-									$temp = $arr[$i];
-									echo "<option value = \"$temp\"";
-									if(isset($_SESSION['search']['type']) && $_SESSION['search']['type'] == $temp)
-										echo " selected";
-									echo ">".$temp."</option>";
-								}
+								$tempx = $btypes[$i];
+								echo "<option value = \"$tempx\"";
+								if(isset($_SESSION['search']['btype']) && $_SESSION['search']['btype'] == $tempx)
+									echo " selected";
+								echo ">".$tempx."</option>";
 							}
 						?>
-						<!--<option value = "Blood">Blood</option>
-						<option value = "Marrow">Bone Marrow</option>-->
-					</select>
-					<noscript><input type="submit" value="Submit"></noscript>
-				</td>
-			</tr>
-			<tr>
-				<td>Blood Group</td>
-				<td>
-					<select name = "b-group">
-					<?php
-						echo "<option value = \"\"";
-						if(!isset($_SESSION['search']['btype']) || $_SESSION['search']['btype'] == "")
-							echo " selected";
-						echo ">Select an option</option>";
-						$btypes = Array('A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-', 'Rh null');
-						for($i = 0; $i < count($btypes); $i++)
-						{
-							$tempx = $btypes[$i];
-							echo "<option value = \"$tempx\"";
-							if(isset($_SESSION['search']['btype']) && $_SESSION['search']['btype'] == $tempx)
-								echo " selected";
-							echo ">".$tempx."</option>";
-						}
-					?>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>State</td>
-				<td>
-					<?php
-						echo "<select name = \"state\" onchange = \"this.form.submit()\">";
-						echo "<option value = \"\"";
-						if(!isset($_SESSION['search']['state']) || $_SESSION['search']['state'] == "")
-							echo " selected ";
-						echo ">Select an option</option>";
-						if(isset($conn) && $conn)
-						{
-							$cmd = "SELECT state FROM location GROUP BY(state);";
-							$out = mysqli_query($conn, $cmd);
-							$arr = mysqli_fetch_all($out);
-							for($i = 0; $i < count($arr); $i++)
-							{
-								$temp = $arr[$i][0];
-								echo "<option value = \"$temp\"";
-								if(isset($_SESSION['search']['state']) && $_SESSION['search']['state'] == $temp)
-									echo " selected ";
-								echo ">".$temp."</option>";
-							}
-						}
-						echo "</select>";
-					?>
-					<noscript><input type="submit" value="Submit"></noscript>
-				</td>
-			</tr>
-			<tr>
-				<td>District</td>
-				<td>
-					<select name = "district" onchange = 'this.form.submit()'
-					<?php
-						if(!isset($_SESSION['search']['state']) || $_SESSION['search']['state'] == "")
-							echo " disabled";
-					?>
-					>
-					<?php
-						if(isset($_SESSION['search']['state']) && $_SESSION['search']['state'] != "")
-						{
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>State</td>
+					<td>
+						<?php
+							echo "<select class = \"form-control\" name = \"state\" onchange = \"this.form.submit()\">";
 							echo "<option value = \"\"";
-							if(!isset($_SESSION['search']['district']) || $_SESSION['search']['district'] == "")
-								echo " selected";
-							echo ">Select an option</option>";
-							$temp = $_SESSION['search']['state'];
-							$cmd = "SELECT district from location WHERE state = '$temp' GROUP BY(district);";
-							$out = mysqli_query($conn, $cmd);
-							$arr = mysqli_fetch_all($out);
-							for($i = 0; $i < count($arr); $i++)
-							{
-								$temp = $arr[$i][0];
-								echo "<option value = \"$temp\"";
-								if(isset($_SESSION['search']['district']) && $_SESSION['search']['district'] == $temp)
-									echo " selected";
-								echo ">".$temp."</option>";
-							}
-						}
-						else
-							echo "<option value = \"\">Select an option</option>";
-					?>
-					</select>
-					<noscript><input type="submit" value="Submit"></noscript>
-				</td>
-			</tr>
-			<tr>
-				<td>City/Town</td>
-				<td>
-					<select name = "city"
-					<?php
-						if(!isset($_SESSION['search']['state']) || $_SESSION['search']['state'] == "" || !isset($_SESSION['search']['district']) || $_SESSION['search']['district'] == "")
-							echo " disabled";
-					?>
-					>
-					<?php
-						if(isset($_SESSION['search']['state']) && $_SESSION['search']['state'] != "" && isset($_SESSION['search']['district']) && $_SESSION['search']['district'] != "")
-						{
-							echo "<option value = \"\"";
-							if(!isset($_SESSION['search']['city']) || $_SESSION['search']['city'] == "")
-								echo " selected";
+							if(!isset($_SESSION['search']['state']) || $_SESSION['search']['state'] == "")
+								echo " selected ";
 							echo ">Select an option</option>";
 							if(isset($conn) && $conn)
 							{
-								$temp = $_SESSION['search']['state'];
-								$temp1 = $_SESSION['search']['district'];
-								$cmd = "SELECT city FROM location WHERE state = '$temp' AND district = '$temp1';";
+								$cmd = "SELECT state FROM location GROUP BY(state);";
 								$out = mysqli_query($conn, $cmd);
 								$arr = mysqli_fetch_all($out);
 								for($i = 0; $i < count($arr); $i++)
 								{
 									$temp = $arr[$i][0];
 									echo "<option value = \"$temp\"";
-									if(!isset($_SESSION['search']['city']) || $_SESSION['search']['city'] == $temp)
+									if(isset($_SESSION['search']['state']) && $_SESSION['search']['state'] == $temp)
+										echo " selected ";
+									echo ">".$temp."</option>";
+								}
+							}
+							echo "</select>";
+						?>
+						<noscript><input type="submit" value="Submit"></noscript>
+					</td>
+				</tr>
+				<tr>
+					<td>District</td>
+					<td>
+						<select class = "form-control" name = "district" onchange = 'this.form.submit()'
+						<?php
+							if(!isset($_SESSION['search']['state']) || $_SESSION['search']['state'] == "")
+								echo " disabled";
+						?>
+						>
+						<?php
+							if(isset($_SESSION['search']['state']) && $_SESSION['search']['state'] != "")
+							{
+								echo "<option value = \"\"";
+								if(!isset($_SESSION['search']['district']) || $_SESSION['search']['district'] == "")
+									echo " selected";
+								echo ">Select an option</option>";
+								$temp = $_SESSION['search']['state'];
+								$cmd = "SELECT district from location WHERE state = '$temp' GROUP BY(district);";
+								$out = mysqli_query($conn, $cmd);
+								$arr = mysqli_fetch_all($out);
+								for($i = 0; $i < count($arr); $i++)
+								{
+									$temp = $arr[$i][0];
+									echo "<option value = \"$temp\"";
+									if(isset($_SESSION['search']['district']) && $_SESSION['search']['district'] == $temp)
 										echo " selected";
 									echo ">".$temp."</option>";
 								}
 							}
-						}
-						else
-							echo "<option value = \"\">Select an option</option>";
-					?>
-					</select>
-				</td>
-			</tr>
-		</table>
-		<button type = "submit" value = "Submit">Search</button>
-	</form>
+							else
+								echo "<option value = \"\">Select an option</option>";
+						?>
+						</select>
+						<noscript><input type="submit" value="Submit"></noscript>
+					</td>
+				</tr>
+				<tr>
+					<td>City/Town</td>
+					<td>
+						<select class = "form-control" name = "city"
+						<?php
+							if(!isset($_SESSION['search']['state']) || $_SESSION['search']['state'] == "" || !isset($_SESSION['search']['district']) || $_SESSION['search']['district'] == "")
+								echo " disabled";
+						?>
+						>
+						<?php
+							if(isset($_SESSION['search']['state']) && $_SESSION['search']['state'] != "" && isset($_SESSION['search']['district']) && $_SESSION['search']['district'] != "")
+							{
+								echo "<option value = \"\"";
+								if(!isset($_SESSION['search']['city']) || $_SESSION['search']['city'] == "")
+									echo " selected";
+								echo ">Select an option</option>";
+								if(isset($conn) && $conn)
+								{
+									$temp = $_SESSION['search']['state'];
+									$temp1 = $_SESSION['search']['district'];
+									$cmd = "SELECT city FROM location WHERE state = '$temp' AND district = '$temp1';";
+									$out = mysqli_query($conn, $cmd);
+									$arr = mysqli_fetch_all($out);
+									for($i = 0; $i < count($arr); $i++)
+									{
+										$temp = $arr[$i][0];
+										echo "<option value = \"$temp\"";
+										if(!isset($_SESSION['search']['city']) || $_SESSION['search']['city'] == $temp)
+											echo " selected";
+										echo ">".$temp."</option>";
+									}
+								}
+							}
+							else
+								echo "<option value = \"\">Select an option</option>";
+						?>
+						</select>
+					</td>
+				</tr>
+			</table><br>
+			<button type = "submit" class = "btn btn-primary" value = "Submit"
+			style = "width: 23%;"
+			>Search</button>
+		</form><br><br>
+	</div>
 	<?php
 		if(isset($conn) && isset($_SESSION['search']) && isset($_SESSION['search']['type']) && isset($_SESSION['search']['btype']) && isset($lid)){
 			show($conn, $_SESSION['search']['type'], $_SESSION['search']['btype'], $lid);
@@ -388,11 +403,11 @@
 					echo "<form action = \"search.php\" method = \"post\">";
 					echo "<input type = \"hidden\" name = \"rid\" value = \"".$_SESSION['moved_request']['rid']."\">";
 					echo "<input type = \"hidden\" name = \"isHospital\" value = \"".$_SESSION['moved_request']['isHospital']."\">";
-					echo "<button type = \"submit\" value = \"submit\">Yes</button>";
+					echo "<button type = \"submit\" value = \"submit\" class = \"btn btn-success\">Yes</button>";
 					echo "</form></td><td>";
 					echo "<form action = \"search.php\" method = \"post\">";
 					echo "<input type = \"hidden\" name = \"rid\" value = \"0\">";
-					echo "<button type = \"submit\" value = \"submit\">No</button>";
+					echo "<button type = \"submit\" value = \"submit\" class = \"btn btn-danger\">No</button>";
 					echo "</form></td></tr></table>";
 					echo "</div>";
 				}

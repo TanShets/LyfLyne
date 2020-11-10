@@ -50,8 +50,14 @@
 
 			if(isset($_POST['isloc']) && $_POST['isloc'] != ""){
 				$_SESSION['request']['isloc'] = $_POST['isloc'];
-				if($_SESSION['request']['isloc'] != "")
+				if($_SESSION['request']['isloc'] != ""){
 					$count++;
+					if($_SESSION['request']['isloc'] == "yes"){
+						unset($_POST['state']);
+						unset($_POST['district']);
+						unset($_POST['city']);
+					}
+				}
 			}
 
 			if(isset($_POST['state']) && $_POST['state'] != ""){
@@ -122,110 +128,84 @@
 	?>
 </head>
 <body>
-	<form action = "create-request.php" method = "post">
-		<table>
-			<tr>
-				<td>Donation type</td>
-				<td>
-					<select class = "form-control" name = "type" onchange = 'this.form.submit()'>
-						<?php
-							echo "<option value = \"\"";
-							if(!isset($_SESSION['request']['type']) || $_SESSION['request']['type'] == "")
-								echo " selected ";
-							echo ">Select an option</option>";
-							if(isset($conn) && $conn)
-							{
-								$cmd = "SELECT tablename from control;";
-								$out = mysqli_query($conn, $cmd);
-								$arr = mysqli_fetch_all($out);
-								for($i = 0; $i < count($arr); $i++)
+	<div style = "margin-left: 30%; margin-top: 10%; border: 1px solid grey; width: 40%; padding: 20px;">
+		<h2>Create Request</h2>
+		<form action = "create-request.php" method = "post">
+			<table>
+				<tr>
+					<td>Donation type</td>
+					<td>
+						<select class = "form-control" name = "type" onchange = 'this.form.submit()'>
+							<?php
+								echo "<option value = \"\"";
+								if(!isset($_SESSION['request']['type']) || $_SESSION['request']['type'] == "")
+									echo " selected ";
+								echo ">Select an option</option>";
+								if(isset($conn) && $conn)
 								{
-									$temp = $arr[$i][0];
-									echo "<option value = \"$temp\"";
-									if(isset($_SESSION['request']['type']) && $_SESSION['request']['type'] == $temp)
-										echo " selected ";
-									echo ">$temp</option>";
+									$cmd = "SELECT tablename from control;";
+									$out = mysqli_query($conn, $cmd);
+									$arr = mysqli_fetch_all($out);
+									for($i = 0; $i < count($arr); $i++)
+									{
+										$temp = $arr[$i][0];
+										echo "<option value = \"$temp\"";
+										if(isset($_SESSION['request']['type']) && $_SESSION['request']['type'] == $temp)
+											echo " selected ";
+										echo ">$temp</option>";
+									}
+									//print_r($arr);
 								}
-								//print_r($arr);
-							}
-						?>
-					</select>
-					<noscript><input type = "submit" value = "submit"></noscript>
-				</td>
-			</tr>
-			<tr>
-				<td>Is it the same location as original?</td>
-				<td>
-					<select name = "isloc" onchange = 'this.form.submit()'>
-						<option value = ""
-						<?php 
-							if(!isset($_SESSION['request']['isloc']) || $_SESSION['request']['isloc'] == "")
-								echo " selected";
-						?>
-						>Select one</option>
-						<option value = "yes"
-						<?php 
-							if(!isset($_SESSION['request']['isloc']) || $_SESSION['request']['isloc'] == "yes")
-								echo " selected ";
-						?>
-						>Yes</option>
-						<option value = "no"
-						<?php 
-							if(!isset($_SESSION['request']['isloc']) || $_SESSION['request']['isloc'] == "no")
-								echo " selected ";
-						?>
-						>No</option>
-					</select>
-				</td>
-			</tr>
-			<?php
-				if(!isset($_SESSION['request']['isloc']) || (isset($_SESSION['request']['isloc']) && $_SESSION['request']['isloc'] == "no"))
-				{
-					echo "<tr>";
-					echo "<td>State</td><td>";
-					echo "<select name = \"state\" onchange = \"this.form.submit()\">";
-					echo "<option value = \"\"";
-					if(!isset($_SESSION['request']['state']) || $_SESSION['request']['state'] == "")
-						echo " selected ";
-					echo ">Select an option</option>";
-					if(isset($conn) && $conn)
-					{
-						$cmd = "SELECT state FROM location GROUP BY(state);";
-						$out = mysqli_query($conn, $cmd);
-						$arr = mysqli_fetch_all($out);
-						for($i = 0; $i < count($arr); $i++)
-						{
-							$temp = $arr[$i][0];
-							echo "<option value = \"$temp\"";
-							if(isset($_SESSION['request']['state']) && $_SESSION['request']['state'] == $temp)
-								echo " selected ";
-							echo ">".$temp."</option>";
-						}
-					}
-					echo "</select><noscript><input type=\"submit\" value=\"submit\"></noscript>";
-					echo "</td>";
-					echo "</tr>";
-
-					if(isset($_SESSION['request']['state']) && $_SESSION['request']['state'] != "")
+							?>
+						</select>
+						<noscript><input type = "submit" value = "submit"></noscript>
+					</td>
+				</tr>
+				<tr>
+					<td>Is it the same location as original?</td>
+					<td>
+						<select class = "form-control" name = "isloc" onchange = 'this.form.submit()'>
+							<option value = ""
+							<?php 
+								if(!isset($_SESSION['request']['isloc']) || $_SESSION['request']['isloc'] == "")
+									echo " selected";
+							?>
+							>Select one</option>
+							<option value = "yes"
+							<?php 
+								if(!isset($_SESSION['request']['isloc']) || $_SESSION['request']['isloc'] == "yes")
+									echo " selected ";
+							?>
+							>Yes</option>
+							<option value = "no"
+							<?php 
+								if(!isset($_SESSION['request']['isloc']) || $_SESSION['request']['isloc'] == "no")
+									echo " selected ";
+							?>
+							>No</option>
+						</select>
+					</td>
+				</tr>
+				<?php
+					if(!isset($_SESSION['request']['isloc']) || (isset($_SESSION['request']['isloc']) && $_SESSION['request']['isloc'] == "no"))
 					{
 						echo "<tr>";
-						echo "<td>District</td><td>";
-						echo "<select name = \"district\" onchange = \"this.form.submit()\">";
+						echo "<td>State</td><td>";
+						echo "<select class = \"form-control\" name = \"state\" onchange = \"this.form.submit()\">";
 						echo "<option value = \"\"";
-						if(!isset($_SESSION['request']['district']) || $_SESSION['request']['district'] == "")
+						if(!isset($_SESSION['request']['state']) || $_SESSION['request']['state'] == "")
 							echo " selected ";
 						echo ">Select an option</option>";
 						if(isset($conn) && $conn)
 						{
-							$temp = $_SESSION['request']['state'];
-							$cmd = "SELECT district FROM location WHERE state = '$temp' GROUP BY(district);";
+							$cmd = "SELECT state FROM location GROUP BY(state);";
 							$out = mysqli_query($conn, $cmd);
 							$arr = mysqli_fetch_all($out);
 							for($i = 0; $i < count($arr); $i++)
 							{
 								$temp = $arr[$i][0];
 								echo "<option value = \"$temp\"";
-								if(isset($_SESSION['request']['district']) && $_SESSION['request']['district'] == $temp)
+								if(isset($_SESSION['request']['state']) && $_SESSION['request']['state'] == $temp)
 									echo " selected ";
 								echo ">".$temp."</option>";
 							}
@@ -234,66 +214,97 @@
 						echo "</td>";
 						echo "</tr>";
 
-						if(isset($_SESSION['request']['district']) && $_SESSION['request']['district'] != "")
+						if(isset($_SESSION['request']['state']) && $_SESSION['request']['state'] != "")
 						{
 							echo "<tr>";
-							echo "<td>City</td><td>";
-							echo "<select name = \"city\">";
+							echo "<td>District</td><td>";
+							echo "<select name = \"district\" class = \"form-control\" onchange = \"this.form.submit()\">";
 							echo "<option value = \"\"";
-							if(!isset($_SESSION['request']['city']) || $_SESSION['request']['city'] == "")
+							if(!isset($_SESSION['request']['district']) || $_SESSION['request']['district'] == "")
 								echo " selected ";
 							echo ">Select an option</option>";
 							if(isset($conn) && $conn)
 							{
-								$temp = $_SESSION['request']['district'];
-								$temp1 = $_SESSION['request']['state'];
-								$cmd = "SELECT city FROM location WHERE state = '$temp1' AND district = '$temp';";
-								
+								$temp = $_SESSION['request']['state'];
+								$cmd = "SELECT district FROM location WHERE state = '$temp' GROUP BY(district);";
 								$out = mysqli_query($conn, $cmd);
 								$arr = mysqli_fetch_all($out);
 								for($i = 0; $i < count($arr); $i++)
 								{
 									$temp = $arr[$i][0];
 									echo "<option value = \"$temp\"";
-									if(isset($_SESSION['request']['city']) && $_SESSION['request']['city'] == $temp)
+									if(isset($_SESSION['request']['district']) && $_SESSION['request']['district'] == $temp)
 										echo " selected ";
 									echo ">".$temp."</option>";
 								}
 							}
-							echo "</select>";
+							echo "</select><noscript><input type=\"submit\" value=\"submit\"></noscript>";
 							echo "</td>";
 							echo "</tr>";
+
+							if(isset($_SESSION['request']['district']) && $_SESSION['request']['district'] != "")
+							{
+								echo "<tr>";
+								echo "<td>City</td><td>";
+								echo "<select name = \"city\" class = \"form-control\">";
+								echo "<option value = \"\"";
+								if(!isset($_SESSION['request']['city']) || $_SESSION['request']['city'] == "")
+									echo " selected ";
+								echo ">Select an option</option>";
+								if(isset($conn) && $conn)
+								{
+									$temp = $_SESSION['request']['district'];
+									$temp1 = $_SESSION['request']['state'];
+									$cmd = "SELECT city FROM location WHERE state = '$temp1' AND district = '$temp';";
+									
+									$out = mysqli_query($conn, $cmd);
+									$arr = mysqli_fetch_all($out);
+									for($i = 0; $i < count($arr); $i++)
+									{
+										$temp = $arr[$i][0];
+										echo "<option value = \"$temp\"";
+										if(isset($_SESSION['request']['city']) && $_SESSION['request']['city'] == $temp)
+											echo " selected ";
+										echo ">".$temp."</option>";
+									}
+								}
+								echo "</select>";
+								echo "</td>";
+								echo "</tr>";
+							}
 						}
 					}
-				}
-			?>
-			<tr>
-				<td>Is the situation immediately life-threatening?</td>
-				<td>
-					<select name = "priority">
-						<option value = ""
-						<?php
-							if(!isset($_SESSION['request']['priority']) || $_SESSION['request']['priority'] == "")
-								echo " selected ";
-						?>
-						>Select any one</option>
-						<option value = "1"
-						<?php
-							if(isset($_SESSION['request']['priority']) && $_SESSION['request']['priority'] == "1")
-								echo " selected ";
-						?>
-						>Yes</option>
-						<option value = "2"
-						<?php
-							if(isset($_SESSION['request']['priority']) && $_SESSION['request']['priority'] == "0")
-								echo " selected ";
-						?>
-						>No</option>
-					</select>
-				</td>
-			</tr>
-		</table>
-		<button type = "submit" value = "submit">Submit</button>
-	</form>
+				?>
+				<tr>
+					<td>Is the situation immediately life-threatening?</td>
+					<td>
+						<select name = "priority" class = "form-control">
+							<option value = ""
+							<?php
+								if(!isset($_SESSION['request']['priority']) || $_SESSION['request']['priority'] == "")
+									echo " selected ";
+							?>
+							>Select any one</option>
+							<option value = "1"
+							<?php
+								if(isset($_SESSION['request']['priority']) && $_SESSION['request']['priority'] == "1")
+									echo " selected ";
+							?>
+							>Yes</option>
+							<option value = "2"
+							<?php
+								if(isset($_SESSION['request']['priority']) && $_SESSION['request']['priority'] == "0")
+									echo " selected ";
+							?>
+							>No</option>
+						</select>
+					</td>
+				</tr>
+			</table><br>
+			<button type = "submit" value = "submit" class = "btn btn-success" style = "width: 40%; margin-left: 55%;">
+				Submit
+			</button>
+		</form>
+	</div>
 </body>
 </html>
