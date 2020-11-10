@@ -137,7 +137,7 @@
 
         function display($heads, $arr){
 			//print_r($heads);
-			echo "<table>";
+			echo "<table class = \"table table-striped\">";
 			echo "<tr>";
 			$names = Array();
 			foreach ($heads as $x => $y) {
@@ -146,6 +146,7 @@
 					array_push($names, $x);
 				}
 			}
+			echo "<td></td><td></td>";
 			echo "</tr>";
 			//print_r($names);
 			$i = null;
@@ -174,7 +175,7 @@
 							echo $inputs[$i];
 						}
 						echo "<input type = \"hidden\" name = \"alter\" value = \"".$k."\">";
-						echo "<td><button type=\"submit\">".$buttons[$k]."</button></td>";
+						echo "<td><button class = \"btn btn-danger\" type=\"submit\">".$buttons[$k]."</button></td>";
 						echo "</form>";
 					}
 				}

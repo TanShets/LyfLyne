@@ -169,7 +169,7 @@
 
             function display($heads, $arr){
                 //print_r($heads);
-                echo "<table>";
+                echo "<table class = \"table table-striped\">";
                 echo "<tr>";
                 $names = Array();
                 foreach ($heads as $x => $y) {
@@ -178,6 +178,7 @@
                         array_push($names, $x);
                     }
                 }
+                echo "<td></td><td></td><td></td>";
                 echo "</tr>";
                 //print_r($names);
                 $i = null;
@@ -202,17 +203,17 @@
                         echo "</td>";
                     }
                     echo "<input type = \"hidden\" name = \"used\" value = \"0\">";
-                    echo "<td><button type = \"submit\">Update</button></td>";
+                    echo "<td><button class = \"btn btn-success\" type = \"submit\">Update</button></td>";
                     echo "</form>";
                     echo "<td><form action = \"admin-view-employee.php\" method = \"post\">";
                     echo "<input type = \"hidden\" name = \"eid\" value = \"".$arr[$i][0]."\">";
                     echo "<input type = \"hidden\" name = \"used\" value = \"1\">";
-                    echo "<button type = \"submit\">Update Location</button>";
+                    echo "<button style = \"width: 120%;\" class = \"btn btn-primary\" type = \"submit\">Update Location</button>";
                     echo "</form></td>";
                     echo "<td><form action = \"admin-view-employee.php\" method = \"post\">";
                     echo "<input type = \"hidden\" name = \"eid\" value = \"".$arr[$i][0]."\">";
                     echo "<input type = \"hidden\" name = \"used\" value = \"2\">";
-                    echo "<button type = \"submit\">Delete</button>";
+                    echo "<button class = \"btn btn-danger\" type = \"submit\">Delete</button>";
                     echo "</form></td>";
                     echo "</tr>";
                 }
@@ -326,6 +327,7 @@
         ?>
 	</head>
 	<body>
+        <center><h2>Employee List</h2></center>
 		<?php
             if($heads != null && $arr != null)
                 display($heads, $arr);

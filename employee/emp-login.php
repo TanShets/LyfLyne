@@ -19,6 +19,12 @@
 			unset($_SESSION['message']);
 		}
 
+		if(isset($_SESSION['emp-user'])){
+            $_SESSION['message'] = "You're already logged in!";
+			header("Location: emp-requests.php");
+				exit();
+        }
+
 		if($_SERVER['REQUEST_METHOD'] == "POST"){
 			$mainServe = "localhost";
 			$mainuser = "root";
@@ -56,7 +62,7 @@
 	?>
 </head>
 <body>
-	<div style = "margin-left: 35%; margin-top: 18%; width: 30%; border: 1px solid grey; padding: 20px;">
+	<div style = "margin-left: 35%; margin-top: 15%; width: 30%; border: 1px solid grey; padding: 20px;">
 		<form action = "emp-login.php" method = "post">
 			<h1>Employee Login</h1>
 			<table>

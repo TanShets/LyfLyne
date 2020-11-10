@@ -389,7 +389,7 @@
 
 		function display($heads, $arr){
 			//print_r($heads);
-			echo "<table>";
+			echo "<table class = \"table table-striped\">";
 			echo "<tr>";
 			$names = Array();
 			foreach ($heads as $x => $y) {
@@ -398,6 +398,7 @@
 					array_push($names, $x);
 				}
 			}
+			echo "<th></th><th></th><th></th>";
 			echo "</tr>";
 			//print_r($names);
 			$i = null;
@@ -421,13 +422,31 @@
 				$temp = "<input type = \"hidden\" name = \"type\" value = \"".$_POST['type']."\">";
 				array_push($inputs, $temp);
 				for($k = 0; $k < count($buttons); $k++){
-					if($k != 2 || ($k == 2 && $x[3] == "blood")){
+					if($k != 2 || ($k == 2 && $x[3] == "blood") || ($k == 2 && $x[3] == "marrow")){
 						for($i = 0; $i < count($inputs); $i++){
 							echo $inputs[$i];
 						}
+						$classname = "";
+						switch($buttons[$k]){
+							case $buttons[0]:{
+								$classname = "btn btn-success";
+								break;
+							}
+							case $buttons[1]:{
+								$classname = "btn btn-danger";
+								break;
+							}
+							case $buttons[2]:{
+								$classname = "btn btn-primary";
+								break;
+							}
+						}
 						echo "<input type = \"hidden\" name = \"alter\" value = \"".$k."\">";
-						echo "<td><button type=\"submit\">".$buttons[$k]."</button></td>";
+						echo "<td><button class = \"$classname\" type=\"submit\">".$buttons[$k]."</button></td>";
 						echo "</form>";
+					}
+					else{
+						echo "<td></td>";
 					}
 				}
 				echo "</tr>";
@@ -520,47 +539,53 @@
 			return null;
 		}
 	?>
-	<form action = "admin-view-request.php" method = "post">
-		Request order by 
-		<select name = "type" onchange='this.form.submit()'>
-			<option value = ""
-			<?php
-				if(!isset($_SESSION['admin-request']['type']) || $_SESSION['admin-request']['type'] == "")
-					echo " selected";
-			?>
-			>Select an option</option>
-			<option value = "priority"
-			<?php
-				if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "priority")
-					echo " selected";
-			?>
-			>Priority</option>
-			<option value = "time_d"
-			<?php
-				if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "time_d")
-					echo " selected";
-			?>
-			>Oldest to newest</option>
-			<option value = "time_n"
-			<?php
-				if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "time_n")
-					echo " selected";
-			?>
-			>Newest to Oldest</option>
-			<option value = "hospital"
-			<?php
-				if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "hospital")
-					echo " selected";
-			?>
-			>Hospital</option>
-			<option value = "hospital-priority only"
-			<?php
-				if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "hospital-priority only")
-					echo " selected";
-			?>
-			>Hospital - Priority only</option>
-		</select>
-	</form>
+	<div class = "container" style = "margin-left: 38%; margin-top: 3%; padding-bottom: 40px;">
+		<h2>View Requests</h2>
+		<form action = "admin-view-request.php" method = "post">
+			<table><tr><td>
+			Request order by</td><td> 
+			<select class = "form-control" name = "type" onchange='this.form.submit()'
+			style = "width: 100%;">
+				<option value = ""
+				<?php
+					if(!isset($_SESSION['admin-request']['type']) || $_SESSION['admin-request']['type'] == "")
+						echo " selected";
+				?>
+				>Select an option</option>
+				<option value = "priority"
+				<?php
+					if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "priority")
+						echo " selected";
+				?>
+				>Priority</option>
+				<option value = "time_d"
+				<?php
+					if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "time_d")
+						echo " selected";
+				?>
+				>Oldest to newest</option>
+				<option value = "time_n"
+				<?php
+					if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "time_n")
+						echo " selected";
+				?>
+				>Newest to Oldest</option>
+				<option value = "hospital"
+				<?php
+					if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "hospital")
+						echo " selected";
+				?>
+				>Hospital</option>
+				<option value = "hospital-priority only"
+				<?php
+					if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "hospital-priority only")
+						echo " selected";
+				?>
+				>Hospital - Priority only</option>
+			</select>
+			</td></tr></table>
+		</form>
+	</div>
 	<?php
 		if(isset($arr) && $arr != null)
 			display($heads, $arr);

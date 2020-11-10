@@ -147,74 +147,80 @@
 	?>
 </head>
 <body>
-	<form action = "update-bank.php" method = "post">
-		<table>
-			<tr>
-				<td>Organ/Fluid concerned</td>
-				<td>
-					<select name = "type" onchange = 'this.form.submit()'>
+	<div class = "container" style = "margin-left: 32%; margin-top: 13%; border: 1px grey solid; width: 36%; padding: 20px;">
+		<h3>Update the Organ/Blood Bank here</h3><br>
+		<form action = "update-bank.php" method = "post">
+			<table>
+				<tr>
+					<td>Organ/Fluid concerned</td>
+					<td>
+						<select class = "form-control" name = "type" onchange = 'this.form.submit()'>
+							<?php
+								echo "<option value = \"\"";
+								if(!isset($_SESSION['update-bank']['type']) || $_SESSION['update-bank']['type'] == "")
+									echo " selected ";
+								echo ">Select an option</option>";
+								if(isset($conn) && $conn)
+								{
+									$cmd = "SELECT tablename from control;";
+									$out = mysqli_query($conn, $cmd);
+									$arr = mysqli_fetch_all($out);
+									for($i = 0; $i < count($arr); $i++)
+									{
+										$temp = $arr[$i][0];
+										echo "<option value = \"$temp\"";
+										if(isset($_SESSION['update-bank']['type']) && $_SESSION['update-bank']['type'] == $temp)
+											echo " selected ";
+										echo ">$temp</option>";
+									}
+									//print_r($arr);
+								}
+							?>
+						</select>
+						<noscript><input type = "submit" value = "submit"></noscript>
+					</td>
+				</tr>
+				<tr>
+					<td>Blood Group</td>
+					<td>
+						<select class = "form-control" name = "b-group">
 						<?php
 							echo "<option value = \"\"";
-							if(!isset($_SESSION['update-bank']['type']) || $_SESSION['update-bank']['type'] == "")
-								echo " selected ";
+							if(!isset($_SESSION['update-bank']['btype']) || $_SESSION['update-bank']['btype'] == "")
+								echo " selected";
 							echo ">Select an option</option>";
-							if(isset($conn) && $conn)
+							$btypes = Array('A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-', 'Rh null');
+							for($i = 0; $i < count($btypes); $i++)
 							{
-								$cmd = "SELECT tablename from control;";
-								$out = mysqli_query($conn, $cmd);
-								$arr = mysqli_fetch_all($out);
-								for($i = 0; $i < count($arr); $i++)
-								{
-									$temp = $arr[$i][0];
-									echo "<option value = \"$temp\"";
-									if(isset($_SESSION['update-bank']['type']) && $_SESSION['update-bank']['type'] == $temp)
-										echo " selected ";
-									echo ">$temp</option>";
-								}
-								//print_r($arr);
+								$tempx = $btypes[$i];
+								echo "<option value = \"$tempx\"";
+								if(isset($_SESSION['update-bank']['btype']) && $_SESSION['update-bank']['btype'] == $tempx)
+									echo " selected";
+								echo ">".$tempx."</option>";
 							}
 						?>
-					</select>
-					<noscript><input type = "submit" value = "submit"></noscript>
-				</td>
-			</tr>
-			<tr>
-				<td>Blood Group</td>
-				<td>
-					<select name = "b-group">
-					<?php
-						echo "<option value = \"\"";
-						if(!isset($_SESSION['update-bank']['btype']) || $_SESSION['update-bank']['btype'] == "")
-							echo " selected";
-						echo ">Select an option</option>";
-						$btypes = Array('A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-', 'Rh null');
-						for($i = 0; $i < count($btypes); $i++)
-						{
-							$tempx = $btypes[$i];
-							echo "<option value = \"$tempx\"";
-							if(isset($_SESSION['update-bank']['btype']) && $_SESSION['update-bank']['btype'] == $tempx)
-								echo " selected";
-							echo ">".$tempx."</option>";
-						}
-					?>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Quantity</td>
-				<td>
-					<input type = "number" name = "quantity"
-					placeholder="ml for blood numbers for others"
-					style = "width: 115%;"
-					<?php
-						if(isset($_SESSION['update-bank']['quantity']))
-							echo " value = \"".$_SESSION['update-bank']['quantity']."\"";
-					?>
-					>
-				</td>
-			</tr>
-		</table>
-		<button type = "submit" value = "submit">Submit</button>
-	</form>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Quantity</td>
+					<td>
+						<input class = "form-control" type = "number" name = "quantity"
+						placeholder="ml for blood numbers for others"
+						style = "width: 135%;"
+						<?php
+							if(isset($_SESSION['update-bank']['quantity']))
+								echo " value = \"".$_SESSION['update-bank']['quantity']."\"";
+						?>
+						>
+					</td>
+				</tr>
+			</table><br>
+			<button class = "btn btn-success" type = "submit" value = "submit"
+			style = "width: 80%; margin-left: 10%;">
+				Submit
+			</button>
+		</form>
+	</div>
 </body>
 </html>

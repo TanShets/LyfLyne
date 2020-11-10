@@ -46,22 +46,27 @@
 	?>
 </head>
 <body>
-	<form action = "location-entry.php" method = "post">
-		<table>
-			<tr>
-				<td>State</td>
-				<td><input type = "text" name = "state"></td>
-			</tr>
-			<tr>
-				<td>District</td>
-				<td><input type="text" name="district"></td>
-			</tr>
-			<tr>
-				<td>City</td>
-				<td><input type="text" name="city"></td>
-			</tr>
-		</table>
-		<button type = "submit" value = "submit">Submit</button>
-	</form>
+	<div class = "container" style = "margin-left: 38%; margin-top: 15%; border: solid 1px grey; width: 22%; padding: 20px;">
+		<h3 style = "padding-bottom: 10px;">Enter New Location</h3>
+		<form action = "location-entry.php" method = "post">
+			<table>
+				<tr>
+					<td>State</td>
+					<td><input class = "form-control" type = "text" name = "state"></td>
+				</tr>
+				<tr>
+					<td>District</td>
+					<td><input class = "form-control" type="text" name="district"></td>
+				</tr>
+				<tr>
+					<td>City</td>
+					<td><input class = "form-control" type="text" name="city"></td>
+				</tr>
+			</table><br>
+			<button class = "btn btn-primary" type = "submit" value = "submit" style = "width: 98%;">
+				Submit
+			</button>
+		</form>
+	</div>
 </body>
 </html>

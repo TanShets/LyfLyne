@@ -19,6 +19,12 @@
             unset($_SESSION['message']);
         }
 
+        if(isset($_SESSION['admin'])){
+            $_SESSION['message'] = "You're already logged in!";
+			header("Location: admin-home.php");
+				exit();
+        }
+
         if($_SERVER['REQUEST_METHOD'] == "POST"){
             $mainServe = "localhost";
             $mainuser = "root";
@@ -103,15 +109,17 @@
     ?>
 </head>
 <body>
-	<form action = "admin-login.php" method = "post">
-		<h1>Login as Admin</h1>
-		<table>
-			<tr>
-				<td>Admin ID</td>
-				<td><input type = "text" name = "userid" placeholder="Enter your admin id"></td>
-			</tr>
-		</table>
-		<button type = "submit">Login</button>
-	</form><br>
+	<div class = "container" style = "margin-left: 37%; margin-top: 15%; border: grey 1px solid; width: 25%; padding: 20px;">
+        <form action = "admin-login.php" method = "post">
+            <h1>Login as Admin</h1>
+            <table>
+                <tr>
+                    <td>Admin ID</td>
+                    <td><input class = "form-control" type = "text" name = "userid" placeholder="Enter your admin id"></td>
+                </tr>
+            </table><br>
+            <center><button type = "submit" class = "btn btn-success" style = "width: 80%;">Login</button></center>
+        </form>
+    </div>
 </body>
 </html>
