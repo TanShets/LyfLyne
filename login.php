@@ -83,6 +83,7 @@
 <body>
 	<div class = "container-fluid" style = "margin-left: 35%; margin-top: 12%; height: 200%">
 		<div style = "width:29.8%; height: 200%; border: grey 2px solid; padding: 10px;">
+		<center>
 		<h2>Login to your account</h2>
 		<form action = "login.php" method = "post">
 			<table>
@@ -94,14 +95,12 @@
 					<td>Password</td>
 					<td><input class = "form-control" type = "password" name = "password" placeholder="Enter password"></td>
 				</tr>
-			</table>
-			<table>
-				<tr>
-					<td>Hospital Account</td>
-					<td><input class = "form-check-label" type = "checkbox" name = "isHospital" value = "1"/></td>
-				</tr>
-			</table>
-			<button type = "submit" class = "btn btn-primary">Login</button>
+			</table><div style = "padding-bottom: 10px;"></div>
+			<label for = "isHospital">Hospital Account</label>
+			<input id = "isHospital" class = "form-check-label" type = "checkbox" name = "isHospital" value = "1"/>
+			<center style = "padding-top: 10px;">
+			<button type = "submit" class = "btn btn-primary" style = "width: 80%;">Login</button>
+			</center>
 		</form><br>
 		<table>
 			<tr><td>
@@ -114,6 +113,7 @@
 				</form></td>
 			</tr>
 		</table>
+		</center>
 		</div>
 	</div>
 </body>
