@@ -111,32 +111,33 @@
 					$count++;
 			}
 
-			if(isset($_POST['state']))
-			{
+			if(isset($_POST['state']) && $_POST['state'] != ""){
 				$_SESSION['search']['state'] = $_POST['state'];
-				if($_SESSION['search']['state'] != "")
-					$count++;
-			}
-
-			if(isset($_POST['state']) && isset($_POST['district']))
-			{
-				$_SESSION['search']['district'] = $_POST['district'];
-				if($_SESSION['search']['district'] != "")
-					$count++;
-			}
-			else
 				$_SESSION['search']['district'] = "";
-
-			if(isset($_POST['state']) && isset($_POST['district']) && isset($_POST['city']))
-			{
-				$_SESSION['search']['city'] = $_POST['city'];
-				if($_SESSION['search']['city'] != "")
-					$count++;
-			}
-			else
 				$_SESSION['search']['city'] = "";
+				$_SESSION['search']['area'] = "";
+				$count++;
+			}
+
+			if(isset($_POST['district']) && $_POST['district'] != ""){
+				$_SESSION['search']['district'] = $_POST['district'];
+				$_SESSION['search']['city'] = "";
+				$_SESSION['search']['area'] = "";
+				$count++;
+			}
+
+			if(isset($_POST['city']) && $_POST['city'] != ""){
+				$_SESSION['search']['city'] = $_POST['city'];
+				$_SESSION['search']['area'] = "";
+				$count++;
+			}
+
+			if(isset($_POST['area']) && $_POST['area'] != ""){
+				$_SESSION['search']['area'] = $_POST['area'];
+				$count++;
+			}
 			//echo $count;
-			if($count == 5)
+			if($count == 6)
 			{
 				$cmd = "SELECT lid FROM location WHERE state = '".$_SESSION['search']['state']."' AND ";
 				$cmd = $cmd."district = '".$_SESSION['search']['district']."' AND city = '".$_SESSION['search']['city']."';";
@@ -342,7 +343,7 @@
 				<tr>
 					<td>City/Town</td>
 					<td>
-						<select class = "form-control" name = "city"
+						<select class = "form-control" name = "city" onchange = 'this.form.submit()'
 						<?php
 							if(!isset($_SESSION['search']['state']) || $_SESSION['search']['state'] == "" || !isset($_SESSION['search']['district']) || $_SESSION['search']['district'] == "")
 								echo " disabled";
@@ -359,7 +360,7 @@
 								{
 									$temp = $_SESSION['search']['state'];
 									$temp1 = $_SESSION['search']['district'];
-									$cmd = "SELECT city FROM location WHERE state = '$temp' AND district = '$temp1';";
+									$cmd = "SELECT city FROM location WHERE state = '$temp' AND district = '$temp1' GROUP BY(city);";
 									$out = mysqli_query($conn, $cmd);
 									$arr = mysqli_fetch_all($out);
 									for($i = 0; $i < count($arr); $i++)
@@ -367,6 +368,54 @@
 										$temp = $arr[$i][0];
 										echo "<option value = \"$temp\"";
 										if(!isset($_SESSION['search']['city']) || $_SESSION['search']['city'] == $temp)
+											echo " selected";
+										echo ">".$temp."</option>";
+									}
+								}
+							}
+							else
+								echo "<option value = \"\">Select an option</option>";
+						?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Area</td>
+					<td>
+						<select class = "form-control" name = "area"
+						<?php
+							if(
+								!isset($_SESSION['search']['state']) || $_SESSION['search']['state'] == "" || 
+								!isset($_SESSION['search']['district']) || $_SESSION['search']['district'] == "" || 
+								!isset($_SESSION['search']['city']) || $_SESSION['search']['city'] == ""
+							)
+								echo " disabled";
+						?>
+						>
+						<?php
+							if(
+								isset($_SESSION['search']['state']) && $_SESSION['search']['state'] != "" && 
+								isset($_SESSION['search']['district']) && $_SESSION['search']['district'] != "" && 
+								isset($_SESSION['search']['city']) && $_SESSION['search']['city'] != ""
+							)
+							{
+								echo "<option value = \"\"";
+								if(!isset($_SESSION['search']['area']) || $_SESSION['search']['area'] == "")
+									echo " selected";
+								echo ">Select an option</option>";
+								if(isset($conn) && $conn)
+								{
+									$temp = $_SESSION['search']['state'];
+									$temp1 = $_SESSION['search']['district'];
+									$temp2 = $_SESSION['search']['city'];
+									$cmd = "SELECT area FROM location WHERE state = '$temp' AND district = '$temp1' AND city = '$temp2';";
+									$out = mysqli_query($conn, $cmd);
+									$arr = mysqli_fetch_all($out);
+									for($i = 0; $i < count($arr); $i++)
+									{
+										$temp = $arr[$i][0];
+										echo "<option value = \"$temp\"";
+										if(!isset($_SESSION['search']['area']) || $_SESSION['search']['area'] == $temp)
 											echo " selected";
 										echo ">".$temp."</option>";
 									}

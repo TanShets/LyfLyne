@@ -33,14 +33,18 @@
 				$temp1 = $_POST['state'];
 				$temp2 = $_POST['district'];
 				$temp3 = $_POST['city'];
-				$cmd = "SELECT * FROM location WHERE state = '$temp1' AND district = '$temp2'AND city = '$temp3';";
+				$temp4 = $_POST['area'];
+				$cmd = "SELECT * FROM location WHERE state = '$temp1' AND district = '$temp2'AND city = '$temp3' AND area = '$temp4';";
 				$out = mysqli_query($conn, $cmd);
 				$arr = mysqli_fetch_all($out);
 				if(!is_array($arr) || count($arr) == 0)
 				{
-					$cmd = "INSERT INTO location(state, district, city) VALUES('$temp1', '$temp2', '$temp3');";
+					$cmd = "INSERT INTO location(state, district, city, area) VALUES('$temp1', '$temp2', '$temp3', '$temp4');";
+					//echo $cmd;
 					$out = mysqli_query($conn, $cmd);
 				}
+				else
+					echo "Failed";
 			}
 		}
 	?>
@@ -61,6 +65,10 @@
 				<tr>
 					<td>City</td>
 					<td><input class = "form-control" type="text" name="city"></td>
+				</tr>
+				<tr>
+					<td>Area</td>
+					<td><input class = "form-control" type="text" name="area"></td>
 				</tr>
 			</table><br>
 			<button class = "btn btn-primary" type = "submit" value = "submit" style = "width: 98%;">
