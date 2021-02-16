@@ -43,6 +43,10 @@
 			die("Failed: ".mysqli_connect_error());
 		}
 
+		if(isset($_SESSION['moved_request'])){
+			print_r($_SESSION['moved_request']);
+		}
+
 		$count = 0;
 		if($_SERVER['REQUEST_METHOD'] == "POST"){
 			if(isset($_POST['rid'])){

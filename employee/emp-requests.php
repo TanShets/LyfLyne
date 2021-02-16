@@ -261,7 +261,7 @@
 							elseif(isset($_SESSION['request']['type']) && $_SESSION['request']['type'] != ""){
 								$_SESSION['moved_request']['isHospital'] = false;
 								$temp_uid = $_POST['uid'];
-								$cmd = "SELECT btype FROM user WHERE uid = '$uid';";
+								$cmd = "SELECT btype FROM user WHERE uid = '$temp_uid';";
 								$out = mysqli_query($conn, $cmd);
 								if($out){
 									$arr = mysqli_fetch_array($out);

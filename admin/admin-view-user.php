@@ -79,7 +79,7 @@
 												if(is_array($temp_arr3)){
 													$temp_id = $temp_arr3[$id_name];
 													$cmd = "UPDATE ".$temp_arr2[$i][0]." SET quantity = quantity + 1 WHERE ";
-													$cmd = $id_name." = '$temp_id';";
+													$cmd = $cmd.$id_name." = '$temp_id';";
 													//echo $cmd;
 												}
 												else{

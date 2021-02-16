@@ -427,6 +427,7 @@
 							echo $inputs[$i];
 						}
 						$classname = "";
+						$isDisabled = "";
 						switch($buttons[$k]){
 							case $buttons[0]:{
 								$classname = "btn btn-success";
@@ -434,6 +435,7 @@
 							}
 							case $buttons[1]:{
 								$classname = "btn btn-danger";
+								$isDisabled = " disabled";
 								break;
 							}
 							case $buttons[2]:{
@@ -442,7 +444,7 @@
 							}
 						}
 						echo "<input type = \"hidden\" name = \"alter\" value = \"".$k."\">";
-						echo "<td><button class = \"$classname\" type=\"submit\">".$buttons[$k]."</button></td>";
+						echo "<td><button class = \"$classname\" type=\"submit\"".$isDisabled.">".$buttons[$k]."</button></td>";
 						echo "</form>";
 					}
 					else{
