@@ -78,16 +78,20 @@
 												//echo "Till here";
 												if(is_array($temp_arr3)){
 													$temp_id = $temp_arr3[$id_name];
-													$cmd = "UPDATE ".$temp_arr2[$i][0]." SET quantity = quantity + 1 WHERE ";
-													$cmd = $cmd.$id_name." = '$temp_id';";
+													//		$cmd = "UPDATE ".$temp_arr2[$i][0]." SET quantity = quantity + 1 WHERE ";
+													//		$cmd = $cmd.$id_name." = '$temp_id';";
 													//echo $cmd;
+													$cmd = "INSERT INTO dead_donor_queue(dtid, dtype, lid, btype) VALUES('$temp_id', ";
 												}
 												else{
-													$cmd = "INSERT INTO ".$temp_arr2[$i][0]."(btype, quantity, lid) VALUES(";
-													$cmd = $cmd."'".$temp_arr['btype']."', 1, ";
-													$cmd = $cmd."'".$temp_arr['lid']."');";
+													//		$cmd = "INSERT INTO ".$temp_arr2[$i][0]."(btype, quantity, lid) VALUES(";
+													//		$cmd = $cmd."'".$temp_arr['btype']."', 1, ";
+													//		$cmd = $cmd."'".$temp_arr['lid']."');";
 													//echo $cmd;
+													$cmd = "INSERT INTO dead_donor_queue(dtype, lid, btype) VALUES(";
 												}
+
+												$cmd = $cmd."'".$temp_arr2[$i][0]."', '".$temp_arr['lid']."', '".$temp_arr['btype']."');";
 
 												$out = mysqli_query($conn, $cmd);
 												if($out){
