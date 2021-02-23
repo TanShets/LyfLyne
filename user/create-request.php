@@ -95,6 +95,10 @@
 					$cmd = "SELECT lid FROM location WHERE state = '$temp1' AND district = '$temp2' AND city = '$temp3';";
 					$out = mysqli_query($conn, $cmd);
 					$lid = mysqli_fetch_array($out)['lid'];
+
+					$cmd2 = "SELECT lid FROM area_location WHERE clid = '$lid';";
+					$out2 = mysqli_query($conn, $cmd2);
+					$lid2 = mysqli_fetch_array($out2)['lid'];
 				}
 				elseif($count == 3 && isset($_SESSION['request']['isloc']) && $_SESSION['request']['isloc'] == "yes")
 				{

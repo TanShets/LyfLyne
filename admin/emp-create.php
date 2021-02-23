@@ -108,6 +108,7 @@
 				//$cmd = "SELECT lid FROM location WHERE state = '".$_SESSION['emp_create_temp']['state'];
 				//$cmd .="' AND district = '".$_SESSION['emp_create_temp']['district'];
 				$cmd = "SELECT lid FROM location WHERE state = '".$_SESSION['emp_create_temp']['state']."' AND district = '".$_SESSION['emp_create_temp']['district']."' AND city = '".$_SESSION['emp_create_temp']['city']."' AND area = '".$_SESSION['emp_create_temp']['area']."';";
+				$cmd2 = "SELECT lid FROM area_location WHERE area = '".$_SESSION['emp_create_temp']['area']."';";
 				echo $cmd;
 				if(isset($conn) && $conn){
 					$out = mysqli_query($conn, $cmd);
@@ -117,6 +118,13 @@
 						$_SESSION['emp_create_temp']['lid'] = $lid;	
 						//print_r($lid);
 						echo "<br>";
+					}
+
+					$out2 = mysqli_query($conn, $cmd2);
+					if($out2)
+					{
+						$lid2 = mysqli_fetch_array($out2)['lid'];
+						//$_SESSION['emp_create_temp']['lid'] = $lid2;
 					}
 				}
 				unset($_SESSION['emp_create_temp']['state']);

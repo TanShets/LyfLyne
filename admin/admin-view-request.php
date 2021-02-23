@@ -157,7 +157,7 @@
 									$cmd = $cmd."btype = '$btype' AND quantity >= '$quantity' AND ";
 									$cmd = $cmd."lid IN (";
 									for($i = 0; $i < count($lids) - 1; $i++){
-										$cmd = $cmd."'".$lids[$i][0].", ";
+										$cmd = $cmd."'".$lids[$i][0]."', ";
 									}
 									$cmd = $cmd."'".$lids[count($lids) - 1]."');";
 									//echo $cmd;

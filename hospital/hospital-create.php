@@ -141,6 +141,23 @@
 					echo "Failed";
 			}
 		}
+
+		function get_area($conn, $city){
+			$cmd1 = "SELECT lid FROM location WHERE city = '$city';";
+			$out1 = mysqli_query($conn, $cmd1);
+			if($out1){
+				$arr1 = mysqli_fetch_array($out);
+				$cmd2 = "SELECT area FROM area_location WHERE clid = '".$arr1['lid']."';";
+
+				$out2 = mysqli_query($conn, $cmd2);
+				if($out2){
+					$arr2 = mysqli_fetch_all($out2);
+					return $arr2;
+				}
+			}
+
+			return array();
+		}
 	?>
 </head>
 <body>
@@ -308,8 +325,13 @@
 									$temp1 = $_SESSION['h_create_temp']['district'];
 									$temp2 = $_SESSION['h_create_temp']['city'];
 									$cmd = "SELECT area FROM location WHERE state = '$temp' AND district = '$temp1' AND city = '$temp2';";
+									
+									//$arr2 
+
 									$out = mysqli_query($conn, $cmd);
 									$arr = mysqli_fetch_all($out);
+									$arr2 = get_area($conn, $temp2);
+									
 									for($i = 0; $i < count($arr); $i++)
 									{
 										$temp = $arr[$i][0];

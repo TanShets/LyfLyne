@@ -37,14 +37,34 @@
 				$cmd = "SELECT * FROM location WHERE state = '$temp1' AND district = '$temp2'AND city = '$temp3' AND area = '$temp4';";
 				$out = mysqli_query($conn, $cmd);
 				$arr = mysqli_fetch_all($out);
-				if(!is_array($arr) || count($arr) == 0)
+				$cmd2 = "SELECT * FROM area_location WHERE area = '$temp4';";
+				$out2 = mysqli_query($conn, $cmd2);
+				$arr2 = mysqli_fetch_all($out2);
+				if((!is_array($arr) || count($arr) == 0) && (!is_array($arr2) || count($arr2) == 0))
 				{
 					$cmd = "INSERT INTO location(state, district, city, area) VALUES('$temp1', '$temp2', '$temp3', '$temp4');";
 					//echo $cmd;
 					$out = mysqli_query($conn, $cmd);
+					$temp_lid = get_lid($conn, $temp3);
+					if($temp_lid != -1){
+						$cmd = "INSERT INTO area_location(clid, area) VALUES('$temp_lid', '$temp4');";
+						$out = mysqli_query($conn, $cmd);
+					}
 				}
 				else
 					echo "Failed";
+			}
+		}
+
+		function get_lid($conn, $city){
+			$cmd = "SELECT lid FROM location WHERE city = '$city'";
+			$out = mysqli_query($conn, $cmd);
+			$arr = mysqli_fetch_all($out);
+			if(is_array($arr) && count($arr) > 0){
+				return $arr[0][0];
+			}
+			else{
+				return -1;
 			}
 		}
 	?>

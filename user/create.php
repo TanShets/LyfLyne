@@ -118,14 +118,23 @@
 			if($count == 15 && $_SESSION['create_temp']['password'] == $_SESSION['create_temp']['cpassword']){
 				unset($_SESSION['create_temp']['cpassword']);
 				$cmd = "SELECT lid FROM location WHERE state = '".$_SESSION['create_temp']['state']."' AND district = '".$_SESSION['create_temp']['district']."' AND city = '".$_SESSION['create_temp']['city']."' AND area = '".$_SESSION['create_temp']['area']."';";
+				
+				$cmd2 = "SELECT lid FROM area_location WHERE area = '".$_SESSION['create_temp']['area']."';";
+
 				echo $cmd;
 				if(isset($conn) && $conn){
 					$out = mysqli_query($conn, $cmd);
+					$out2 = mysqli_query($conn, $cmd2);
+
 					if($out)
 					{
 						$lid = mysqli_fetch_array($out)['lid'];
 						$_SESSION['create_temp']['lid'] = $lid;	
 						print_r($lid);
+					}
+
+					if($out2){
+						$lid2 = mysqli_fetch_array($out2)['lid'];
 					}
 				}
 				unset($_SESSION['create_temp']['state']);
