@@ -8,8 +8,8 @@
         $mail->Host = 'smtp.gmail.com';
         $mail->Port = '465';
         $mail->isHTML();
-        $mail->Username = 'shetstan@gmail.com';
-        $mail->Password = 'DarkGod@2000';
+        $mail->Username = 
+        $mail->Password = 
         $mail->SetFrom('no-reply@lyflyne.org');
         $mail->Subject = 'Yo';
         $mail->Body = 'Hello there';
