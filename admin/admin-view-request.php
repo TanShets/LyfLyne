@@ -482,10 +482,13 @@
 
 		function updateSupply($conn, $dtype, $btype, $lid, $quantity){
 			if($conn && $dtype && $btype && $lid && is_numeric($quantity)){
+				/*
 				$cmd = "UPDATE ".$dtype." SET quantity = quantity + ".$quantity." WHERE ";
 				if($dtype == "blood" || $dtype == "marrow")
 					$cmd = $cmd."isbank = 1 AND ";
 				$cmd = $cmd."btype = '$btype' AND lid = '$lid';";
+				*/
+				$cmd = "";
 				$out = mysqli_query($conn, $cmd);
 				if($out)
 				{
