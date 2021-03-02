@@ -1,3 +1,4 @@
+<?php require('../security.php'); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,54 +59,7 @@
             }
         }
 
-        function encode($word){
-            if(strlen($word) > 15)
-                return null;
-            $enc_word = "";
-            $isNumber = null;
-            for($i = 0; $i < strlen($word); $i++){
-                if(is_numeric($word[$i])){
-                    $val = ord($word[$i]) - ord('0');
-                    $x = chr(ord('A') - $val);
-                    $y = chr(ord('a') + 2 * $val);
-                    $z = chr(40 + $val / 2);
-                    $isNumber = true;
-                }
-                elseif(ctype_alpha($word[$i])){
-                    $val = ord($word[$i]) - ord('A');
-                    $x = chr(40 + $val);
-                    $y = chr(ord('a') - $val / 2);
-                    $z = chr(ord('0') + $val / 3);
-                    $isNumber = false;
-                }
-                else{
-                    return null;
-                }
-
-                $enc_word = $enc_word.$x.$y.$z;
-                if($isNumber)
-                    $enc_word = $enc_word.'~';
-            }
-            return $enc_word;
-        }
-
-        function decode($word){
-            $final_word = "";
-            $length = strlen($word);
-            for($i = 0; $i < $length; $i += 3){
-                if($i < $length - 3 && $word[$i + 3] == '~'){
-                    $val = ord('A') - ord($word[$i]);
-                    $x = chr($val + ord('0'));
-                    $i++;
-                }
-                else{
-                    $val = ord($word[$i]) - 40;
-                    $x = chr($val + ord('A'));
-                }
-                $final_word = $final_word.$x;
-            }
-            return $final_word;
-        }
+        
     ?>
 </head>
 <body>
