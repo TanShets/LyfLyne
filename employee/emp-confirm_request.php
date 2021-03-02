@@ -54,7 +54,7 @@
 			if(isset($_POST['rid']) && isset($_POST['form_type'])){
 				$rid = $_POST['rid'];
 
-				switch($_SESSION['emp-confirm_request']){
+				switch($_SESSION['emp-confirm_request']['choice']){
 					case 'request':{
 						if($_POST['form_type'] == 'Confirm'){
 							confirm_request($conn, $rid, "admin_request_queue");
@@ -151,6 +151,7 @@
 					$priority = $arr['priority'];
 					$request_time = $arr['request_time'];
 					$lookin = $arr['lookin'];
+					$dtype = $arr['dtype'];
 					$dtid = $arr['dtid'];
 
 					switch($tablename){
@@ -179,10 +180,26 @@
                     $id_name = substr($dtype, 0, 2)."id";
                     
                     if($dtid != -1){
-                        $cmd = "UPDATE $dtype SET quantity = quantity - $quantity WHERE $id_name = '$dtid';";
+						$temp_cmd = "SELECT quantity FROM $dtype WHERE $id_name = '$dtid';";
+						$out = mysqli_query($conn, $temp_cmd);
+						if($out){
+							$temp_arr = mysqli_fetch_array($out);
+							if(is_array($temp_arr) && count($temp_arr) > 0){
+								$max_quantity = $temp_arr['quantity'];
+								if($max_quantity >= $quantity){
+									$cmd = "UPDATE $dtype SET quantity = quantity - $quantity WHERE $id_name = '$dtid';";
+									//echo $cmd;
+								}
+								else{
+									$_SESSION['message'] = "Insufficient amount compared to required amount";
+									return;
+								}
+							}
+						}
                     }
                     else{
-                        $cmd = "INSERT INTO $dtype(btype, quantity, lid) VALUES('$btype', $quantity, '$lid');";
+						$_SESSION['message'] = "Required blood/organs unavailable";
+						return;
                     }
 
                     $out = mysqli_query($conn, $cmd);
