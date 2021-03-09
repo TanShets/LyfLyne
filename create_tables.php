@@ -35,13 +35,29 @@
             "CREATE TABLE IF NOT EXISTS request(rid INT PRIMARY KEY, lid INT, priority INT, dtype VARCHAR(30), uid INT, 
             request_time DATETIME, lookin INT);",
             
-            "CREATE TABLE IF NOT EXISTS request_log(rid INT PRIMARY KEY, lid INT, priority INT, uid INT, request_time DATETIME, 
-            finish_time DATETIME);",
             "CREATE TABLE retina(reid INT PRIMARY KEY, uid INT, btype VARCHAR(10), quantity INT, lid INT);",
             
             "CREATE TABLE IF NOT EXISTS user(uid INT, username VARCHAR(40), password VARCHAR(30), name VARCHAR(40),
             mobile DECIMAL(10), landline DECIMAL(8), lid INT, email VARCHAR(60), 
             bdonor INT, mdonor INT, odonor INT, btype VARCHAR(10));",
+
+            "CREATE TABLE IF NOT EXISTS admin_hospital_request_queue(rid INT PRIMARY KEY, aid INT, hid INT, name VARCHAR(60), 
+            dtype VARCHAR(30), btype VARCHAR(10), quantity INT, lid INT, priority INT, request_time DATETIME, lookin INT, dtid INT);",
+
+            "CREATE TABLE IF NOT EXISTS admin_request_queue(rid INT PRIMARY KEY, aid INT, lid INT, priority INT, dtype VARCHAR(30), 
+            uid INT, request_time DATETIME, lookin INT, dtid INT);",
+
+            "CREATE TABLE IF NOT EXISTS dead_donor_log(ddid INT PRIMARY KEY, dtype VARCHAR(40), dtid INT, lid INT, 
+            btype VARCHAR(10), finish_time DATETIME);",
+
+            "CREATE TABLE IF NOT EXISTS dead_donor_queue(ddid INT PRIMARY KEY, dtype VARCHAR(40), dtid INT, lid INT, 
+            btype VARCHAR(10));",
+
+            "CREATE TABLE IF NOT EXISTS hospital_request_log(rid INT PRIMARY KEY, hid INT, name VARCHAR(60), dtype VARCHAR(30),
+            btype VARCHAR(10), quantity INT, lid INT, priority INT, request_time DATETIME, lookin INT, finish_time DATETIME);",
+
+            "CREATE TABLE IF NOT EXISTS request_log(rid INT PRIMARY KEY, lid INT, priority INT, dtype VARCHAR(30), uid INT, 
+            request_time DATETIME, lookin INT, finish_time DATETIME);",
 
             "INSERT INTO admin VALUES(1, ';W6HQ:UJ?:X6OM=LO<[GAZH@');",
             "INSERT INTO control VALUES(1, 'blood');",
