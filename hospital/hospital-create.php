@@ -36,6 +36,19 @@
 		if($_SERVER['REQUEST_METHOD'] == "POST"){
 			$count = 0;
 
+			if(isset($_POST['otp_close'])){
+				unset($_SESSION['h_create_temp']['correct_otp']);
+			}
+
+			if(isset($_POST['otp_resend'])){
+				$_SESSION['h_create_temp']['correct_otp'] = generateOTP();
+				sendOTP(
+					$_SESSION['h_create_temp']['correct_otp'], 
+					$_SESSION['h_create_temp']['email'],
+					$_SESSION['h_create_temp']['username']
+				);
+			}
+
 			if(
 				isset($_SESSION['h_create_temp']['correct_otp']) && 
 				isset($_POST['otp']) && 
@@ -183,6 +196,40 @@
 			}
 			else
 				echo "Failed";
+		}
+
+		function open_Hospital_OTP_form(){
+			echo '<div class = "form-popup" id = "form-popper">';
+				echo '<table>';
+				echo '<form action = "hospital-create.php" method = "post" id = "popper">';
+					echo '<tr><h4>Your One Time Password has been sent to ';
+					if(isset($_SESSION['h_create_temp']['email'])){
+						echo $_SESSION['h_create_temp']['email'];
+					}
+					echo '</h4></tr>';
+
+					echo '<tr class = "wider-tab">';
+					echo '<label for="otp">OTP: </label>';
+					echo '<input id = "otp" type = "text" name = "otp">';
+					echo '</tr>';
+					echo '<tr><td>';
+					echo '<button type = "submit" class = "btn btn-primary">Submit</button>';
+					echo '</td>';
+				echo '</form>';
+
+				echo '<form action = "hospital-create.php" method = "post">';
+					echo '<td>';
+					echo '<input type = "submit" name = "otp_resend" value = "Resend OTP" class = "btn btn-primary"/>';
+					echo '</td>';
+				echo '</form>';
+
+				echo '<form action = "hospital-create.php" method = "post">';
+					echo '<td>';
+					echo '<input type = "submit" name = "otp_close" value = "Close" class = "btn btn-danger"/>';
+					echo '</td></tr>';
+				echo '</form>';
+				echo '</table>';
+			echo '</div>';
 		}
 	?>
 </head>
@@ -418,19 +465,7 @@
 
 	<?php
 		if(isset($_SESSION['h_create_temp']['correct_otp'])){
-			echo '<div class = "form-popup" id = "form-popper">';
-				echo '<form action = "hospital-create.php" method = "post" id = "popper">';
-					echo '<h2>Your One Time Password has been sent to ';
-					if(isset($_SESSION['h_create_temp']['email'])){
-						echo $_SESSION['h_create_temp']['email'];
-					}
-					echo '</h2>';
-
-					echo '<label for="otp">OTP: </label>';
-					echo '<input id = "otp" type = "text" name = "otp">';
-					echo '<button type = "submit" class = "btn btn-primary">Submit</button>';
-				echo '</form>';
-			echo '</div>';
+			open_Hospital_OTP_form();
 		}
 	?>
 </body>
