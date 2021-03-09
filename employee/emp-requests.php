@@ -66,6 +66,7 @@
 										//$cmd = "UPDATE ".$dtype." SET quantity = quantity - ".$quantity." WHERE btype = '$btype' AND lid = '$lid';";
 										$outcome = updateSupply($conn, $dtype, $btype, $lid, -$quantity);
 										if($outcome){
+											log_request($conn, $temp_rid, "hospital_request");
 											$cmd = "DELETE FROM hospital_request WHERE rid = '$temp_rid';";
 											$out = mysqli_query($conn, $cmd);
 										}
@@ -103,6 +104,7 @@
 												$outcome = updateSupply($conn, $dtype, $btype, $lid, -$quantity);
 												if($outcome){
 													//echo "step 5<br>";
+													log_request($conn, $temp_rid, "request");
 													$cmd = "DELETE FROM request WHERE rid = '$temp_rid';";
 													$out = mysqli_query($conn, $cmd);
 												}
@@ -532,6 +534,46 @@
 				}
 			}
 			return null;
+		}
+
+		function log_request($conn, $rid, $tablename){
+			$cmd = "SELECT * FROM $tablename WHERE rid = '$rid';";
+			$out = mysqli_query($conn, $cmd);
+
+			if($out){
+				$arr = mysqli_fetch_array($out);
+				$cmd = "";
+
+				if(is_array($arr) && count($arr) > 0){
+					$lid = $arr['lid'];
+					$priority = $arr['priority'];
+					$dtype = $arr['dtype'];
+					$request_time = $arr['request_time'];
+					$lookin = $arr['lookin'];
+					switch($tablename){
+						case "request":{
+							$uid = $arr['uid'];
+							$cmd = "INSERT INTO request_log VALUES('$rid', '$lid', '$priority', '$uid', '$request_time', '$lookin', NOW());";
+							break;
+						}
+
+						case "hospital_request":{
+							$hid = $arr['hid'];
+							$name = $arr['name'];
+							$btype = $arr['btype'];
+							$quantity = $arr['quantity'];
+
+							$cmd = "INSERT INTO hospital_request_log VALUES('$rid', '$hid', '$name', '$dtype', '$btype', '$quantity', '$lid', '$priority', '$request_time', '$lookin', NOW());";
+							break;
+						}
+
+						default:
+							return;
+					}
+
+					$out = mysqli_query($conn, $cmd);
+				}
+			}
 		}
 	?>
 	<div class = "container" style = "margin-left: 35%; margin-top: 3%; padding-bottom: 40px;">

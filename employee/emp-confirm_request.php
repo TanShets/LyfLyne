@@ -145,6 +145,7 @@
             $out = mysqli_query($conn, $cmd);
             if($out){
                 $arr = mysqli_fetch_array($out);
+				$logging_cmd = "";
                 if(is_array($arr)){
 					$aid = $arr['aid'];
 					$lid = $arr['lid'];
@@ -162,6 +163,8 @@
 							$out = mysqli_query($conn, $cmd);
 							$arr_temp = mysqli_fetch_array($out);
 							$btype = $arr_temp['btype'];
+
+							$logging_cmd = "INSERT INTO request_log VALUES('$rid', '$lid', '$priority', '$dtype', '$uid', '$request_time', '$lookin', NOW());";
 							break;
 						}
 
@@ -170,6 +173,8 @@
 							$btype = $arr['btype'];
 							$quantity = $arr['quantity'];
 							$hid = $arr['hid'];
+
+							$logging_cmd = "INSERT INTO hospital_request_log VALUES('$rid', '$hid', '$name', '$dtype', '$btype', '$quantity', '$lid', '$priority', '$request_time', '$lookin', NOW());";
 							break;
 						}
 
@@ -207,7 +212,13 @@
                         $cmd = "DELETE FROM $tablename WHERE rid = '$rid';";
                         $out = mysqli_query($conn, $cmd);
                         if($out){
-                            $_SESSION['message'] = "Confirmed";
+							$out = mysqli_query($conn, $logging_cmd);
+							if($out){
+								$_SESSION['message'] = "Confirmed";
+							}
+							else{
+								$_SESSION['message'] = "Confirmed with logging error";
+							}
                         }
                         else
                             $_SESSION['message'] = "Removal from queue error";

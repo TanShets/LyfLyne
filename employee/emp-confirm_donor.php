@@ -128,7 +128,13 @@
                         $cmd = "DELETE FROM dead_donor_queue WHERE ddid = '$ddid';";
                         $out = mysqli_query($conn, $cmd);
                         if($out){
-                            $_SESSION['message'] = "Confirmed";
+                            $cmd = "INSERT INTO dead_donor_log VALUES('$ddid', '$dtype', '$dtid', '$lid', '$btype', NOW());";
+                            $out = mysqli_query($conn, $cmd);
+                            if($out){
+                                $_SESSION['message'] = "Confirmed";
+                            }
+                            else
+                                $_SESSION['message'] = "Confirmed but with log error";
                         }
                         else
                             $_SESSION['message'] = "Removal from queue error";

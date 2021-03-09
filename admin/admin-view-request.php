@@ -59,17 +59,10 @@
 								$quantity = $_POST['quantity'];
 								//echo $_POST['btype'];
 								$btype = $_POST['btype'];
-								$arr = getSupply($conn, $dtype, $btype, $lid);
-								if(is_array($arr)){
-									$max_quantity = $arr['quantity'];
-									if($quantity <= $max_quantity){
-										//$cmd = "UPDATE ".$dtype." SET quantity = quantity - ".$quantity." WHERE btype = '$btype' AND lid = '$lid';";
-										$outcome = updateSupply($conn, $dtype, $btype, $lid, -$quantity);
-										if($outcome){
-											$cmd = "DELETE FROM hospital_request WHERE rid = '$temp_rid';";
-											$out = mysqli_query($conn, $cmd);
-										}
-									}
+								$outcome = enqueue_request($conn, $temp_rid, "hospital_request");
+								if($outcome){
+									$cmd = "DELETE FROM hospital_request WHERE rid = '$temp_rid';";
+									$out = mysqli_query($conn, $cmd);
 								}
 							}
 							else{
@@ -92,24 +85,14 @@
 										}
 										else
 											$quantity = 1;
-										$arr = getSupply($conn, $dtype, $btype, $lid);
-										//print_r($arr);
-										if(is_array($arr)){
-											//echo "step 3<br>";
-											$max_quantity = $arr['quantity'];
-											if($quantity <= $max_quantity){
-												//echo "step 4<br>";
-												//$cmd = "UPDATE ".$dtype." SET quantity = quantity - ".$quantity." WHERE btype = '$btype' AND lid = '$lid';";
-												$outcome = updateSupply($conn, $dtype, $btype, $lid, -$quantity);
-												if($outcome){
-													//echo "step 5<br>";
-													$cmd = "DELETE FROM request WHERE rid = '$temp_rid';";
-													$out = mysqli_query($conn, $cmd);
-												}
-											}
-											else{
-												$message = "Insufficient supply in the bank. Please transfer request!";
-											}
+										$outcome = enqueue_request($conn, $temp_rid, "request");
+										if($outcome){
+											//echo "step 5<br>";
+											$cmd = "DELETE FROM request WHERE rid = '$temp_rid';";
+											$out = mysqli_query($conn, $cmd);
+										}
+										else{
+											$message = "Insufficient supply in the bank. Please transfer request!";
 										}
 									}
 								}
@@ -488,7 +471,12 @@
 					$cmd = $cmd."isbank = 1 AND ";
 				$cmd = $cmd."btype = '$btype' AND lid = '$lid';";
 				*/
-				$cmd = "";
+				$id_name = substr($dtype, 0, 2)."id";
+				$cmd = "SELECT $id_name FROM $dtype WHERE btype = '$btype' AND lid = '$lid'";
+				if($dtype == "blood" || $dtype == "marrow")
+					$cmd = $cmd." isbank = 1;";
+				else
+					$cmd = $cmd.";";
 				$out = mysqli_query($conn, $cmd);
 				if($out)
 				{
@@ -542,6 +530,98 @@
 				}
 			}
 			return null;
+		}
+
+		function enqueue_request($conn, $rid, $tablename){
+			$cmd = "SELECT * FROM $tablename WHERE rid = '$rid';";
+			$out = mysqli_query($conn, $cmd);
+
+			if($out){
+				$arr = mysqli_fetch_array($out);
+				if(is_array($arr) && count($arr) > 0){
+					$lid = $arr['lid'];
+					$priority = $arr['priority'];
+					$dtype = $arr['dtype'];
+					$request_time = $arr['request_time'];
+					$lookin = $arr['lookin'];
+					$aid = $_SESSION['admin']['aid'];
+					$final_cmd = "";
+
+					switch($tablename){
+						case "request":{
+							$uid = $arr['uid'];
+							$btype = "";
+
+							$cmd = "SELECT btype FROM user WHERE uid = '$uid';";
+							$out = mysqli_query($conn, $cmd);
+
+							if($out){
+								$arr = mysqli_fetch_array($out);
+								if(is_array($arr) && count($arr) > 0){
+									$btype = $arr['btype'];
+								}
+								else
+									return;
+							}
+							else
+								return;
+
+							if($dtype == 'blood')
+								$quantity = 500;
+							else
+								$quantity = 1;
+							
+							$final_cmd = "INSERT INTO admin_request_queue VALUES('$rid', '$aid', '$lid', '$priority', '$dtype', '$uid', '$request_time', '$lookin', ";
+							break;
+						}
+
+						case "hospital_request":{
+							$hid = $arr['hid'];
+							$name = $arr['name'];
+							$btype = $arr['btype'];
+							$quantity = $arr['quantity'];
+
+							$final_cmd = "INSERT INTO admin_hospital_request_queue VALUES('$rid', '$aid', '$hid', '$name', '$dtype', '$btype', '$quantity', '$lid', '$priority', '$request_time', '$lookin', ";
+							break;
+						}
+
+						default:
+							return;
+					}
+
+					$id_name = substr($dtype, 0, 2)."id";
+
+					$cmd = "SELECT $id_name FROM $dtype WHERE (lid = '$lid' OR lid = '$lookin') AND btype = '$btype' AND quantity >= '$quantity';";
+					$out = mysqli_query($conn, $cmd);
+					//print_r($cmd);
+					if($out){
+						$arr = mysqli_fetch_array($out);
+						//echo "<br>Here<br>";
+						if(is_array($arr) && count($arr) > 0){
+							$dtid = $arr[$id_name];
+
+							$final_cmd .= "'$dtid');";
+							//print_r($final_cmd);
+							$out = mysqli_query($conn, $final_cmd);
+							if($out){
+								return true;
+							}
+							else{
+								//print_r(mysqli_error($conn));
+								return null;
+							}
+						}
+						else
+							return null;
+					}
+					else
+						return null;
+				}
+				else
+					return null;
+			}
+			else
+				return null;
 		}
 	?>
 	<div class = "container" style = "margin-left: 38%; margin-top: 3%; padding-bottom: 40px;">
