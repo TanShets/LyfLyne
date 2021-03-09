@@ -1,3 +1,4 @@
+<?php require('../email_test.php'); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,6 +6,7 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../style/user.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -33,6 +35,15 @@
 
 		if($_SERVER['REQUEST_METHOD'] == "POST"){
 			$count = 0;
+
+			if(
+				isset($_SESSION['h_create_temp']['correct_otp']) && 
+				isset($_POST['otp']) && 
+				$_SESSION['h_create_temp']['correct_otp'] == $_POST['otp']
+			){
+				execute_hospital_creation($conn);
+			}
+
 			if(isset($_POST['name']) && $_POST['name'] != ""){
 				$_SESSION['h_create_temp']['name'] = $_POST['name'];
 				$count++;
@@ -99,7 +110,10 @@
 				$count++;
 			}
 
-			if($count == 12 && $_SESSION['h_create_temp']['password'] == $_SESSION['h_create_temp']['cpassword']){
+			if(
+				!isset($_SESSION['h_create_temp']['correct_otp']) && $count == 12 && 
+				$_SESSION['h_create_temp']['password'] == $_SESSION['h_create_temp']['cpassword']
+			){
 				unset($_SESSION['h_create_temp']['cpassword']);
 				$cmd = "SELECT lid FROM location WHERE state = '".$_SESSION['h_create_temp']['state']."' AND district = '".$_SESSION['h_create_temp']['district']."' AND city = '".$_SESSION['h_create_temp']['city']."' AND area = '".$_SESSION['h_create_temp']['area']."';";
 				//echo $cmd;
@@ -116,29 +130,13 @@
 				unset($_SESSION['h_create_temp']['district']);
 				unset($_SESSION['h_create_temp']['city']);
 				unset($_SESSION['h_create_temp']['area']);
-				$cmd = "INSERT INTO hospital_user(";
-				foreach ($_SESSION['h_create_temp'] as $x => $y) {
-					$cmd = $cmd.$x.", ";
-				}
-				$cmd = substr($cmd, 0, -2).") VALUES(";
-				foreach ($_SESSION['h_create_temp'] as $x) {
-					$cmd = $cmd."'".$x."', ";
-				}
-				$cmd = substr($cmd, 0, -2).");";
-				//echo $cmd;
-				if(isset($conn) && $conn){
-					echo "Hear";
-					//echo $cmd;
-					$out = mysqli_query($conn, $cmd);
-					if($out)
-					{
-						echo "me";
-						header("Location: ../login.php");
-							exit();
-					}
-				}
-				else
-					echo "Failed";
+
+				$_SESSION['h_create_temp']['correct_otp'] = generateOTP();
+				sendOTP(
+					$_SESSION['h_create_temp']['correct_otp'], 
+					$_SESSION['h_create_temp']['email'],
+					$_SESSION['h_create_temp']['username']
+				);
 			}
 		}
 
@@ -157,6 +155,34 @@
 			}
 
 			return array();
+		}
+
+		function execute_hospital_creation($conn){
+			unset($_SESSION['h_create_temp']['correct_otp']);
+			$cmd = "INSERT INTO hospital_user(";
+			foreach ($_SESSION['h_create_temp'] as $x => $y) {
+				$cmd = $cmd.$x.", ";
+			}
+			$cmd = substr($cmd, 0, -2).") VALUES(";
+			foreach ($_SESSION['h_create_temp'] as $x) {
+				$cmd = $cmd."'".$x."', ";
+			}
+			$cmd = substr($cmd, 0, -2).");";
+			//echo $cmd;
+			if(isset($conn) && $conn){
+				//echo $cmd;
+				$out = mysqli_query($conn, $cmd);
+				if($out)
+				{
+					//echo "me";
+					$_SESSION['message'] = "Hospital Registered!!!!";
+					unset($_SESSION['h_create_temp']);
+					header("Location: ../login.php");
+						exit();
+				}
+			}
+			else
+				echo "Failed";
 		}
 	?>
 </head>
@@ -389,5 +415,23 @@
 			</button>
 		</form></center>
 	</div>
+
+	<?php
+		if(isset($_SESSION['h_create_temp']['correct_otp'])){
+			echo '<div class = "form-popup" id = "form-popper">';
+				echo '<form action = "hospital-create.php" method = "post" id = "popper">';
+					echo '<h2>Your One Time Password has been sent to ';
+					if(isset($_SESSION['h_create_temp']['email'])){
+						echo $_SESSION['h_create_temp']['email'];
+					}
+					echo '</h2>';
+
+					echo '<label for="otp">OTP: </label>';
+					echo '<input id = "otp" type = "text" name = "otp">';
+					echo '<button type = "submit" class = "btn btn-primary">Submit</button>';
+				echo '</form>';
+			echo '</div>';
+		}
+	?>
 </body>
 </html>

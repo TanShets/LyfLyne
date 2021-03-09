@@ -149,4 +149,16 @@
     function print_word(){
         echo "x";
     }
+
+    function generateOTP(){
+        $size = 6;
+
+        $otp = "";
+        for($i = 0; $i < $size; $i++){
+            $num = chr(rand(0, 100) % 10 + ord('0'));
+            $otp = $otp.$num;
+        }
+
+        return $otp;
+    }
 ?>

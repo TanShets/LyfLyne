@@ -1,3 +1,4 @@
+<?php require('../email_test.php'); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,9 +6,11 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../style/user.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 	<?php
 		if(!isset($_SESSION))
 			session_start();
@@ -17,6 +20,12 @@
 			header("Location: create-request.php");
 				exit();
 		}
+
+		if(isset($_SESSION['message'])){
+			echo "<script>alert('".$_SESSION['message']."');</script>";
+			unset($_SESSION['message']);
+		}
+
 		if(!isset($_SESSION['create_temp']))
 			$_SESSION['create_temp'] = array();
 		
@@ -31,6 +40,22 @@
 		}
 
 		if($_SERVER['REQUEST_METHOD'] == "POST"){
+			if(
+				isset($_SESSION['create_temp']['correct_otp']) && isset($_POST['otp']) && 
+				$_POST['otp'] == $_SESSION['create_temp']['correct_otp']
+			){
+				//unset($_SESSION['create-temp']['corrected_otp']);
+				$_SESSION['message'] = "Made it here";
+				//echo "Reached here";
+				execute_create($conn);
+			}
+			else if(
+				isset($_SESSION['create_temp']['correct_otp']) && isset($_POST['otp']) && 
+				$_POST['otp'] != $_SESSION['create_temp']['corrected_otp']
+			){
+				$_SESSION['message'] = "Incorrect OTP";
+			}
+			
 			$count = 0;
 			if(isset($_POST['name']) && $_POST['name'] != ""){
 				$_SESSION['create_temp']['name'] = $_POST['name'];
@@ -115,13 +140,14 @@
 
 			unset($_SESSION['create_temp']['b-group']);
 
-			if($count == 15 && $_SESSION['create_temp']['password'] == $_SESSION['create_temp']['cpassword']){
+			if(!isset($_SESSION['create_temp']['corrected_otp']) && $count == 15 && 
+			$_SESSION['create_temp']['password'] == $_SESSION['create_temp']['cpassword']){
 				unset($_SESSION['create_temp']['cpassword']);
 				$cmd = "SELECT lid FROM location WHERE state = '".$_SESSION['create_temp']['state']."' AND district = '".$_SESSION['create_temp']['district']."' AND city = '".$_SESSION['create_temp']['city']."' AND area = '".$_SESSION['create_temp']['area']."';";
 				
 				$cmd2 = "SELECT lid FROM area_location WHERE area = '".$_SESSION['create_temp']['area']."';";
 
-				echo $cmd;
+				//echo $cmd;
 				if(isset($conn) && $conn){
 					$out = mysqli_query($conn, $cmd);
 					$out2 = mysqli_query($conn, $cmd2);
@@ -130,83 +156,102 @@
 					{
 						$lid = mysqli_fetch_array($out)['lid'];
 						$_SESSION['create_temp']['lid'] = $lid;	
-						print_r($lid);
+						//print_r($lid);
 					}
-
+					//echo "p1<br>";
 					if($out2){
-						$lid2 = mysqli_fetch_array($out2)['lid'];
+						$arr = mysqli_fetch_array($out2);
+						//print_r($arr);
+						//$lid2 = mysqli_fetch_array($out2)['lid'];
 					}
 				}
+				//echo "p2<br>";
 				unset($_SESSION['create_temp']['state']);
+				//echo "p3<br>";
 				unset($_SESSION['create_temp']['district']);
+				//echo "p4<br>";
 				unset($_SESSION['create_temp']['city']);
+				//echo "p5<br>";
 				unset($_SESSION['create_temp']['area']);
-				$cmd = "INSERT INTO user(";
-				foreach ($_SESSION['create_temp'] as $x => $y) {
-					$cmd = $cmd.$x.", ";
-				}
-				$cmd = substr($cmd, 0, -2).") VALUES(";
-				foreach ($_SESSION['create_temp'] as $x) {
-					$cmd = $cmd."'".$x."', ";
-				}
-				$cmd = substr($cmd, 0, -2).");";
-				//echo $cmd;
-				if(isset($conn) && $conn){
-					//echo "Hear";
+
+				$_SESSION['create_temp']['correct_otp'] = generateOTP();
+				sendOTP(
+					$_SESSION['create_temp']['correct_otp'], 
+					$_SESSION['create_temp']['email'],
+					$_SESSION['create_temp']['username']
+				);
+				//echo $_SESSION['create_temp']['correct_otp']."<br>";
+				//execute_create($conn);
+			}
+		}
+
+		function execute_create($conn){
+			unset($_SESSION['create_temp']['correct_otp']);
+			$cmd = "INSERT INTO user(";
+			foreach ($_SESSION['create_temp'] as $x => $y) {
+				$cmd = $cmd.$x.", ";
+			}
+			$cmd = substr($cmd, 0, -2).") VALUES(";
+			foreach ($_SESSION['create_temp'] as $x) {
+				$cmd = $cmd."'".$x."', ";
+			}
+			$cmd = substr($cmd, 0, -2).");";
+			//echo $cmd;
+			if(isset($conn) && $conn){
+				//echo "Hear";
+				$out = mysqli_query($conn, $cmd);
+				if($out)
+				{
+					$cmd = "SELECT uid FROM user WHERE ";
+					foreach ($_SESSION['create_temp'] as $x => $y) {
+						$cmd = $cmd.$x."= '$y' AND ";
+					}
+					$cmd = substr($cmd, 0, -5).";";
 					$out = mysqli_query($conn, $cmd);
-					if($out)
-					{
-						$cmd = "SELECT uid FROM user WHERE ";
-						foreach ($_SESSION['create_temp'] as $x => $y) {
-							$cmd = $cmd.$x."= '$y' AND ";
+					if($out){
+						$arr = mysqli_fetch_array($out);
+						$uid = $arr['uid'];
+						$questions = 0;
+						$answers = 0;
+						if($_SESSION['create_temp']['bdonor'] == 1){
+							$questions++;
+							$cmd = "INSERT INTO blood(uid, btype, isbank, quantity, lid) VALUES('$uid', ";
+							$cmd = $cmd."'".$_SESSION['create_temp']['btype']."', 0, 0, ";
+							$cmd = $cmd."'".$_SESSION['create_temp']['lid']."');";
+							$out = mysqli_query($conn, $cmd);
+							if($out)
+								$answers++;
 						}
-						$cmd = substr($cmd, 0, -5).";";
-						$out = mysqli_query($conn, $cmd);
-						if($out){
-							$arr = mysqli_fetch_array($out);
-							$uid = $arr['uid'];
-							$questions = 0;
-							$answers = 0;
-							if($_SESSION['create_temp']['bdonor'] == 1){
-								$questions++;
-								$cmd = "INSERT INTO blood(uid, btype, isbank, quantity, lid) VALUES('$uid', ";
-								$cmd = $cmd."'".$_SESSION['create_temp']['btype']."', 0, 0, ";
-								$cmd = $cmd."'".$_SESSION['create_temp']['lid']."');";
-								$out = mysqli_query($conn, $cmd);
-								if($out)
-									$answers++;
-							}
 
-							if($_SESSION['create_temp']['mdonor'] == 1){
-								$questions++;
-								$cmd = "INSERT INTO marrow(uid, btype, isbank, quantity, lid) VALUES('$uid', ";
-								$cmd = $cmd."'".$_SESSION['create_temp']['btype']."', 0, 0, ";
-								$cmd = $cmd."'".$_SESSION['create_temp']['lid']."');";
-								$out = mysqli_query($conn, $cmd);
-								if($out)
-									$answers++;
-							}
+						if($_SESSION['create_temp']['mdonor'] == 1){
+							$questions++;
+							$cmd = "INSERT INTO marrow(uid, btype, isbank, quantity, lid) VALUES('$uid', ";
+							$cmd = $cmd."'".$_SESSION['create_temp']['btype']."', 0, 0, ";
+							$cmd = $cmd."'".$_SESSION['create_temp']['lid']."');";
+							$out = mysqli_query($conn, $cmd);
+							if($out)
+								$answers++;
+						}
 
-							if($questions == $answers)
-								$_SESSION['message'] = "Successful creation of account";
-							else
-								$_SESSION['message'] = "There was some at creation time!";
-							
-							header("Location: ../login.php");
-							exit();
-						}
-						else{
-							echo "<script>";
-							echo "alert(\"Creation of account failed!\");";
-							echo "</script>";
-						}
+						if($questions == $answers)
+							$_SESSION['message'] = "Successful creation of account";
+						else
+							$_SESSION['message'] = "There was some at creation time!";
+						unset($_SESSION['create_temp']);
+						header("Location: ../login.php");
+						exit();
+					}
+					else{
+						echo "<script>";
+						echo "alert(\"Creation of account failed!\");";
+						echo "</script>";
 					}
 				}
-				else{
-					echo "<script>";
-					echo "alert(\"Creation of account failed!\");";
-					echo "</script>";
-				}
+			}
+			else{
+				echo "<script>";
+				echo "alert(\"Creation of account failed!\");";
+				echo "</script>";
 			}
 		}
 	?>
@@ -527,11 +572,30 @@
 				</tr>
 			</table>
 			<div style = "width: 50%;">
-				<button type = "submit" class = "btn btn-primary" style = "width: 25%; margin-left: 73%;">
+				<button type = "submit" class = "btn btn-primary" style = "width: 25%; margin-left: 73%;"
+				 >
 					Submit
 				</button>
 			</div>
 		</form>
 	</div>
+
+	<?php
+		if(isset($_SESSION['create_temp']['correct_otp'])){
+			echo '<div class = "form-popup" id = "form-popper">';
+				echo '<form action = "create.php" method = "post" id = "popper">';
+					echo '<h2>Your One Time Password has been sent to ';
+					if(isset($_SESSION['create_temp']['email'])){
+						echo $_SESSION['create_temp']['email'];
+					}
+					echo '</h2>';
+
+					echo '<label for="otp">OTP: </label>';
+					echo '<input id = "otp" type = "text" name = "otp">';
+					echo '<button type = "submit" class = "btn btn-primary">Submit</button>';
+				echo '</form>';
+			echo '</div>';
+		}
+	?>
 </body>
 </html>
