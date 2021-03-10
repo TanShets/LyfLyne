@@ -21,14 +21,15 @@
 			font-size: 20px;
 			padding-bottom: 7px;
 			margin-left: 6%;
+            color: white;
 		}
 	</style>
 </head>
-<body>
-	<div class = "container" style = "margin-left: 38%; margin-top: 18%;">
-		<div class = "details">Logged out Successfully!</div>
+<body style="background-image: url(./bg.jpg); background-repeat: no-repeat; background-size: cover;">
+	<div class = "container" style = "margin-left: 38%; margin-top: 18%; background: rgba(0, 0, 0, 0.226); width: 28%;">
+        <div class = "details" style="padding-left: 48px;">Logged out Successfully!</div>
 		<form action = "login.php" id = "pos">
-			<button class = "btn btn-primary" name = "login" value = "login" style = "width: 32%;">
+			<button class = "btn btn-primary" name = "login" value = "login" style = "width: 350px">
 				Back To Login Page
 			</button>
 		</form>
