@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Login to LyfLyne</title>
-	<meta charset="utf-8">
+    <title>Login to LyfLyne</title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	<?php
+    <style>
+        body {
+            color: white;
+        }
+    </style>
+    <?php
 		if(!isset($_SESSION))
 			session_start();
 		
@@ -80,41 +86,49 @@
 		}
 	?>
 </head>
-<body>
-	<div class = "container-fluid" style = "margin-left: 35%; margin-top: 12%; height: 200%">
-		<div style = "width:29.8%; height: 200%; border: grey 2px solid; padding: 10px;">
-		<center>
-		<h2>Login to your account</h2>
-		<form action = "login.php" method = "post">
-			<table>
-				<tr>
-					<td>Username</td>
-					<td><input class = "form-control" type = "text" name = "name" placeholder="Enter your username"></td>
-				</tr>
-				<tr>
-					<td>Password</td>
-					<td><input class = "form-control" type = "password" name = "password" placeholder="Enter password"></td>
-				</tr>
-			</table><div style = "padding-bottom: 10px;"></div>
-			<label for = "isHospital">Hospital Account</label>
-			<input id = "isHospital" class = "form-check-label" type = "checkbox" name = "isHospital" value = "1"/>
-			<center style = "padding-top: 10px;">
-			<button type = "submit" class = "btn btn-primary" style = "width: 80%;">Login</button>
-			</center>
-		</form><br>
-		<table>
-			<tr><td>
-				<form action = "user/create.php">
-					<button type = "submit" class = "btn btn-success">Create User Account</button>
-				</form></td>	
-				<td>
-				<form action = "hospital/hospital-create.php">
-					<button type = "submit" class = "btn btn-success">Create Hospital Account</button>
-				</form></td>
-			</tr>
-		</table>
-		</center>
-		</div>
-	</div>
+
+<body style="background-image: url(./bg.jpg); background-repeat: no-repeat; background-size: cover;" class="blur">
+    <div class="container-fluid" style="margin-left: 35%; margin-top: 12%; height: 200%;">
+        <div style="width:29.8%; height: 200%; border: grey 2px solid; padding: 10px;">
+            <center>
+                <h2>Login to your account</h2>
+                <form action="login.php" method="post">
+                    <table>
+                        <tr>
+                            <td>Username</td>
+                            <td><input class="form-control" type="text" name="name" placeholder="Enter your username">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Password</td>
+                            <td><input class="form-control" type="password" name="password"
+                                    placeholder="Enter password"></td>
+                        </tr>
+                    </table>
+                    <div style="padding-bottom: 10px;"></div>
+                    <label for="isHospital">Hospital Account</label>
+                    <input id="isHospital" class="form-check-label" type="checkbox" name="isHospital" value="1" />
+                    <center style="padding-top: 10px;">
+                        <button type="submit" class="btn btn-primary" style="width: 80%;">Login</button>
+                    </center>
+                </form><br>
+                <table>
+                    <tr>
+                        <td>
+                            <form action="user/create.php">
+                                <button type="submit" class="btn btn-success">Create User Account</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="hospital/hospital-create.php">
+                                <button type="submit" class="btn btn-success">Create Hospital Account</button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </center>
+        </div>
+    </div>
 </body>
+
 </html>
