@@ -43,13 +43,20 @@
 
 <!--
 <html>
-    <head>
-        <title>Email test</title>
-    </head>
-    <body>
-        <form action = "email_test.php" method = "post">
-            <button type = "submit">Test</button>
-        </form>
-    </body>
+
+<head>
+    <title>Email test</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <form action="email_test.php" method="post" style="display: flex; align-items: center; justify-content: center;">
+        <button type="submit" class="btn btn-primary btn-lg" style="padding: 0.5rem 2rem;">Test</button>
+    </form>
+</body>
+
 </html>
 -->
