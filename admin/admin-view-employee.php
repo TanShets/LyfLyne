@@ -112,11 +112,6 @@
                                 //echo $cmd;
                                 $out = mysqli_query($conn, $cmd);
                                 if($out){
-                                    // $cmd = "SELECT * FROM emp_user WHERE name = '".$_POST['name']."' AND ";
-                                    // $cmd = $cmd."username = '".$_POST['username']."' AND ";
-                                    // $cmd = $cmd."email = '".$_POST['email']."' AND ecode = '".$_POST['ecode']."' AND ";
-                                    // $cmd = $cmd."mobile = '".$_POST['mobile']."' AND landline = '".$_POST['landline']."' AND ";
-                                    // $cmd = $cmd."eid = '".$_POST['eid']."';";
                                     $cmd = "SELECT eid, name, username, email, lid, ecode, mobile, landline FROM emp_user;";
                                     $out = mysqli_query($conn, $cmd);
                                     if($out){
