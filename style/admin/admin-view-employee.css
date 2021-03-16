@@ -1,0 +1,8 @@
+.window-box{
+    position: fixed;
+    left: 41%;
+    top: 24%;
+    border: solid black 1px;
+    padding: 20px;
+    background-color: white;
+}

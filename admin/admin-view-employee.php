@@ -5,10 +5,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../style/admin/admin-view-employee.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <style type = "text/css">
+        <!-- <style type = "text/css">
             .window-box{
                 position: absolute;
                 left: 43%;
@@ -16,7 +17,7 @@
                 border: solid black 1px;
                 padding: 20px;
             }
-        </style>
+        </style> -->
         <?php
             session_start();
             
@@ -65,6 +66,10 @@
             }
 
             if($_SERVER['REQUEST_METHOD'] == "POST"){
+                if(isset($_POST['isCancelled']) && $_POST['isCancelled'] == "Close"){
+                    $_SESSION['admin-request'] = array();
+                }
+
                 if(isset($conn) && $conn){
                     $count = 0;
                     if(isset($_POST['state'])){
@@ -91,6 +96,12 @@
                             $count++;
                     }
 
+                    if(isset($_POST['area'])){
+                        $_SESSION['admin-request']['area'] = $_POST['area'];
+                        if($_SESSION['admin-request']['area'] != "")
+                            $count++;
+                    }
+
                     if(isset($_POST['used'])){
                         switch($_POST['used']){
                             case 0:{
@@ -101,6 +112,19 @@
                                 //echo $cmd;
                                 $out = mysqli_query($conn, $cmd);
                                 if($out){
+                                    // $cmd = "SELECT * FROM emp_user WHERE name = '".$_POST['name']."' AND ";
+                                    // $cmd = $cmd."username = '".$_POST['username']."' AND ";
+                                    // $cmd = $cmd."email = '".$_POST['email']."' AND ecode = '".$_POST['ecode']."' AND ";
+                                    // $cmd = $cmd."mobile = '".$_POST['mobile']."' AND landline = '".$_POST['landline']."' AND ";
+                                    // $cmd = $cmd."eid = '".$_POST['eid']."';";
+                                    $cmd = "SELECT eid, name, username, email, lid, ecode, mobile, landline FROM emp_user;";
+                                    $out = mysqli_query($conn, $cmd);
+                                    if($out){
+                                        $new_arr = mysqli_fetch_all($out);
+                                        if(is_array($new_arr) && count($new_arr) > 0){
+                                            $arr = $new_arr;
+                                        }
+                                    }
                                     echo "<script>";
                                     echo "alert(\"Employee id: ".$_POST['eid']." successfully updated!\");";
                                     echo "</script>";
@@ -136,10 +160,11 @@
                             }
 
                             case 3:{
-                                if($count == 3){
+                                if($count == 4){
                                     $cmd = "SELECT lid FROM location WHERE state = '".$_SESSION['admin-request']['state']."'";
                                     $cmd = $cmd." AND district = '".$_SESSION['admin-request']['district']."'";
-                                    $cmd = $cmd." AND city = '".$_SESSION['admin-request']['city']."';";
+                                    $cmd = $cmd." AND city = '".$_SESSION['admin-request']['city']."'";
+                                    $cmd = $cmd." AND area = '".$_SESSION['admin-request']['area']."';";
                                     $out = mysqli_query($conn, $cmd);
                                     if($out){
                                         $arr_temp = mysqli_fetch_array($out);
@@ -148,6 +173,7 @@
                                         $cmd = "UPDATE emp_user SET lid = '$lid' WHERE eid = '".$_SESSION['admin-request']['eid']."';";
                                         $out = mysqli_query($conn, $cmd);
                                         if($out){
+                                            unset($_SESSION['admin-request']['eid']);
                                             echo "<script>";
                                             echo "alert(\"Employee id: ".$_POST['eid']." location successfully updated!\");";
                                             echo "</script>";
@@ -225,10 +251,10 @@
                 echo "<form action = \"admin-view-employee.php\" method = \"post\">";
                 echo "<table>";
                 echo "<tr>";
-                    echo "<td>State</td>";
+                    echo "<td>State:</td>";
                     echo "<td>";
                     //echo "Yes";
-                        echo "<select name = \"state\" onchange = \"this.form.submit()\">";
+                        echo "<select class = \"form-control\" name = \"state\" onchange = \"this.form.submit()\">";
                         echo "<option value = \"\"";
                         if(!isset($_SESSION['admin-request']['state']) || $_SESSION['admin-request']['state'] == "")
                             echo " selected ";
@@ -255,9 +281,9 @@
                     echo "</td>";
                 echo "</tr>";
                 echo "<tr>";
-                    echo "<td>District</td>";
+                    echo "<td>District:</td>";
                     echo "<td>";
-                        echo "<select name = \"district\" onchange = 'this.form.submit()'";
+                        echo "<select class = \"form-control\" name = \"district\" onchange = 'this.form.submit()'";
                         if(!isset($_SESSION['admin-request']['state']) || $_SESSION['admin-request']['state'] == "")
                             echo " disabled";
                         echo ">";
@@ -285,9 +311,9 @@
                     echo "</td>";
                 echo "</tr>";
                 echo "<tr>";
-                    echo "<td>City/Town</td>";
+                    echo "<td>City/Town:</td>";
                     echo "<td>";
-                        echo "<select name = \"city\"";
+                        echo "<select class = \"form-control\" name = \"city\" onchange = 'this.form.submit()'";
                         if(!isset($_SESSION['admin-request']['state']) || $_SESSION['admin-request']['state'] == "" || !isset($_SESSION['admin-request']['district']) || $_SESSION['admin-request']['district'] == "")
                             echo " disabled";
                         echo ">";
@@ -300,13 +326,13 @@
                             {
                                 $temp = $_SESSION['admin-request']['state'];
                                 $temp1 = $_SESSION['admin-request']['district'];
-                                $cmd = "SELECT city FROM location WHERE state = '$temp' AND district = '$temp1';";
+                                $cmd = "SELECT city FROM location WHERE state = '$temp' AND district = '$temp1' GROUP BY(city);";
                                 $out = mysqli_query($conn, $cmd);
                                 $arr = mysqli_fetch_all($out);
                                 for($i = 0; $i < count($arr); $i++){
                                     $temp = $arr[$i][0];
                                     echo "<option value = \"$temp\"";
-                                    if(!isset($_SESSION['admin-request']['city']) || $_SESSION['admin-request']['city'] == $temp)
+                                    if(isset($_SESSION['admin-request']['city']) && $_SESSION['admin-request']['city'] == $temp)
                                         echo " selected";
                                     echo ">".$temp."</option>";
                                 }
@@ -317,11 +343,61 @@
                         echo "</select>";
                     echo "</td>";
                 echo "</tr>";
-                echo "</table>";
+                echo "<tr>";
+                    echo "<td>Area:</td>";
+                    echo "<td>";
+                        echo "<select class = \"form-control\" name = \"area\"";
+                        if(
+                            !isset($_SESSION['admin-request']['state']) || 
+                            $_SESSION['admin-request']['state'] == "" || 
+                            !isset($_SESSION['admin-request']['district']) || 
+                            $_SESSION['admin-request']['district'] == "" || 
+                            !isset($_SESSION['admin-request']['city']) || 
+                            $_SESSION['admin-request']['city'] == ""
+                        )
+                            echo " disabled";
+                        echo ">";
+                        if(
+                            isset($_SESSION['admin-request']['state']) && $_SESSION['admin-request']['state'] != "" && 
+                            isset($_SESSION['admin-request']['district']) && $_SESSION['admin-request']['district'] != "" && 
+                            isset($_SESSION['admin-request']['city']) && $_SESSION['admin-request']['city'] != ""
+                        ){
+                            echo "<option value = \"\"";
+                            if(!isset($_SESSION['admin-request']['area']) || $_SESSION['admin-request']['area'] == "")
+                                echo " selected";
+                            echo ">Select an option</option>";
+                            if(isset($conn) && $conn)
+                            {
+                                $temp = $_SESSION['admin-request']['state'];
+                                $temp1 = $_SESSION['admin-request']['district'];
+                                $temp2 = $_SESSION['admin-request']['city'];
+                                $cmd = "SELECT area FROM location WHERE state = '$temp' AND district = '$temp1' AND city = '$temp2';";
+                                $out = mysqli_query($conn, $cmd);
+                                $arr = mysqli_fetch_all($out);
+                                for($i = 0; $i < count($arr); $i++){
+                                    $temp = $arr[$i][0];
+                                    echo "<option value = \"$temp\"";
+                                    if(isset($_SESSION['admin-request']['area']) && $_SESSION['admin-request']['area'] == $temp)
+                                        echo " selected";
+                                    echo ">".$temp."</option>";
+                                }
+                            }
+                        }
+                        else
+                            echo "<option value = \"\">Select an option</option>";
+                        echo "</select>";
+                    echo "</td>";
+                echo "</tr>";
+                echo "</table><br>";
                 echo "<input type = \"hidden\" name = \"eid\" value = \"".$_SESSION['admin-request']['eid']."\">";
                 echo "<input type = \"hidden\" name = \"used\" value = \"3\">";
-                echo "<button type = \"submit\">Update Location</button>";
+                echo "<center><button type = \"submit\" class = \"btn btn-success\">Update Location</button></center>";
+                echo "</form><br>";
+                echo "<center>";
+                echo "<form action = \"admin-view-employee.php\" method = \"post\">";
+                    echo "<input type = \"submit\" class = \"btn btn-danger\" name = \"isCancelled\" value = \"Close\">";
                 echo "</form>";
+                echo "</center>";
                 echo "</div>";
             }
         ?>
