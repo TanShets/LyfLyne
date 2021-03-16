@@ -147,35 +147,39 @@
 								$quantity = $_POST['quantity'];
 								//echo $_POST['btype'];
 								$btype = $_POST['btype'];
-								$lids = getLocations($conn, $lid, true);
 								$new_lid = null;
-								if(is_array($lids)){
-									$cmd = "SELECT lid FROM ".$_POST['dtype']." WHERE ";
-									if($_POST['dtype'] == "blood" || $_POST['dtype'] == "marrow"){
-										$cmd = $cmd."isbank = 1 AND ";
-									}
-									$cmd = $cmd."btype = '$btype' AND quantity >= '$quantity' AND ";
-									$cmd = $cmd."lid IN (";
-									for($i = 0; $i < count($lids) - 1; $i++){
-										$cmd = $cmd."'".$lids[$i][0].", ";
-									}
-									$cmd = $cmd."'".$lids[count($lids) - 1]."');";
-									//echo $cmd;
-									$out = mysqli_query($conn, $cmd);
-									if($out){
-										$arr = mysqli_fetch_array($out);
-										if(is_array($arr)){
-											$new_lid = $arr['lid'];
+								$levels = array(0, 1, 2, -1);
+								for($j = 0; $j < count($levels); $j++){
+									$lids = getLocations($conn, $lid, $levels[$j]);
+									if(isset($lids) && is_array($lids)){
+										$cmd = "SELECT lid FROM ".$_POST['dtype']." WHERE ";
+										if($_POST['dtype'] == "blood" || $_POST['dtype'] == "marrow"){
+											$cmd = $cmd."isbank = 1 AND ";
+										}
+										$cmd = $cmd."btype = '$btype' AND quantity >= '$quantity' AND ";
+										$cmd = $cmd."lid IN (";
+										for($i = 0; $i < count($lids) - 1; $i++){
+											$cmd = $cmd."'".$lids[$i][0]."', ";
+										}
+										$cmd = $cmd."'".$lids[count($lids) - 1]."');";
+										//echo $cmd;
+										$out = mysqli_query($conn, $cmd);
+										if($out){
+											$arr = mysqli_fetch_array($out);
+											if(is_array($arr)){
+												$new_lid = $arr['lid'];
+											}
 										}
 									}
-								}
 
-								if($new_lid){
-									$cmd = "UPDATE hospital_request SET lookin = '$new_lid' WHERE rid = '$rid';";
-									$out = mysqli_query($conn, $cmd);
-								}
-								else{
-									$out = null;
+									if(isset($new_lid) && $new_lid != null){
+										$cmd = "UPDATE hospital_request SET lookin = '$new_lid' WHERE rid = '$temp_rid';";
+										$out = mysqli_query($conn, $cmd);
+										break;
+									}
+									else{
+										$out = null;
+									}
 								}
 							}
 							else{
@@ -198,35 +202,43 @@
 										}
 										else
 											$quantity = 1;
-										$lids = getLocations($conn, $lid, true);
+										
 										$new_lid = null;
-										if(is_array($lids)){
-											$cmd = "SELECT lid FROM ".$_POST['dtype']." WHERE ";
-											if($_POST['dtype'] == "blood" || $_POST['dtype'] == "marrow"){
-												$cmd = $cmd."isbank = 1 AND ";
-											}
-											$cmd = $cmd."btype = '$btype' AND quantity >= '$quantity' AND ";
-											$cmd = $cmd."lid IN (";
-											for($i = 0; $i < count($lids) - 1; $i++){
-												$cmd = $cmd."'".$lids[$i][0].", ";
-											}
-											$cmd = $cmd."'".$lids[count($lids) - 1]."');";
-											//echo $cmd;
-											$out = mysqli_query($conn, $cmd);
-											if($out){
-												$arr = mysqli_fetch_array($out);
-												if(is_array($arr)){
-													$new_lid = $arr['lid'];
+										$levels = array(0, 1, 2, -1);
+										for($j = 0; $j < count($levels); $j++){
+											//echo $levels[$j]." '$lid'<br>";
+											$lids = getLocations($conn, $lid, $levels[$j]);
+											if(is_array($lids)){
+												//echo "22222";
+												$cmd = "SELECT lid FROM ".$_POST['dtype']." WHERE ";
+												if($_POST['dtype'] == "blood" || $_POST['dtype'] == "marrow"){
+													$cmd = $cmd."isbank = 1 AND ";
+												}
+												$cmd = $cmd."btype = '$btype' AND quantity >= '$quantity' AND ";
+												$cmd = $cmd."lid IN (";
+												for($i = 0; $i < count($lids) - 1; $i++){
+													$cmd = $cmd."'".$lids[$i][0]."', ";
+												}
+												$cmd = $cmd."'".$lids[count($lids) - 1]."');";
+												//echo $cmd;
+												$out = mysqli_query($conn, $cmd);
+												if($out){
+													//echo "kamui";
+													$arr = mysqli_fetch_array($out);
+													if(is_array($arr)){
+														$new_lid = $arr['lid'];
+													}
 												}
 											}
-										}
 
-										if($new_lid){
-											$cmd = "UPDATE request SET lookin = '$new_lid' WHERE rid = '$rid';";
-											$out = mysqli_query($conn, $cmd);
-										}
-										else{
-											$out = null;
+											if(isset($new_lid) && $new_lid != null){
+												$cmd = "UPDATE request SET lookin = '$new_lid' WHERE rid = '$temp_rid';";
+												$out = mysqli_query($conn, $cmd);
+												break;
+											}
+											else{
+												$out = null;
+											}
 										}
 									}
 								}
@@ -497,15 +509,77 @@
 				return false;
 		}
 
-		function getLocations($conn, $lid, $isState){
+		function getLocations($conn, $lid, $level){
 			if($conn && $lid){
-				if($isState){
-					$cmd = "SELECT state FROM location WHERE lid = '$lid';";
-					$out = mysqli_query($conn, $cmd);
-					if($out){
-						$arr = mysqli_fetch_array($out);
-						$state = $arr['state'];
-						$cmd = "SELECT lid FROM location state = '$state' AND lid != '$lid';";
+				switch($level){
+					case 0: {
+						$cmd = "SELECT city FROM location WHERE lid = '$lid';";
+						$out = mysqli_query($conn, $cmd);
+						if($out){
+							$arr = mysqli_fetch_array($out);
+							$city = $arr['city'];
+							$cmd = "SELECT lid FROM location city = '$city' AND lid != '$lid';";
+							$out = mysqli_query($conn, $cmd);
+							if($out){
+								$arr = mysqli_fetch_all($out);
+								if(is_array($arr)){
+									$lids = array();
+									for($i = 0; $i < count($arr); $i++){
+										array_push($lids, $arr[$i][0]);
+									}
+									if(count($lids) > 0)
+										return $lids;
+								}
+							}
+						}
+						break;
+					}
+					case 1: {
+						$cmd = "SELECT district FROM location WHERE lid = '$lid';";
+						$out = mysqli_query($conn, $cmd);
+						if($out){
+							$arr = mysqli_fetch_array($out);
+							$district = $arr['district'];
+							$cmd = "SELECT lid FROM location district = '$district' AND lid != '$lid';";
+							$out = mysqli_query($conn, $cmd);
+							if($out){
+								$arr = mysqli_fetch_all($out);
+								if(is_array($arr)){
+									$lids = array();
+									for($i = 0; $i < count($arr); $i++){
+										array_push($lids, $arr[$i][0]);
+									}
+									if(count($lids) > 0)
+										return $lids;
+								}
+							}
+						}
+						break;
+					}
+					case 2: {
+						$cmd = "SELECT state FROM location WHERE lid = '$lid';";
+						$out = mysqli_query($conn, $cmd);
+						if($out){
+							$arr = mysqli_fetch_array($out);
+							$state = $arr['state'];
+							$cmd = "SELECT lid FROM location state = '$state' AND lid != '$lid';";
+							$out = mysqli_query($conn, $cmd);
+							if($out){
+								$arr = mysqli_fetch_all($out);
+								if(is_array($arr)){
+									$lids = array();
+									for($i = 0; $i < count($arr); $i++){
+										array_push($lids, $arr[$i][0]);
+									}
+									if(count($lids) > 0)
+										return $lids;
+								}
+							}
+						}
+						break;
+					}
+					default: {
+						$cmd = "SELECT lid FROM location WHERE lid != '$lid';";
 						$out = mysqli_query($conn, $cmd);
 						if($out){
 							$arr = mysqli_fetch_all($out);
@@ -517,21 +591,6 @@
 								if(count($lids) > 0)
 									return $lids;
 							}
-						}
-					}
-				}
-				else{
-					$cmd = "SELECT lid FROM location WHERE lid != '$lid';";
-					$out = mysqli_query($conn, $cmd);
-					if($out){
-						$arr = mysqli_fetch_all($out);
-						if(is_array($arr)){
-							$lids = array();
-							for($i = 0; $i < count($arr); $i++){
-								array_push($lids, $arr[$i][0]);
-							}
-							if(count($lids) > 0)
-								return $lids;
 						}
 					}
 				}

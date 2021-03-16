@@ -120,15 +120,16 @@
 
                                 echo "<td>";
                                 echo "<form action = \"emp-confirm_request.php\" method = \"post\">";
-                                echo "<input type = \"hidden\" name = \"".$arr_heads[1]."\" 
-                                value = \"".$arr[$i][0]."\"/>";
-								echo "<input type = \"submit\" name = \"form_type\" class = \"btn btn-success\" value = \"Confirm\" />";
+									echo "<input type = \"hidden\" name = \"".$arr_heads[1]."\" 
+									value = \"".$arr[$i][0]."\"/>";
+									echo "<input type = \"submit\" name = \"form_type\" class = \"btn btn-success\" value = \"Confirm\" />";
+								echo "</form>";
 								echo "</td>";
 
 								echo "<td>";
 								echo "<form action = \"emp-confirm_request.php\" method = \"post\">";
-								echo "<input type = \"hidden\" name = \"".$arr_heads[1]."\" value = \"".$arr[$i][1]."\"/>";
-								echo "<input type = \"submit\" name = \"form_type\" class = \"btn btn-danger\" value = \"Reject\" />";
+									echo "<input type = \"hidden\" name = \"".$arr_heads[1]."\" value = \"".$arr[$i][1]."\"/>";
+									echo "<input type = \"submit\" name = \"form_type\" class = \"btn btn-danger\" value = \"Reject\" />";
                                 echo "</form>";
                                 echo "</td>";
 
@@ -198,14 +199,20 @@
 									//echo $cmd;
 								}
 								else{
-									$_SESSION['message'] = "Insufficient amount compared to required amount";
+									echo "<script>";
+									echo "alert('Insufficient amount compared to required amount');";
+									echo "</script>";
+									//$_SESSION['message'] = "Insufficient amount compared to required amount";
 									return;
 								}
 							}
 						}
                     }
                     else{
-						$_SESSION['message'] = "Required blood/organs unavailable";
+						//$_SESSION['message'] = "Required blood/organs unavailable";
+						echo "<script>";
+						echo "alert('Required blood/organs unavailable');";
+						echo "</script>";
 						return;
                     }
 
@@ -216,14 +223,24 @@
                         if($out){
 							$out = mysqli_query($conn, $logging_cmd);
 							if($out){
-								$_SESSION['message'] = "Confirmed";
+								echo "<script>";
+								echo "alert('Confirmed');";
+								echo "</script>";
+								//$_SESSION['message'] = "Confirmed";
 							}
 							else{
-								$_SESSION['message'] = "Confirmed with logging error";
+								echo "<script>";
+								echo "alert('Confirmed with logging error');";
+								echo "</script>";
+								//$_SESSION['message'] = "Confirmed with logging error";
 							}
                         }
-                        else
-                            $_SESSION['message'] = "Removal from queue error";
+                        else{
+                            echo "<script>";
+							echo "alert('Removal from queue error');";
+							echo "</script>";
+							//$_SESSION['message'] = "Removal from queue error";
+						}
                     }
                 }
             }
