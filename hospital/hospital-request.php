@@ -8,6 +8,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script>
+		function trueSubmission(){
+			document.getElementById("submit_key").value = 1;
+			document.getElementById("h_requests").submit();
+		}
+
+		function change(word){
+			document.getElementById("addMore").value = word;
+			document.getElementById("h_requests").submit();
+		}
+	</script>
 	<?php
 		if(!isset($_SESSION))
 			session_start();
@@ -87,7 +98,12 @@
 						$count++;
 				}
 			}
-			if($count == 5 * $_SESSION['request_count']){
+			print_r($_POST);
+			if(
+				$count == 5 * $_SESSION['request_count'] && 
+				isset($_POST['isSubmit']) && $_POST['isSubmit'] == 1
+			){
+				print_r("Made it here");
 				$success = 0;
 				for($j = 1; $j <= $_SESSION['request_count']; $j++){
 					if(isset($conn) && $conn){
@@ -151,7 +167,7 @@
 <body>
 	<div style = "margin-left: 37%; margin-top: 12%; padding: 20px; border: 1px grey solid; width: 26%;">
 		<h2>Create a Request</h2>
-		<form action = "hospital-request.php" method = "post">
+		<form action = "hospital-request.php" method = "post" id = "h_requests">
 			<?php
 				for($j = 1; $j <= $_SESSION['request_count']; $j++){
 					echo "<table>";
@@ -247,21 +263,27 @@
 					echo "</table><br>";
 				}
 			?>
-			<center><button type = "submit" class = "btn btn-success" value = "submit" style = "width: 90%;">
+			<input type = "hidden" name = "isSubmit" id = "submit_key" value = "0"/>
+			<input type = "hidden" name = "addMore" value = "" id = "addMore">
+			<center><button type = "button" onclick = "trueSubmission()" class = "btn btn-success" value = "submit" style = "width: 90%;">
 				Submit
 			</button></center>
 		</form><br>
 		<table><tr><td>
-		<form action = "hospital-request.php" method = "post">
-			<input type = "hidden" name = "addMore" value = "add">
-			<button type = "submit" class = "btn btn-primary" value = "submit" style = "width: 260%;">
+		<!-- <form action = "hospital-request.php" method = "post" id = "add"> -->
+			<!-- <input type = "hidden" name = "addMore" value = "add"> -->
+			<button type = "button" onclick = "change('add')" class = "btn btn-primary" value = "submit" style = "width: 260%;">
 				Add
 			</button>
-		</form></td><td>
-		<form action = "hospital-request.php" method = "post">
-			<input type = "hidden" name = "addMore" value = "sub">
-			<button type = "submit" class = "btn btn-danger" value = "submit" style = "width: 180%; margin-left: 130%;">Remove</button>
-		</form></td>
+		<!-- </form> -->
+		</td><td>
+		<!-- <form action = "hospital-request.php" method = "post" id = "sub"> -->
+			<!-- <input type = "hidden" name = "addMore" value = "sub"> -->
+			<button type = "button" onclick = "change('sub')" class = "btn btn-danger" value = "submit" style = "width: 180%; margin-left: 130%;">
+				Remove
+			</button>
+		<!-- </form> -->
+		</td>
 		</tr>
 		</table>
 	</div>
