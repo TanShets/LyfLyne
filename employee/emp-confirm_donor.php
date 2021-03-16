@@ -50,57 +50,66 @@
         }
 
         function generate_table($conn){
-            echo "<table>";
-
             $cmd = "SELECT * FROM dead_donor_queue;";
-            $out = mysqli_query($conn, $cmd);
+            if($conn){
+                $out = mysqli_query($conn, $cmd);
 
-            if($out){
-                $arr_temp = mysqli_fetch_array($out);
-                if(is_array($arr_temp)){
-                    $arr_heads = array_keys($arr_temp);
-                    //print_r($arr_heads);
-                    echo "<tr>";
-                    foreach($arr_heads as $i){
-                        if(!is_numeric($i)){
-                            echo "<th>$i</th>";
-                        }
-                    }
-                    echo "<th>Confirm</th>";
-                    echo "</tr>";
-
-                    $out = mysqli_query($conn, $cmd);
-                    if($out){
-                        $arr = mysqli_fetch_all($out);
-
-                        if(is_array($arr) && count($arr) > 0){
-                            $i = 0;
-                            $j = 0;
-                            for($i = 0; $i < count($arr); $i++){
-                                echo "<tr>";
-                                
-                                for($j = 0; $j < count($arr[$i]); $j++){
-                                    echo "<td>";
-                                    echo $arr[$i][$j];
-                                    echo "</td>";
-                                }
-
-                                echo "<td>";
-                                echo "<form action = \"emp-confirm_donor.php\" method = \"post\">";
-                                echo "<input type = \"hidden\" name = \"".$arr_heads[1]."\" 
-                                value = \"".$arr[$i][0]."\"/>";
-                                echo "<button type = \"submit\" class = \"btn btn-success\">Confirm</button>";
-                                echo "</form>";
-                                echo "</td>";
-
-                                echo "</tr>";
+                if($out){
+                    $arr_temp = mysqli_fetch_array($out);
+                    if(is_array($arr_temp)){
+                        echo "<table class = \"table table-striped\">";
+                        $arr_heads = array_keys($arr_temp);
+                        //print_r($arr_heads);
+                        echo "<tr>";
+                        foreach($arr_heads as $i){
+                            if(!is_numeric($i)){
+                                echo "<th>$i</th>";
                             }
                         }
+                        echo "<th>Confirm</th>";
+                        echo "</tr>";
+
+                        $out = mysqli_query($conn, $cmd);
+                        if($out){
+                            $arr = mysqli_fetch_all($out);
+
+                            if(is_array($arr) && count($arr) > 0){
+                                $i = 0;
+                                $j = 0;
+                                for($i = 0; $i < count($arr); $i++){
+                                    echo "<tr>";
+                                    
+                                    for($j = 0; $j < count($arr[$i]); $j++){
+                                        echo "<td>";
+                                        echo $arr[$i][$j];
+                                        echo "</td>";
+                                    }
+
+                                    echo "<td>";
+                                    echo "<form action = \"emp-confirm_donor.php\" method = \"post\">";
+                                    echo "<input type = \"hidden\" name = \"".$arr_heads[1]."\" 
+                                    value = \"".$arr[$i][0]."\"/>";
+                                    echo "<button type = \"submit\" class = \"btn btn-success\">Confirm</button>";
+                                    echo "</form>";
+                                    echo "</td>";
+
+                                    echo "</tr>";
+                                }
+                            }
+                        }
+                        echo "</table>";
+                    }
+                    else{
+                        echo "<br><center><h2>No Dead Donor Requests require confirmation at present</h2></center>";
                     }
                 }
+                else{
+                    echo "<br><center><h1>No Dead Donor Requests require confirmation at present</h1></center>";
+                }
             }
-
-            echo "</table>";
+            else{
+                echo "<h2>Connection Error</h2>: Please try refreshing the page and try again!";
+            }
         }
 
         function confirm_request($conn, $ddid){

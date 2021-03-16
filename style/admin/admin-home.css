@@ -1,0 +1,75 @@
+.containerx{
+    width: 80%;
+    height: 100%;
+    margin: auto;
+    font-size:xx-large;
+    color: white;
+    padding: 10px;
+    padding-bottom: 21%;
+    text-align: center;
+}
+  
+.tab1, .tab2{
+    float: left;
+    border-radius: 3%;
+    width: 45%;
+    height: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 10%;
+    padding-bottom: 10%;
+}
+
+.logout-tab{
+    width: 40%;
+    padding: 2%;
+    margin-left: 42.5%;
+}
+  
+.tab2{
+    margin-left: 3%;
+}
+
+#view-user{
+    background-color: rgb(230, 16, 31);
+}
+#view-user:hover{
+    background-color: rgb(179, 2, 14);
+}
+
+#view-employee{
+    background-color: rgb(32, 29, 219);
+}
+#view-employee:hover{
+    background-color: rgb(9, 7, 165);
+}
+
+#emp-create{
+    background-color: rgb(223, 202, 15);
+}
+#emp-create:hover{
+    background-color: rgb(197, 163, 9);
+}
+
+#view-request{
+    background-color: rgb(25, 148, 14);
+}
+#view-request:hover{
+    background-color: rgb(20, 129, 11);
+}
+
+#location-entry{
+    float: center;
+    margin-left: 23%;
+    border-radius: 3%;
+    width: 45%;
+    height: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 10%;
+    padding-bottom: 10%;
+    background-color: rgb(143, 10, 170);
+}
+#location-entry:hover{
+    background-color: rgb(106, 6, 126);
+}

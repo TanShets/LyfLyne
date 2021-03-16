@@ -78,7 +78,8 @@
 		}
 		
 		function generate_table($conn, $tablename){
-            echo "<table>";
+			echo "<br>";
+            echo "<table class = \"table table-striped\">";
 
 			$cmd = "SELECT * FROM $tablename;";
 			//echo $cmd;
@@ -98,6 +99,7 @@
                         }
                     }
                     echo "<th>Confirm</th>";
+					echo "<th></th>";
                     echo "</tr>";
 
                     $out = mysqli_query($conn, $cmd);
