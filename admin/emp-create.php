@@ -156,6 +156,8 @@
 						echo "me";
 						print_r($cmd);
 						//echo "Success";
+						$_SESSION['message'] = "Account: ".$_SESSION['emp_create_temp']['username']." created successfully!!";
+						unset($_SESSION['emp_create_temp']);
 						header("Location: ../employee/emp-login.php");
 							exit();
 					}

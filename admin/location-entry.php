@@ -11,6 +11,14 @@
 	<?php
 		if(!isset($_SESSION))
 			session_start();
+		
+		if(isset($_SESSION['message'])){
+			echo "<script>";
+				echo "alert('".$_SESSION['message']."');";
+			echo "</script>";
+
+			unset($_SESSION['message']);
+		}
 
 		if(!isset($_SESSION['admin'])){
 			$_SESSION['message'] = "You must be logged in as admin to add a new location!";
@@ -45,6 +53,12 @@
 					$cmd = "INSERT INTO location(state, district, city, area) VALUES('$temp1', '$temp2', '$temp3', '$temp4');";
 					//echo $cmd;
 					$out = mysqli_query($conn, $cmd);
+					if($out){
+						echo "<script>";
+							echo "alert('Successfully added new location!!!!');";
+						echo "</script>";
+						//$_SESSION['message'] = "Successfully added new location!!!";
+					}
 					$temp_lid = get_lid($conn, $temp3);
 					if($temp_lid != -1){
 						$cmd = "INSERT INTO area_location(clid, area) VALUES('$temp_lid', '$temp4');";
