@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../style/employee/login.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -62,20 +63,27 @@
 	?>
 </head>
 <body>
-	<div style = "margin-left: 35%; margin-top: 15%; width: 30%; border: 1px solid grey; padding: 20px;">
+	<!-- <div style = "margin-left: 35%; margin-top: 15%; width: 30%; border: 1px solid grey; padding: 20px;"> -->
+	<div class = "login-form">
 		<form action = "emp-login.php" method = "post">
-			<h1>Employee Login</h1>
+			<center><h1>Employee Login</h1></center><br>
 			<table>
 				<tr>
-					<td>Username</td>
-					<td><input class = "form-control" type = "text" name = "name" placeholder="Enter your username"></td>
+					<td>Username:</td>
+					<td>
+						<input class = "form-control" type = "text" name = "name" placeholder="Enter your username" id = "login-input1">
+					</td>
 				</tr>
 				<tr>
-					<td>Password</td>
-					<td><input class = "form-control" type = "password" name = "password" placeholder="Enter password"></td>
+					<td>Password:</td>
+					<td>
+						<input class = "form-control" type = "password" name = "password" placeholder="Enter password" id = "login-input2">
+					</td>
 				</tr>
 			</table><br>
-			<button class = "btn btn-primary" type = "submit" style = "margin-left: 60%; width: 34%;">Login</button>
+			<center>
+			<button class = "btn btn-primary" type = "submit" id = "login-button">Login</button>
+			</center>
 		</form>
 	</div>
 </body>
