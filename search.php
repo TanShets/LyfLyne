@@ -54,7 +54,7 @@
 					echo "<script>";
 					echo "alert(\"Proceed to find another donor then\");";
 					echo "</script>";
-					unset($_SESSION['search']);
+					//unset($_SESSION['search']);
 					$_SESSION['search'] = array();
 				}
 				else{
@@ -140,7 +140,8 @@
 			if($count == 6)
 			{
 				$cmd = "SELECT lid FROM location WHERE state = '".$_SESSION['search']['state']."' AND ";
-				$cmd = $cmd."district = '".$_SESSION['search']['district']."' AND city = '".$_SESSION['search']['city']."';";
+				$cmd = $cmd."district = '".$_SESSION['search']['district']."' AND city = '".$_SESSION['search']['city']."' AND ";
+				$cmd = $cmd."area = '".$_SESSION['search']['area']."';";
 				$out = mysqli_query($conn, $cmd);
 				if($out){
 					$arr = mysqli_fetch_array($out);
@@ -444,9 +445,16 @@
 		//print_r($_SESSION['emp-user']);
 		//echo "<br><br>";
 		//print_r($_SESSION['search']);
-		if(isset($_SESSION['search']['type']) && isset($_SESSION['search']['btype']) && isset($_SESSION['emp-user']) && isset($_SESSION['final_solve']) && isset($_SESSION['moved_request'])){
+		if(
+			isset($_SESSION['search']['type']) && isset($_SESSION['search']['btype']) && 
+			isset($_SESSION['emp-user']) && isset($_SESSION['final_solve']) && 
+			isset($_SESSION['moved_request'])
+		){
 			//echo "Step1<br>";
-			if($_SESSION['moved_request']['dtype'] == $_SESSION['search']['type'] && $_SESSION['moved_request']['btype'] == $_SESSION['search']['btype']){
+			if(
+				$_SESSION['moved_request']['dtype'] == $_SESSION['search']['type'] && 
+				$_SESSION['moved_request']['btype'] == $_SESSION['search']['btype']
+			){
 				//echo "Step2<br>";
 				if(isset($_SESSION['moved_request']['isHospital']) && $_SESSION['moved_request']['rid']){
 					//echo "Step3<br>";

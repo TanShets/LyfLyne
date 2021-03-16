@@ -445,6 +445,9 @@
 						echo "<td><button class = \"$classname\" type=\"submit\">".$buttons[$k]."</button></td>";
 						echo "</form>";
 					}
+					else{
+						echo "<td></td>";
+					}
 				}
 				echo "</tr>";
 			}
@@ -553,7 +556,8 @@
 					switch($tablename){
 						case "request":{
 							$uid = $arr['uid'];
-							$cmd = "INSERT INTO request_log VALUES('$rid', '$lid', '$priority', '$uid', '$request_time', '$lookin', NOW());";
+							$cmd = "INSERT INTO request_log VALUES('$rid', '$lid', '$priority', '$dtype', '$uid', '$request_time', '$lookin', NOW());";
+							//print_r($cmd);
 							break;
 						}
 
