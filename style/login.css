@@ -1,0 +1,30 @@
+body {
+    color: white;
+    background-image: url(../bg.jpg); 
+    background-repeat: no-repeat; 
+    background-size: cover;
+}
+
+.login-form{
+    width:29.8%; 
+    height: 200%; 
+    border: rgba(0, 0, 0, 0.4) 1px solid; 
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.details{
+    font-size: 150%;
+    padding-top: 7%;
+    padding-bottom: 10%;
+    margin-left: 1%;
+    color: white;
+}
+
+#logout-main{
+    margin-left: 38%; 
+    margin-top: 18%; 
+    background: rgba(0, 0, 0, 0.35); 
+    width: 28%;
+    padding-bottom: 2%;
+}

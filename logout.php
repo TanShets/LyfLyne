@@ -13,20 +13,15 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="style/login.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	<style type = "text/css">
-		.details{
-			font-size: 20px;
-			padding-bottom: 7px;
-			margin-left: 6%;
-            color: white;
-		}
-	</style>
 </head>
-<body style="background-image: url(./bg.jpg); background-repeat: no-repeat; background-size: cover;">
-	<div class = "container" style = "margin-left: 38%; margin-top: 18%; background: rgba(0, 0, 0, 0.226); width: 28%;">
+<!-- <body style="background-image: url(./bg.jpg); background-repeat: no-repeat; background-size: cover;"> -->
+<body>
+	<!-- <div class = "container" style = "margin-left: 38%; margin-top: 18%; background: rgba(0, 0, 0, 0.226); width: 28%;"> -->
+	<div class = "container" id = "logout-main">
         <div class = "details" style="padding-left: 48px;">Logged out Successfully!</div>
 		<form action = "login.php" id = "pos">
 			<button class = "btn btn-primary" name = "login" value = "login" style = "width: 350px">
