@@ -132,6 +132,9 @@
 			echo "<center><h2>Your pending requests</h2></center>";
 			display($heads, $arr);
 		}
+		else{
+			echo "<br><center><h2>You have no pending requestes</h2></center>";
+		}
 	?>
 </body>
 </html>
