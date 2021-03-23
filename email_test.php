@@ -22,7 +22,7 @@
     */
 
     function sendOTP($otp, $email, $username){
-        echo $otp."<br>".$email."<br>".$username;
+        //echo $otp."<br>".$email."<br>".$username;
         $mail = new PHPMailer();
         $mail->isSMTP();
         $mail->SMTPAuth = true;

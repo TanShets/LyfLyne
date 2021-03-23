@@ -40,6 +40,7 @@
 				if(isset($_POST['alter'])){
 					switch($_POST['alter']){
 						case 0:{
+							remove_from_donor_database($conn, $_POST['uid']);
 							$cmd = "DELETE FROM user WHERE uid = '".$_POST['uid']."';";
 							$out = mysqli_query($conn, $cmd);
 							if($out){
@@ -186,6 +187,14 @@
 				echo "</tr>";
 			}
 			echo "</table>";
+		}
+
+		function remove_from_donor_database($conn, $uid){
+			$cmd1 = "DELETE FROM blood WHERE uid = '$uid'";
+			$cmd2 = "DELETE FROM marrow WHERE uid = '$uid'";
+
+			$out1 = mysqli_query($conn, $cmd1);
+			$out2 = mysqli_query($conn, $cmd2);
 		}
     ?>
 </head>

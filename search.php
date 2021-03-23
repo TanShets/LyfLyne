@@ -43,9 +43,9 @@
 			die("Failed: ".mysqli_connect_error());
 		}
 
-		if(isset($_SESSION['moved_request'])){
-			print_r($_SESSION['moved_request']);
-		}
+		// if(isset($_SESSION['moved_request'])){
+		// 	print_r($_SESSION['moved_request']);
+		// }
 
 		$count = 0;
 		if($_SERVER['REQUEST_METHOD'] == "POST"){
@@ -81,18 +81,22 @@
 					}
 				}
 			}
-
+			//print_r($_POST);
 			if(isset($_POST['alter']) && $_POST['alter'] == 0){
 				$cmd = "SELECT mobile, landline FROM user WHERE uid = '".$_POST['uid']."';";
 				$out = mysqli_query($conn, $cmd);
 				if($out){
 					$arr = mysqli_fetch_array($out);
 					if(is_array($arr)){
+						//print_r("Yes");
 						echo "<script>";
 						echo "alert(\"Mobile: ".$arr['mobile'].", Landline: ".$arr['landline']."\");";
 						echo "</script>";
 
 						$_SESSION['final_solve'] = 1;
+					}
+					else{
+						print_r("No");
 					}
 				}
 			}
