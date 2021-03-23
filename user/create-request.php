@@ -132,6 +132,7 @@
 	?>
 </head>
 <body>
+	<?php include_once('../navbar.php'); ?>
 	<div style = "margin-left: 30%; margin-top: 10%; border: 1px solid grey; width: 40%; padding: 20px;">
 		<h2>Create Request</h2>
 		<form action = "create-request.php" method = "post">

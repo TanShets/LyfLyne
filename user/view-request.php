@@ -127,6 +127,7 @@
     ?>
 </head>
 <body>
+	<?php include_once('../navbar.php'); ?>
 	<?php
 		if($heads != null && $arr != null){
 			echo "<center><h2>Your pending requests</h2></center>";

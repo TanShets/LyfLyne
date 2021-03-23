@@ -128,9 +128,12 @@
     ?>
 </head>
 <body>
+	<?php include_once('../navbar.php'); ?>
+	<div class = "container-fluid">
 	<?php
 		if($heads != null && $arr != null)
 			display($heads, $arr);
 	?>
+	</div>
 </body>
 </html>

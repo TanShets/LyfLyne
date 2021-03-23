@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../style/admin/admin-view-request.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -624,56 +625,59 @@
 				return null;
 		}
 	?>
-	<div class = "container" style = "margin-left: 38%; margin-top: 3%; padding-bottom: 40px;">
-		<h2>View Requests</h2>
-		<form action = "admin-view-request.php" method = "post">
-			<table><tr><td>
-			Request order by</td><td> 
-			<select class = "form-control" name = "type" onchange='this.form.submit()'
-			style = "width: 100%;">
-				<option value = ""
-				<?php
-					if(!isset($_SESSION['admin-request']['type']) || $_SESSION['admin-request']['type'] == "")
-						echo " selected";
-				?>
-				>Select an option</option>
-				<option value = "priority"
-				<?php
-					if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "priority")
-						echo " selected";
-				?>
-				>Priority</option>
-				<option value = "time_d"
-				<?php
-					if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "time_d")
-						echo " selected";
-				?>
-				>Oldest to newest</option>
-				<option value = "time_n"
-				<?php
-					if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "time_n")
-						echo " selected";
-				?>
-				>Newest to Oldest</option>
-				<option value = "hospital"
-				<?php
-					if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "hospital")
-						echo " selected";
-				?>
-				>Hospital</option>
-				<option value = "hospital-priority only"
-				<?php
-					if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "hospital-priority only")
-						echo " selected";
-				?>
-				>Hospital - Priority only</option>
-			</select>
-			</td></tr></table>
-		</form>
+	<?php include_once('../navbar.php'); ?>
+	<div class = "container-fluid">
+		<div class = "container" id = "view-request-form">
+			<h2>View Requests</h2>
+			<form action = "admin-view-request.php" method = "post">
+				<table><tr><td>
+				Request order by</td><td> 
+				<select class = "form-control" name = "type" onchange='this.form.submit()'
+				style = "width: 100%;">
+					<option value = ""
+					<?php
+						if(!isset($_SESSION['admin-request']['type']) || $_SESSION['admin-request']['type'] == "")
+							echo " selected";
+					?>
+					>Select an option</option>
+					<option value = "priority"
+					<?php
+						if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "priority")
+							echo " selected";
+					?>
+					>Priority</option>
+					<option value = "time_d"
+					<?php
+						if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "time_d")
+							echo " selected";
+					?>
+					>Oldest to newest</option>
+					<option value = "time_n"
+					<?php
+						if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "time_n")
+							echo " selected";
+					?>
+					>Newest to Oldest</option>
+					<option value = "hospital"
+					<?php
+						if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "hospital")
+							echo " selected";
+					?>
+					>Hospital</option>
+					<option value = "hospital-priority only"
+					<?php
+						if(isset($_SESSION['admin-request']['type']) && $_SESSION['admin-request']['type'] == "hospital-priority only")
+							echo " selected";
+					?>
+					>Hospital - Priority only</option>
+				</select>
+				</td></tr></table>
+			</form>
+		</div>
+		<?php
+			if(isset($arr) && $arr != null)
+				display($heads, $arr);
+		?>
 	</div>
-	<?php
-		if(isset($arr) && $arr != null)
-			display($heads, $arr);
-	?>
 </body>
 </html>

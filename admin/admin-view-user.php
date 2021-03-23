@@ -190,9 +190,13 @@
     ?>
 </head>
 <body>
+	<?php include_once('../navbar.php'); ?><br>
+	<div class = "container-fluid">
+	<h3>Current Users</h3>
 	<?php
 		if($heads != null && $arr != null)
 			display($heads, $arr);
 	?>
+	</div>
 </body>
 </html>

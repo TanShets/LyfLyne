@@ -388,15 +388,18 @@
         ?>
 	</head>
 	<body>
-        <center><h2>Employee List</h2></center>
-		<?php
-            if($heads != null && $arr != null)
-                display($heads, $arr);
-            
-            if(isset($_SESSION['admin-request']['eid'])){
-                //echo $_SESSION['admin-request']['eid'];
-                window_box($conn, $_SESSION['admin-request']['eid']);
-            }
-        ?>
+        <?php include_once('../navbar.php'); ?><br>
+        <div class = "container-fluid" id = "admin-view-employee-form">
+            <center><h2>Employee List</h2></center>
+            <?php
+                if($heads != null && $arr != null)
+                    display($heads, $arr);
+                
+                if(isset($_SESSION['admin-request']['eid'])){
+                    //echo $_SESSION['admin-request']['eid'];
+                    window_box($conn, $_SESSION['admin-request']['eid']);
+                }
+            ?>
+        </div>
 	</body>
 </html>

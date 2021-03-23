@@ -307,29 +307,33 @@
 			}
 		}
     ?>
-	<form action = "emp-confirm_request.php" method = "post">
-		<select class = "form-control" name = "choice" onchange = 'this.form.submit()'>
-			<option value = ""
-			<?php
-				if(!isset($_SESSION['emp-confirm_request']) || !isset($_SESSION['emp-confirm_request']['choice']) || $_SESSION['emp-confirm_request']['choice'] == ""){
-					echo " selected";
-				}
-			?>>Select an option</option>
-			<option value = "request"
-			<?php
-				if(isset($_SESSION['emp-confirm_request']) && isset($_SESSION['emp-confirm_request']['choice']) && $_SESSION['emp-confirm_request']['choice'] == "request"){
-					echo " selected";
-				}
-			?>>Individual Requests</option>
+	<?php include_once('../navbar.php'); ?><br>
+	<div class = "container-fluid">
+		<h3>Confirm Admin Request</h3>
+		<form action = "emp-confirm_request.php" method = "post">
+			<select class = "form-control" name = "choice" onchange = 'this.form.submit()'>
+				<option value = ""
+				<?php
+					if(!isset($_SESSION['emp-confirm_request']) || !isset($_SESSION['emp-confirm_request']['choice']) || $_SESSION['emp-confirm_request']['choice'] == ""){
+						echo " selected";
+					}
+				?>>Select an option</option>
+				<option value = "request"
+				<?php
+					if(isset($_SESSION['emp-confirm_request']) && isset($_SESSION['emp-confirm_request']['choice']) && $_SESSION['emp-confirm_request']['choice'] == "request"){
+						echo " selected";
+					}
+				?>>Individual Requests</option>
 
-			<option value = "hospital_request"
-			<?php
-				if(isset($_SESSION['emp-confirm_request']) && isset($_SESSION['emp-confirm_request']['choice']) && $_SESSION['emp-confirm_request']['choice'] == "hospital_request"){
-					echo " selected";
-				}
-			?>>Hospital Requests</option>
-		</select>
-	</form>
+				<option value = "hospital_request"
+				<?php
+					if(isset($_SESSION['emp-confirm_request']) && isset($_SESSION['emp-confirm_request']['choice']) && $_SESSION['emp-confirm_request']['choice'] == "hospital_request"){
+						echo " selected";
+					}
+				?>>Hospital Requests</option>
+			</select>
+		</form>
+	</div>
 	<?php
 		if(isset($_SESSION['emp-confirm_request']['choice']) && $_SESSION['emp-confirm_request']['choice'] != ""){
 			$table_namex = array(

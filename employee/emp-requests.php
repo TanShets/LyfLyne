@@ -639,6 +639,7 @@
 			}
 		}
 	?>
+	<?php include_once('../navbar.php'); ?>
 	<div class = "container" style = "margin-left: 35%; margin-top: 3%; padding-bottom: 40px;">
 		<form action = "emp-requests.php" method = "post">
 			<div style = "padding-left: 4%;"><h2>Handle Requests</h2></div>

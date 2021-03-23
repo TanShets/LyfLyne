@@ -57,6 +57,7 @@
                 if($out){
                     $arr_temp = mysqli_fetch_array($out);
                     if(is_array($arr_temp)){
+                        echo "<div class = \"container-fluid\">";
                         echo "<table class = \"table table-striped\">";
                         $arr_heads = array_keys($arr_temp);
                         //print_r($arr_heads);
@@ -98,13 +99,14 @@
                             }
                         }
                         echo "</table>";
+                        echo "</div>";
                     }
                     else{
-                        echo "<br><center><h2>No Dead Donor Requests require confirmation at present</h2></center>";
+                        echo "<center><h2>No Dead Donor Requests require confirmation at present</h2></center>";
                     }
                 }
                 else{
-                    echo "<br><center><h1>No Dead Donor Requests require confirmation at present</h1></center>";
+                    echo "<center><h1>No Dead Donor Requests require confirmation at present</h1></center>";
                 }
             }
             else{
@@ -152,6 +154,7 @@
             }
         }
     ?>
+    <?php include_once('../navbar.php'); ?><br>
 
     <?php generate_table($conn); ?>
 </body>

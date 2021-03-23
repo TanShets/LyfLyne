@@ -1,0 +1,13 @@
+#emp-create-form{
+    margin-left: 30%; 
+    margin-top: 3%; 
+    border: solid grey 1px; 
+    width: 35%; 
+    padding: 10px; 
+    height: 95%;
+}
+
+body{
+    height: 110%;
+    padding-bottom: 4%;
+}

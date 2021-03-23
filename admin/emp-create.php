@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../style/admin/emp-create.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -172,7 +173,8 @@
 	?>
 </head>
 <body>
-	<div class = "container" style = "margin-left: 30%; margin-top: 3%; border: solid grey 1px; width: 35%; padding: 10px; height: 95%;">
+	<?php include_once('../navbar.php'); ?>
+	<div class = "container-fluid" id = "emp-create-form">
 		<center><h2 style = "padding-bottom: 10px;">Create Employee Account</h2>
 		<form action = "emp-create.php" method = "post">
 			<table>

@@ -27,6 +27,7 @@
     </script>
 </head>
 <body>
+    <?php include_once('../navbar.php'); ?>
     <div class = "logout-tab">
         <form action = "../logout.php" method = "post">
             <button class = "btn btn-primary" type = "submit" value = "submit">Logout</button>

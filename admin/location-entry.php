@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../style/admin/location-entry.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -84,7 +85,8 @@
 	?>
 </head>
 <body>
-	<div class = "container" style = "margin-left: 38%; margin-top: 15%; border: solid 1px grey; width: 22%; padding: 20px;">
+	<?php include_once('../navbar.php'); ?>
+	<div class = "container" id = "location-entry-form">
 		<h3 style = "padding-bottom: 10px;">Enter New Location</h3>
 		<form action = "location-entry.php" method = "post">
 			<table>

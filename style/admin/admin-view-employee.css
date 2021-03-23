@@ -6,3 +6,8 @@
     padding: 20px;
     background-color: white;
 }
+
+#admin-view-employee-form{
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
