@@ -161,4 +161,32 @@
 
         return $otp;
     }
+
+    function redirect($url){
+        if(!isset($_SESSION)){
+            header("Location: ".$url."login.php");
+				exit();
+        }
+
+        if(isset($_SESSION['user'])){
+            header("Location: ".$url."user/create-request.php");
+				exit();
+        }
+        elseif(isset($_SESSION['hospital_user'])){
+            header("Location: ".$url."hospital/hospital-request.php");
+				exit();
+        }
+        elseif(isset($_SESSION['emp-user'])){
+            header("Location: ".$url."employee/emp-requests.php");
+				exit();
+        }
+        elseif(isset($_SESSION['admin'])){
+            header("Location: ".$url."admin/admin-home.php");
+				exit();
+        }
+        else{
+            header("Location: ".$url."login.php");
+                exit();
+        }
+    }
 ?>
