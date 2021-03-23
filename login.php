@@ -31,11 +31,20 @@
 			header("Location: user/create-request.php");
 				exit();
 		}
-
-		if(isset($_SESSION['hospital_user'])){
-			$_SESSION['message'] = "You must log out from your account before trying to login to another account.";
+		elseif(isset($_SESSION['hospital_user'])){
+			$_SESSION['message'] = "You must log out from your hospital account before trying to login to another account.";
 			header("Location: hospital/hospital-request.php");
 				exit();
+		}
+		elseif(isset($_SESSION['emp-user'])){
+			$_SESSION['message'] = "You must logout of your employee account before trying to login again.";
+			head("Location: employee/emp-requests.php");
+			exit();
+		}
+		elseif(isset($_SESSION['admin'])){
+			$_SESSION['message'] = "You must logout of your admin account before trying to login again.";
+			head("Location: admin/admin-home.php");
+			exit();
 		}
 
 		if($_SERVER['REQUEST_METHOD'] == "POST"){
@@ -128,7 +137,9 @@
                             </form>
                         </td>
                     </tr>
-                </table>
+                </table><br>
+				Are you an employee? Click <a href = "employee/emp-login.php">here </a>to Login<br>
+				Are you an admin? Click<a href = "admin/admin-login.php"> here </a>to Login<br>
             </center>
         </div>
     </div>
