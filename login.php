@@ -99,7 +99,7 @@
 
 <!-- <body style="background-image: url(./bg.jpg); background-repeat: no-repeat; background-size: cover;" class="blur"> -->
 <body class = "blur">
-    <div class="container-fluid" style="margin-left: 35%; margin-top: 12%; height: 200%;">
+    <div class="container-fluid" id = "parent-login-form">
         <!-- <div style="width:29.8%; height: 200%; border: grey 2px solid; padding: 10px;"> -->
 		<div class = "login-form">
             <center>

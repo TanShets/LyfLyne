@@ -5,6 +5,12 @@ body {
     background-size: cover;
 }
 
+#parent-login-form{
+    margin-left: 35%; 
+    margin-top: 12%; 
+    height: 200%;
+}
+
 .login-form{
     width:29.8%; 
     height: 200%; 

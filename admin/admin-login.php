@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href = "../style/admin/admin-login.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -78,12 +79,12 @@
     ?>
 </head>
 <body>
-	<div class = "container" style = "margin-left: 37%; margin-top: 15%; border: grey 1px solid; width: 25%; padding: 20px;">
+	<div class = "container" id = "admin-login-container">
         <form action = "admin-login.php" method = "post">
             <h1>Login as Admin</h1>
             <table>
                 <tr>
-                    <td>Admin ID</td>
+                    <td>Admin ID: </td>
                     <td><input class = "form-control" type = "text" name = "userid" placeholder="Enter your admin id"></td>
                 </tr>
             </table><br>

@@ -1,0 +1,14 @@
+#admin-login-container{
+    margin-left: 37%; 
+    margin-top: 15%; 
+    width: 25%; 
+    padding: 20px;
+    background-color:rgba(0, 0, 0, 0.7);
+}
+
+body{
+    background-image: url("../../assets/admin-bg-office.jpg");
+    background-repeat: no-repeat; 
+    background-size: cover;
+    color: white;
+}
