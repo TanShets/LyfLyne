@@ -68,7 +68,7 @@
         <?php 
             echo "href=\"".$tabs[array_key_first($tabs)]."\" ";
         ?>
-        style="color: red; font-family: Impact;"><big>LyfLyne</big></a>
+        style="color: rgb(240, 185, 4); font-family: Impact;"><big>LyfLyne</big></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>

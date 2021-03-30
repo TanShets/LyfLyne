@@ -37,7 +37,7 @@
 		}
 		elseif(isset($_SESSION['admin'])){
 			$_SESSION['message'] = "You must logout of your admin account before trying to login again.";
-			head("Location: ../admin/admin-home.php");
+			header("Location: ../admin/admin-home.php");
 			exit();
 		}
 

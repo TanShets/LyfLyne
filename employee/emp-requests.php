@@ -55,16 +55,17 @@
 							$out = null;
 							$dtype = $_POST['dtype'];
 							if($_SESSION['request']['type'] == "hospital" || $_SESSION['request']['type'] == "hospital-priority only"){
-								$lid = $_POST['lid'];
+								$lid = $_SESSION['emp-user']['lid'];
 								$quantity = $_POST['quantity'];
 								//echo $_POST['btype'];
 								$btype = $_POST['btype'];
-								$arr = getSupply($conn, $dtype, $btype, $lid);
+								$arr = getSupply($conn, $dtype, $btype, $lid, $quantity);
 								if(is_array($arr)){
 									$max_quantity = $arr['quantity'];
+									$btype_temp = $arr['btype'];
 									if($quantity <= $max_quantity){
 										//$cmd = "UPDATE ".$dtype." SET quantity = quantity - ".$quantity." WHERE btype = '$btype' AND lid = '$lid';";
-										$outcome = updateSupply($conn, $dtype, $btype, $lid, -$quantity);
+										$outcome = updateSupply($conn, $dtype, $btype_temp, $lid, -$quantity);
 										if($outcome){
 											log_request($conn, $temp_rid, "hospital_request");
 											$cmd = "DELETE FROM hospital_request WHERE rid = '$temp_rid';";
@@ -83,7 +84,8 @@
 									$out = null;
 									if(is_array($arr)){
 										//echo "Step two<br>";
-										$lid = $arr['lid'];
+										//$lid = $arr['lid'];
+										$lid = $_SESSION['emp-user']['lid'];
 										$btype = $arr['btype'];
 										if($_POST['dtype'] == "blood"){
 											if($_POST['priority'] == 1)
@@ -93,15 +95,16 @@
 										}
 										else
 											$quantity = 1;
-										$arr = getSupply($conn, $dtype, $btype, $lid);
+										$arr = getSupply($conn, $dtype, $btype, $lid, $quantity);
 										//print_r($arr);
 										if(is_array($arr)){
 											//echo "step 3<br>";
 											$max_quantity = $arr['quantity'];
+											$btype_temp = $arr['btype'];
 											if($quantity <= $max_quantity){
 												//echo "step 4<br>";
 												//$cmd = "UPDATE ".$dtype." SET quantity = quantity - ".$quantity." WHERE btype = '$btype' AND lid = '$lid';";
-												$outcome = updateSupply($conn, $dtype, $btype, $lid, -$quantity);
+												$outcome = updateSupply($conn, $dtype, $btype_temp, $lid, -$quantity);
 												if($outcome){
 													//echo "step 5<br>";
 													log_request($conn, $temp_rid, "request");
@@ -401,6 +404,7 @@
 
 		function display($heads, $arr){
 			//print_r($heads);
+			echo "<div class = \"container-fluid\">";
 			echo "<table class = \"table table-striped\">";
 			echo "<tr>";
 			$names = Array();
@@ -464,15 +468,34 @@
 				echo "</tr>";
 			}
 			echo "</table>";
+			echo "</div>";
 		}
 
-		function getSupply($conn, $dtype, $btype, $lid){
+		function getSupply($conn, $dtype, $btype, $lid, $quantity){
 			if($conn && $dtype && $btype && $lid){
+				$additional = array(
+					'Rh null' => array('Rh null'),
+					'O-' => array('Rh null', 'O-'),
+					'A-' => array('Rh null', 'O-', 'A-'),
+					'B-' => array('Rh null', 'O-', 'B-'),
+					'AB-' => array('Rh null', 'O-', 'A-', 'B-', 'AB-'),
+					'O+' => array('Rh null', 'O-', 'O+'),
+					'A+' => array('Rh null', 'O-', 'A-', 'O+', 'A+'),
+					'B+' => array('Rh null', 'O-', 'B-', 'O+', 'B+'),
+					'AB+' => array('Rh null', 'O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+')
+				);
+
 				$cmd = "SELECT* FROM ".$dtype." WHERE ";
 				if($dtype == "blood" || $dtype == "marrow")
 					$cmd = $cmd."isbank = 1 AND ";
-				$cmd = $cmd."btype = '$btype' AND lid = '$lid';";
-				//echo $cmd;
+				//$cmd = $cmd."btype = '$btype' AND lid = '$lid';";
+				$cmd = $cmd."btype IN(";
+				for($i = 0; $i < count($additional[$btype]) - 1; $i++){
+					$cmd = $cmd."'".$additional[$btype][$i]."', ";
+				}
+
+				$cmd = $cmd."'".$additional[$btype][count($additional[$btype]) - 1]."') AND lid = '$lid' AND quantity >= '$quantity';";
+				//echo $cmd."<br>";
 				$out = mysqli_query($conn, $cmd);
 				if($out)
 				{
@@ -492,10 +515,11 @@
 
 		function updateSupply($conn, $dtype, $btype, $lid, $quantity){
 			if($conn && $dtype && $btype && $lid && is_numeric($quantity)){
-				$cmd = "UPDATE ".$dtype." SET quantity = quantity + ".$quantity." WHERE ";
+				$cmd = "UPDATE ".$dtype." SET quantity = quantity ".$quantity." WHERE ";
 				if($dtype == "blood" || $dtype == "marrow")
 					$cmd = $cmd."isbank = 1 AND ";
 				$cmd = $cmd."btype = '$btype' AND lid = '$lid';";
+				//echo "<br>".$cmd;
 				$out = mysqli_query($conn, $cmd);
 				if($out)
 				{

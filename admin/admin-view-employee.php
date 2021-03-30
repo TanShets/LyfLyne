@@ -128,6 +128,7 @@
                             }
 
                             case 2:{
+                                log_deleted_employee($conn, $_POST['eid']);
                                 $cmd = "DELETE FROM emp_user WHERE eid = '".$_POST['eid']."';";
                                 $out = mysqli_query($conn, $cmd);
                                 if($out){
@@ -385,6 +386,38 @@
                 echo "</center>";
                 echo "</div>";
             }
+
+            function log_deleted_employee($conn, $eid){
+                $cmd = "SELECT * FROM emp_user WHERE eid = '$eid';";
+                $out = mysqli_query($conn, $cmd);
+                if($out){
+                    $arr = mysqli_fetch_array($out);
+                    if(is_array($arr) && count($arr) > 0){
+                        $cmd = "INSERT INTO emp_user_log VALUES(";
+                        foreach($arr as $x => $y){
+                            // if($x != "landline" && !is_numeric($x)){
+                            //     $cmd .= "'$y', ";
+                            // }
+                            // elseif($x == "landline"){
+                            //     $cmd .= "'$y'";
+                            //     break;
+                            // }
+
+                            if(!is_numeric($x)){
+                                if($x == "landline"){
+                                    $cmd .= "'$y'";
+                                }
+                                else{
+                                    $cmd .= "'$y', ";
+                                }
+                            }
+                        }
+                        $cmd .= ");";
+
+                        $out = mysqli_query($conn, $cmd);
+                    }
+                }
+            }
         ?>
 	</head>
 	<body>
@@ -392,9 +425,12 @@
         <div class = "container-fluid" id = "admin-view-employee-form">
             <center><h2>Employee List</h2></center>
             <?php
-                if($heads != null && $arr != null)
+                if($heads != null && $arr != null){
+                    $cmd = "SELECT * FROM emp_user;";
+                    $out = mysqli_query($conn, $cmd);
+                    $arr = mysqli_fetch_all($out);
                     display($heads, $arr);
-                
+                }
                 if(isset($_SESSION['admin-request']['eid'])){
                     //echo $_SESSION['admin-request']['eid'];
                     window_box($conn, $_SESSION['admin-request']['eid']);

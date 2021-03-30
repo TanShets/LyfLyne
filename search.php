@@ -27,6 +27,19 @@
 		$mainpass = "";
 		$dbname = "lyflyne";
 		$conn = mysqli_connect($mainServe, $mainuser, $mainpass, $dbname);
+
+		$additional = array(
+			'Rh null' => array('Rh null'),
+			'O-' => array('Rh null', 'O-'),
+			'A-' => array('Rh null', 'O-', 'A-'),
+			'B-' => array('Rh null', 'O-', 'B-'),
+			'AB-' => array('Rh null', 'O-', 'A-', 'B-', 'AB-'),
+			'O+' => array('Rh null', 'O-', 'O+'),
+			'A+' => array('Rh null', 'O-', 'A-', 'O+', 'A+'),
+			'B+' => array('Rh null', 'O-', 'B-', 'O+', 'B+'),
+			'AB+' => array('Rh null', 'O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+')
+		);
+
 		if(!isset($_SESSION['search']))
 		{
 			$_SESSION['search'] = array();
@@ -457,7 +470,8 @@
 			//echo "Step1<br>";
 			if(
 				$_SESSION['moved_request']['dtype'] == $_SESSION['search']['type'] && 
-				$_SESSION['moved_request']['btype'] == $_SESSION['search']['btype']
+				in_array($_SESSION['search']['btype'], $additional[$_SESSION['moved_request']['btype']])
+				//$_SESSION['moved_request']['btype'] == $_SESSION['search']['btype']
 			){
 				//echo "Step2<br>";
 				if(isset($_SESSION['moved_request']['isHospital']) && $_SESSION['moved_request']['rid']){

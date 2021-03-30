@@ -78,6 +78,12 @@
 					$count++;
 			}
 
+			if(isset($_POST['area']) && $_POST['area'] != ""){
+				$_SESSION['request']['area'] = $_POST['area'];
+				if($_SESSION['request']['area'] != "")
+					$count++;
+			}
+
 			if(isset($_POST['priority']) && $_POST['priority'] != ""){
 				$_SESSION['request']['priority'] = $_POST['priority'];
 				if($_SESSION['request']['priority'] != "")
@@ -87,12 +93,13 @@
 			//echo "Look";
 			if(isset($conn) && $conn){
 				$lid = null;
-				if($count == 6)
+				if($count == 7)
 				{
 					$temp1 = $_SESSION['request']['state'];
 					$temp2 = $_SESSION['request']['district'];
 					$temp3 = $_SESSION['request']['city'];
-					$cmd = "SELECT lid FROM location WHERE state = '$temp1' AND district = '$temp2' AND city = '$temp3';";
+					$temp4 = $_SESSION['request']['area'];
+					$cmd = "SELECT lid FROM location WHERE state = '$temp1' AND district = '$temp2' AND city = '$temp3' AND area = '$temp4';";
 					$out = mysqli_query($conn, $cmd);
 					$lid = mysqli_fetch_array($out)['lid'];
 
@@ -251,7 +258,7 @@
 							{
 								echo "<tr>";
 								echo "<td>City</td><td>";
-								echo "<select name = \"city\" class = \"form-control\">";
+								echo "<select name = \"city\" class = \"form-control\" onchange = \"this.form.submit()\">";
 								echo "<option value = \"\"";
 								if(!isset($_SESSION['request']['city']) || $_SESSION['request']['city'] == "")
 									echo " selected ";
@@ -260,7 +267,7 @@
 								{
 									$temp = $_SESSION['request']['district'];
 									$temp1 = $_SESSION['request']['state'];
-									$cmd = "SELECT city FROM location WHERE state = '$temp1' AND district = '$temp';";
+									$cmd = "SELECT city FROM location WHERE state = '$temp1' AND district = '$temp' GROUP BY(city);";
 									
 									$out = mysqli_query($conn, $cmd);
 									$arr = mysqli_fetch_all($out);
@@ -276,6 +283,37 @@
 								echo "</select>";
 								echo "</td>";
 								echo "</tr>";
+
+								if(isset($_SESSION['request']['city']) && $_SESSION['request']['city'] != ""){
+									echo "<tr>";
+									echo "<td>Area</td><td>";
+									echo "<select name = \"area\" class = \"form-control\">";
+									echo "<option value = \"\"";
+									if(!isset($_SESSION['request']['area']) || $_SESSION['request']['area'] == "")
+										echo " selected ";
+									echo ">Select an option</option>";
+									if(isset($conn) && $conn)
+									{
+										$temp = $_SESSION['request']['district'];
+										$temp1 = $_SESSION['request']['state'];
+										$temp2 = $_SESSION['request']['city'];
+										$cmd = "SELECT area FROM location WHERE state = '$temp1' AND district = '$temp' AND city = '$temp2';";
+										
+										$out = mysqli_query($conn, $cmd);
+										$arr = mysqli_fetch_all($out);
+										for($i = 0; $i < count($arr); $i++)
+										{
+											$temp = $arr[$i][0];
+											echo "<option value = \"$temp\"";
+											if(isset($_SESSION['request']['area']) && $_SESSION['request']['area'] == $temp)
+												echo " selected ";
+											echo ">".$temp."</option>";
+										}
+									}
+									echo "</select>";
+									echo "</td>";
+									echo "</tr>";
+								}
 							}
 						}
 					}

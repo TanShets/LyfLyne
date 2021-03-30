@@ -442,10 +442,28 @@
 
 		function getSupply($conn, $dtype, $btype, $lid){
 			if($conn && $dtype && $btype && $lid){
+				$additional = array(
+					'Rh null' => array('Rh null'),
+					'O-' => array('Rh null', 'O-'),
+					'A-' => array('Rh null', 'O-', 'A-'),
+					'B-' => array('Rh null', 'O-', 'B-'),
+					'AB-' => array('Rh null', 'O-', 'A-', 'B-', 'AB-'),
+					'O+' => array('Rh null', 'O-', 'O+'),
+					'A+' => array('Rh null', 'O-', 'A-', 'O+', 'A+'),
+					'B+' => array('Rh null', 'O-', 'B-', 'O+', 'B+'),
+					'AB+' => array('Rh null', 'O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+')
+				);
+				
 				$cmd = "SELECT* FROM ".$dtype." WHERE ";
 				if($dtype == "blood" || $dtype == "marrow")
 					$cmd = $cmd."isbank = 1 AND ";
-				$cmd = $cmd."btype = '$btype' AND lid = '$lid';";
+				//$cmd = $cmd."btype = '$btype' AND lid = '$lid';";
+				$cmd = $cmd."btype IN(";
+				for($i = 0; $i < count($additional[$btype]) - 1; $i++){
+					$cmd = $cmd."'".$additional[$btype][$i]."', ";
+				}
+
+				$cmd = $cmd."'".$additional[$btype][count($additional[$btype]) - 1]."') AND lid = '$lid';";
 				echo $cmd;
 				$out = mysqli_query($conn, $cmd);
 				if($out)

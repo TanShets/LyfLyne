@@ -41,6 +41,7 @@
 					switch($_POST['alter']){
 						case 0:{
 							remove_from_donor_database($conn, $_POST['uid']);
+							log_deleted_user($conn, $_POST['uid'], false);
 							$cmd = "DELETE FROM user WHERE uid = '".$_POST['uid']."';";
 							$out = mysqli_query($conn, $cmd);
 							if($out){
@@ -96,6 +97,7 @@
 
 												$out = mysqli_query($conn, $cmd);
 												if($out){
+													log_deleted_user($conn, $_POST['uid'], true);
 													$cmd = "DELETE FROM user WHERE uid = '".$_POST['uid']."';";
 													$out = mysqli_query($conn, $cmd);
 													if($out){
@@ -195,6 +197,39 @@
 
 			$out1 = mysqli_query($conn, $cmd1);
 			$out2 = mysqli_query($conn, $cmd2);
+		}
+
+		function log_deleted_user($conn, $uid, $isDeceased){
+			$cmd = "SELECT * FROM user WHERE uid = '$uid';";
+			//echo $cmd."<br>";
+			$out = mysqli_query($conn, $cmd);
+			if($out){
+				$arr = mysqli_fetch_array($out);
+				if(is_array($arr) && count($arr) > 0){
+					//uid	username	password	name	mobile	landline	lid	email	bdonor	mdonor	odonor	btype	
+					$cmd = "INSERT INTO user_log(uid, username, password, name, mobile, landline, lid, email, bdonor, mdonor, odonor, btype";
+					if($isDeceased){
+						$cmd .= ", isDeceased";
+					}
+					$cmd .= ") VALUES(";
+					foreach($arr as $x => $y){
+						if(!is_numeric($x)){
+							if($x == "btype"){
+								$cmd .= "'$y'";
+							}
+							else{
+								$cmd .= "'$y', ";
+							}
+						}
+					}
+
+					if($isDeceased){
+						$cmd .= ", '1'";
+					}
+					$cmd .= ");";
+					$out = mysqli_query($conn, $cmd);
+				}
+			}
 		}
     ?>
 </head>

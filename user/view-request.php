@@ -78,6 +78,7 @@
 
         function display($heads, $arr){
 			//print_r($heads);
+			echo "<div class = \"container-fluid\">";
 			echo "<table class = \"table table-striped\">";
 			echo "<tr>";
 			$names = Array();
@@ -123,6 +124,7 @@
 				echo "</tr>";
 			}
 			echo "</table>";
+			echo "</div>";
 		}
     ?>
 </head>
