@@ -695,6 +695,11 @@
 		<?php
 			if(isset($arr) && $arr != null)
 				display($heads, $arr);
+			elseif($_SERVER['REQUEST_METHOD'] == "POST"){
+				echo '<div class = "container-fluid">';
+					echo '<h2>There are no requests to view!!</h2>';
+				echo '</div>';
+			}
 		?>
 	</div>
 </body>

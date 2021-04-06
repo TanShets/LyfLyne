@@ -79,7 +79,7 @@
 		
 		function generate_table($conn, $tablename){
 			echo "<br>";
-            echo "<table class = \"table table-striped\">";
+            
 
 			$cmd = "SELECT * FROM $tablename;";
 			//echo $cmd;
@@ -91,6 +91,7 @@
 				//print_r($arr_temp);
                 if(is_array($arr_temp)){
                     $arr_heads = array_keys($arr_temp);
+					echo "<table class = \"table table-striped\">";
                     //print_r($arr_heads);
                     echo "<tr>";
                     foreach($arr_heads as $i){
@@ -137,10 +138,16 @@
                             }
                         }
                     }
+					echo "</table>";
                 }
+				else{
+					echo '<div class = "container">';
+						echo '<center><h2>No Requests found to be confirmed</h2></center>';
+					echo '</div>';
+				}
 			}
 
-            echo "</table>";
+            
 		}
 		
 		function confirm_request($conn, $rid, $tablename){

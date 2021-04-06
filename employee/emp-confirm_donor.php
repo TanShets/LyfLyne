@@ -102,7 +102,9 @@
                         echo "</div>";
                     }
                     else{
-                        echo "<center><h2>No Dead Donor Requests require confirmation at present</h2></center>";
+                        echo '<div class = "container-fluid">';
+                            echo "<center><h2>No Dead Donor Requests require confirmation at present</h2></center>";
+                        echo '</div>';
                     }
                 }
                 else{

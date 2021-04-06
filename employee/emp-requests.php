@@ -405,69 +405,74 @@
 		function display($heads, $arr){
 			//print_r($heads);
 			echo "<div class = \"container-fluid\">";
-			echo "<table class = \"table table-striped\">";
-			echo "<tr>";
-			$names = Array();
-			foreach ($heads as $x => $y) {
-				if(!is_numeric($x)){
-					echo "<th>".$x."</th>";
-					array_push($names, $x);
-				}
-			}
-			echo "<th></th><th></th><th></th>";
-			echo "</tr>";
-			//print_r($names);
-			$i = null;
-			foreach($arr as $x){
-				$i = 0;
-				$inputs = Array();
+			if(isset($arr) && count($arr) > 0){
+				echo "<table class = \"table table-striped\">";
 				echo "<tr>";
-				//echo "<form action = \"emp-requests.php\" method = \"post\">";
-				$temp = "<form action = \"emp-requests.php\" method = \"post\">";
-				array_push($inputs, $temp);
-				foreach ($x as $y) {
-					echo "<td>".$y."</td>";
-					$temp = "<input class = \"form-control\" type = \"hidden\" name = \"".$names[$i]."\" value = \"".$y."\">";
-					array_push($inputs, $temp);
-					//echo "<input type = \"hidden\" name = \"";
-					//echo $names[$i]."\" value = \"".$y."\">";
-					$i++;
-				}
-				//print_r($inputs);
-				$buttons = Array("Accept", "Reject and Transfer", "Find donor");
-				$temp = "<input class = \"form-control\" type = \"hidden\" name = \"type\" value = \"".$_POST['type']."\">";
-				array_push($inputs, $temp);
-				for($k = 0; $k < count($buttons); $k++){
-					if($k != 2 || ($k == 2 && $x[3] == "blood") || ($k == 2 && $x[3] == "marrow")){
-						for($i = 0; $i < count($inputs); $i++){
-							echo $inputs[$i];
-						}
-						$classname = "";
-						switch($buttons[$k]){
-							case $buttons[0]:{
-								$classname = "btn btn-success";
-								break;
-							}
-							case $buttons[1]:{
-								$classname = "btn btn-danger";
-								break;
-							}
-							case $buttons[2]:{
-								$classname = "btn btn-primary";
-								break;
-							}
-						}
-						echo "<input class = \"form-control\" type = \"hidden\" name = \"alter\" value = \"".$k."\">";
-						echo "<td><button class = \"$classname\" type=\"submit\">".$buttons[$k]."</button></td>";
-						echo "</form>";
-					}
-					else{
-						echo "<td></td>";
+				$names = Array();
+				foreach ($heads as $x => $y) {
+					if(!is_numeric($x)){
+						echo "<th>".$x."</th>";
+						array_push($names, $x);
 					}
 				}
+				echo "<th></th><th></th><th></th>";
 				echo "</tr>";
+				//print_r($names);
+				$i = null;
+				foreach($arr as $x){
+					$i = 0;
+					$inputs = Array();
+					echo "<tr>";
+					//echo "<form action = \"emp-requests.php\" method = \"post\">";
+					$temp = "<form action = \"emp-requests.php\" method = \"post\">";
+					array_push($inputs, $temp);
+					foreach ($x as $y) {
+						echo "<td>".$y."</td>";
+						$temp = "<input class = \"form-control\" type = \"hidden\" name = \"".$names[$i]."\" value = \"".$y."\">";
+						array_push($inputs, $temp);
+						//echo "<input type = \"hidden\" name = \"";
+						//echo $names[$i]."\" value = \"".$y."\">";
+						$i++;
+					}
+					//print_r($inputs);
+					$buttons = Array("Accept", "Reject and Transfer", "Find donor");
+					$temp = "<input class = \"form-control\" type = \"hidden\" name = \"type\" value = \"".$_POST['type']."\">";
+					array_push($inputs, $temp);
+					for($k = 0; $k < count($buttons); $k++){
+						if($k != 2 || ($k == 2 && $x[3] == "blood") || ($k == 2 && $x[3] == "marrow")){
+							for($i = 0; $i < count($inputs); $i++){
+								echo $inputs[$i];
+							}
+							$classname = "";
+							switch($buttons[$k]){
+								case $buttons[0]:{
+									$classname = "btn btn-success";
+									break;
+								}
+								case $buttons[1]:{
+									$classname = "btn btn-danger";
+									break;
+								}
+								case $buttons[2]:{
+									$classname = "btn btn-primary";
+									break;
+								}
+							}
+							echo "<input class = \"form-control\" type = \"hidden\" name = \"alter\" value = \"".$k."\">";
+							echo "<td><button class = \"$classname\" type=\"submit\">".$buttons[$k]."</button></td>";
+							echo "</form>";
+						}
+						else{
+							echo "<td></td>";
+						}
+					}
+					echo "</tr>";
+				}
+				echo "</table>";
 			}
-			echo "</table>";
+			else{
+				echo '<center><h2>No Requests found!!!</h2></center>';
+			}
 			echo "</div>";
 		}
 
@@ -713,6 +718,16 @@
 	<?php
 		if(isset($arr) && $arr != null)
 			display($heads, $arr);
+		elseif($_SERVER['REQUEST_METHOD'] == "POST"){
+			echo '<div class = "container-fluid">';
+				echo '<center><h3>No Requests found!</h3></center>';
+			echo '</div>';
+		}
+		// else{
+		// 	echo '<div class = "container-fluid">';
+		// 		echo '<h2>No Requests found!!!</h2>';
+		// 	echo '</div>';
+		// }
 	?>
 </body>
 </html>

@@ -232,9 +232,34 @@
 								echo "</table>";
 								echo "</div>";
 							}
+							else{
+								echo '<div class = "container">';
+									echo '<center><h2>No Donor found here</h2></center>';
+								echo '</div>';
+							}
+						}
+						else{
+							echo '<div class = "container">';
+								echo '<center><h2>No Donor found here</h2></center>';
+							echo '</div>';
 						}
 					}
+					else{
+						echo '<div class = "container">';
+							echo '<center><h2>No Donor found here</h2></center>';
+						echo '</div>';
+					}
 				}
+				else{
+					echo '<div class = "container">';
+						echo '<center><h2>No Donor found here</h2></center>';
+					echo '</div>';
+				}
+			}
+			else{
+				echo '<div class = "container">';
+					echo '<h2>No Donor found here</h2>';
+				echo '</div>';
 			}
 		}
 	?>
