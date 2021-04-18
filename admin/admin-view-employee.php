@@ -48,9 +48,11 @@
             if($out){
                 $heads = mysqli_fetch_array($out);
                 if(is_array($heads)){
+                    //echo $cmd;
                     $out = mysqli_query($conn, $cmd);
                     if($out){
                         $arr = mysqli_fetch_all($out);
+                        //print_r($arr[0]);
                     }
                 }
             }
@@ -180,10 +182,13 @@
             }
 
             function display($heads, $arr){
-                //print_r($heads);
+                // print_r($heads);
+                // echo "<br><br>";
+                // print_r($arr);
                 echo "<table class = \"table table-striped\">";
                 echo "<tr>";
                 $names = Array();
+                //print_r($heads);
                 foreach ($heads as $x => $y) {
                     if(!is_numeric($x)){
                         echo "<th>".$x."</th>";
@@ -426,9 +431,9 @@
             <center><h2>Employee List</h2></center>
             <?php
                 if($heads != null && $arr != null){
-                    $cmd = "SELECT * FROM emp_user;";
-                    $out = mysqli_query($conn, $cmd);
-                    $arr = mysqli_fetch_all($out);
+                    // $cmd = "SELECT * FROM emp_user;";
+                    // $out = mysqli_query($conn, $cmd);
+                    // $arr = mysqli_fetch_all($out);
                     display($heads, $arr);
                 }
                 if(isset($_SESSION['admin-request']['eid'])){

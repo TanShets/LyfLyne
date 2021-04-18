@@ -211,6 +211,7 @@
 										for($j = 0; $j < count($levels); $j++){
 											//echo $levels[$j]." '$lid'<br>";
 											$lids = getLocations($conn, $lid, $levels[$j]);
+											//print_r($lids);
 											if(is_array($lids)){
 												//echo "22222";
 												$cmd = "SELECT lid FROM ".$_POST['dtype']." WHERE ";
@@ -218,17 +219,20 @@
 													$cmd = $cmd."isbank = 1 AND ";
 												}
 												$cmd = $cmd."btype = '$btype' AND quantity >= '$quantity' AND ";
+												//print_r($lids);
 												$cmd = $cmd."lid IN (";
 												for($i = 0; $i < count($lids) - 1; $i++){
-													$cmd = $cmd."'".$lids[$i][0]."', ";
+													$cmd = $cmd."'".$lids[$i]."', ";
 												}
 												$cmd = $cmd."'".$lids[count($lids) - 1]."');";
-												//echo $cmd;
 												$out = mysqli_query($conn, $cmd);
+												//echo $cmd;
 												if($out){
 													//echo "kamui";
 													$arr = mysqli_fetch_array($out);
-													if(is_array($arr)){
+
+													if(isset($arr) && is_array($arr)){
+														//echo "Yes";
 														$new_lid = $arr['lid'];
 													}
 												}
